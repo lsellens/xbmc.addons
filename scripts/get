@@ -1,0 +1,78 @@
+#!/bin/sh
+
+################################################################################
+#      This file is part of OpenELEC - http://www.openelec.tv
+#      Copyright (C) 2009-2012 Stephan Raue (stephan@openelec.tv)
+#
+#  This Program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2, or (at your option)
+#  any later version.
+#
+#  This Program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with OpenELEC.tv; see the file COPYING.  If not, write to
+#  the Free Software Foundation, 51 Franklin Street, Suite 500, Boston, MA 02110, USA.
+#  http://www.gnu.org/copyleft/gpl.html
+################################################################################
+
+. config/options $1
+
+if [ -z "$1" ]; then
+  for i in `find packages/ -type f -name meta`; do
+    GET_PKG=`grep ^PKG_NAME= $i | sed -e "s,\",,g" -e "s,PKG_NAME=,,"`
+    $SCRIPTS/get $GET_PKG
+  done
+fi
+
+[ -z "$PKG_URL" ] && exit 0
+
+if [ -n "$PKG_URL" ]; then
+  URLS="$URLS `echo $PKG_URL | sed s%GEEXBOX_SRCS%$GEEXBOX_SRCS%`"
+
+  for i in $URLS; do
+    SOURCE_NAME="`basename $i`"
+    PACKAGE="$SOURCES/$1/$SOURCE_NAME"
+    PACKAGE_MIRROR="$DISTRO_MIRROR/$PKG_NAME/$SOURCE_NAME"
+    [ "$VERBOSE" != "yes" ] && WGET_OPT=-q
+    WGET_CMD="wget --passive-ftp --no-check-certificate -c $WGET_OPT -P $SOURCES/$1"
+
+    NBWGET="1"
+
+    STAMP="$PACKAGE.url"
+    MD5SUM="$PACKAGE.md5"
+
+    mkdir -p $SOURCES/$1
+
+    if [ -f "$STAMP" ]; then
+      [ `cat $STAMP` = "$i" ] && continue
+    fi
+    DL="yes"
+
+    $SCRIPTS/checkdeps get
+
+    rm -f $STAMP
+
+    printf "%${INDENT}c GET      $1\n" ' '>&$SILENT_OUT
+    export INDENT=$((${INDENT:-1}+$INDENT_SIZE))
+
+    until [ -f "$STAMP" ] || $WGET_CMD $i || $WGET_CMD $PACKAGE_MIRROR; do
+      NBWGET=$(($NBWGET+1))
+      if [ "$NBWGET" -gt "10" ]; then
+        echo -e "\nCant't get $1 sources : $i\n Try later !!"
+        exit 1
+      fi
+    done
+
+    echo $i > $STAMP
+    md5sum -t $PACKAGE > $MD5SUM
+
+    rm -f $BUILD_BASE*/$STAMPS_NOARCH/$1/unpack
+    rm -f $BUILD_BASE*/$STAMPS_NOARCH/$1/build
+
+  done
+fi

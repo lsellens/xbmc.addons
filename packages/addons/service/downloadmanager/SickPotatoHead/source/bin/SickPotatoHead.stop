@@ -1,0 +1,3 @@
+#!/bin/sh
+
+kill `ps | grep -E 'python.*service.downloadmanager.SickPotatoHead' | awk '{print $1}'` 2>/dev/null

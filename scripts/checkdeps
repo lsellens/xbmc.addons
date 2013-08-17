@@ -1,0 +1,116 @@
+#!/bin/sh
+
+################################################################################
+#      This file is part of OpenELEC - http://www.openelec.tv
+#      Copyright (C) 2009-2012 Stephan Raue (stephan@openelec.tv)
+#
+#  This Program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2, or (at your option)
+#  any later version.
+#
+#  This Program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with OpenELEC.tv; see the file COPYING.  If not, write to
+#  the Free Software Foundation, 51 Franklin Street, Suite 500, Boston, MA 02110, USA.
+#  http://www.gnu.org/copyleft/gpl.html
+################################################################################
+
+. config/options $1
+
+deps=
+deps_pkg=
+files=
+files_pkg=
+
+case $1 in
+  get)
+    deps="wget"
+    deps_pkg="wget"
+    ;;
+  build)
+    deps="gcc g++ sed patch touch tar bzip2 gzip perl cp gawk makeinfo gperf cvs zip unzip mkfontscale diff xsltproc java"
+    deps_pkg="gcc g++ sed patch fileutils tar bzip2 gzip perl coreutils gawk texinfo gperf cvs zip unzip xutils diff xsltproc default-jre"
+    files="/usr/include/stdio.h /usr/include/ncurses.h"
+    files_pkg="libc6-dev libncurses5-dev"
+    ;;
+  qemu)
+    if [ ! `which qemu` ]; then
+      echo "Your system doesn't seem to have QEMU installed"
+      exit 1
+    fi
+    ;;
+esac
+
+getarg() {
+  eval echo \${$(($1+2))}
+}
+
+i=0
+while dep=`getarg $i $deps` && [ -n "$dep" ]; do
+  [ -z "`which $dep 2>/dev/null`" ] && need="$need $dep" && need_pkg="$need_pkg `getarg $i $deps_pkg`"
+  i=$(($i+1))
+done
+
+i=0
+while file=`getarg $i $files` && [ -n "$file" ]; do
+  [ ! -f $file ] && need="$need $file" && need_pkg="$need_pkg `getarg $i $files_pkg`"
+  i=$(($i+1))
+done
+
+if [ -n "$need" ]; then
+  echo "**** Your system lacks the following tools needed to $1 $DISTRONAME ****"
+  echo $need
+
+  [ -f /etc/lsb-release ] && . /etc/lsb-release
+
+  if [ -n "`which aptitude 2>/dev/null`" ]; then
+    DISTRO="a Debian" 
+    [ "$DISTRIB_ID" = "Ubuntu" ] && DISTRO="an Ubuntu"
+    echo "**** You seem to use $DISTRO system ****"
+    read -p "would you like to install the needed tools ? (y/n) " ans
+    [ "$ans" = "y" ] && sudo aptitude install $need_pkg
+  elif [ -f /etc/mandrake-release -a -n "`which urpmi 2>/dev/null`" ]; then
+    echo "**** You seem to use a mandrake system ****"
+    read -p "would you like to install the needed tools ? (y/n) " ans
+    [ "$ans" = "y" ] && sudo urpmi $need_pkg
+  elif [ -f /etc/gentoo-release -a -n "`which emerge 2>/dev/null`" ]; then
+    echo "**** You seem to use a gentoo system ****"
+    read -p "would you like to install the needed tools ? (y/n) " ans
+    [ "$ans" = "y" ] && sudo emerge -D $need_pkg
+  elif [ -f /etc/fedora-release -a -n "`which yum 2>/dev/null`" ]; then
+    echo "**** You seem to use a fedora system ****"
+    read -p "would you like to install the needed tools ? (y/n) " ans
+    [ "$ans" = "y" ] && sudo yum install $need_pkg
+  else
+    echo "********"
+    exit 1
+  fi
+fi
+
+
+need=""
+need_pkg=""
+
+i=0
+while dep=`getarg $i $deps` && [ -n "$dep" ]; do
+  [ -z "`which $dep 2>/dev/null`" ] && need="$need $dep" && need_pkg="$need_pkg `getarg $i $deps_pkg`"
+  i=$(($i+1))
+done
+
+i=0
+while file=`getarg $i $files` && [ -n "$file" ]; do
+  [ ! -f $file ] && need="$need $file" && need_pkg="$need_pkg `getarg $i $files_pkg`"
+  i=$(($i+1))
+done
+
+if [ -n "$need" ]; then
+  echo "**** The following packages were not installed correctly ****"
+  echo $need_pkg
+  echo "********"
+  exit 1
+fi

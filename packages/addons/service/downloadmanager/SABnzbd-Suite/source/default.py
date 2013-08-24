@@ -19,10 +19,8 @@
 ################################################################################
 
 import os
-import time
 import xbmc
 import xbmcaddon
-import subprocess
 
 __scriptname__ = "SABnzbd Suite"
 __author__     = "OpenELEC"
@@ -35,9 +33,3 @@ __stop__       = xbmc.translatePath( os.path.join( __cwd__, 'bin', "SABnzbd-Suit
 #Open settings dialog
 if __name__ == '__main__':
     __settings__.openSettings()
-
-#Restart Suite
-subprocess.check_call(['bash',__stop__])
-#os.system(__stop__)
-time.sleep(10)
-subprocess.call(['python',__start__])

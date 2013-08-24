@@ -1,9 +1,7 @@
 #
 import os
-import time
 import xbmc
 import xbmcaddon
-import subprocess
 
 __scriptname__ = "SickPotatoHead"
 __author__     = "lsellens"
@@ -16,8 +14,3 @@ __stop__       = xbmc.translatePath( os.path.join( __cwd__, 'bin', "SickPotatoHe
 #Open settings dialog
 if __name__ == '__main__':
     __settings__.openSettings()
-
-#Restart Suite
-subprocess.check_call(['bash',__stop__])
-time.sleep(10)
-subprocess.call(['python',__start__])

@@ -1,3 +1,7 @@
+1.2.2
+- Disable restarting suite opon exiting addon settings
+- update to SickBeard-4d77db9
+
 1.2.1
 - update to SickBeard-55d9f11
 - update to Headphones-8bd1bfc

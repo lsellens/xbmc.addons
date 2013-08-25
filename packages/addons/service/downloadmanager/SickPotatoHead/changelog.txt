@@ -1,3 +1,6 @@
+1.2.3
+- Attemping to fix unable to start error with 1.2.2
+
 1.2.2
 - Disable restarting suite opon exiting addon settings
 - update to SickBeard-4d77db9

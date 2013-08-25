@@ -1,0 +1,6 @@
+sources
+sources/*
+build*
+build*/*
+target
+target/*

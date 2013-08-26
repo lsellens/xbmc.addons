@@ -1,0 +1,40 @@
+#!/bin/sh
+
+cd tools/mkpkg
+. ../../packages/3rdparty/download/SABnzbd/meta
+
+echo "getting sources..."
+  if [ ! -d build.SABnzbd-$PKG_VERSION-src ]; then
+    wget http://prdownloads.sourceforge.net/sabnzbdplus/sabnzbdplus/$PKG_VERSION/SABnzbd-$PKG_VERSION-src.tar.gz
+    echo "extracting sources..."
+    tar xzf SABnzbd-$PKG_VERSION-src.tar.gz
+    mv SABnzbd-$PKG_VERSION build.SABnzbd-$PKG_VERSION-src
+    rm SABnzbd-$PKG_VERSION-src.tar.gz
+  fi
+
+echo "cleaning sources..."
+  cp -rf build.SABnzbd-$PKG_VERSION-src SABnzbd-$PKG_VERSION
+  rm -rf SABnzbd-$PKG_VERSION/*.txt SABnzbd-$PKG_VERSION/Sample-* SABnzbd-$PKG_VERSION/PKG-INFO SABnzbd-$PKG_VERSION/licenses
+
+echo "packing sources..."
+  tar cf SABnzbd-$PKG_VERSION-src.tar SABnzbd-$PKG_VERSION ; gzip -9f SABnzbd-$PKG_VERSION-src.tar
+
+echo "remove temporary sourcedir..."
+  rm -rf SABnzbd-$PKG_VERSION
+
+echo "copying to dev folder"
+  if [ ! -e /home/otkaz/Dropbox/Public/repository.lsellens/devel/SABnzbd-$PKG_VERSION-src.tar.gz ]; then
+    cp SABnzbd-$PKG_VERSION-src.tar.gz /home/otkaz/Dropbox/Public/repository.lsellens/devel/; else
+    echo "file exists"
+  fi
+
+echo "copying to source folder"
+  cd ../../
+  if [ ! -e sources/SABnzbd/SABnzbd-$PKG_VERSION-src.tar.gz ]; then
+    mkdir -p sources/SABnzbd/
+    mv tools/mkpkg/SABnzbd-$PKG_VERSION-src.tar.gz sources/SABnzbd/
+    md5sum -t sources/SABnzbd/SABnzbd-$PKG_VERSION-src.tar.gz > sources/SABnzbd/SABnzbd-$PKG_VERSION-src.tar.gz.md5
+    echo "http://dl.dropbox.com/u/42265484/repository.lsellens/devel/SABnzbd-$PKG_VERSION-src.tar.gz" > sources/SABnzbd/SABnzbd-$PKG_VERSION-src.tar.gz.url
+    echo "done"; else
+    echo "file exists"
+  fi

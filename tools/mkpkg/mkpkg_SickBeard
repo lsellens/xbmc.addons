@@ -1,0 +1,44 @@
+#!/bin/sh
+
+cd tools/mkpkg
+. ../../packages/3rdparty/download/SickBeard/meta
+
+echo "getting sources..."
+  if [ ! -d build.SickBeard.git ]; then
+    git clone git://github.com/lsellens/Sick-Beard.git build.SickBeard.git
+  fi
+
+  cd build.SickBeard.git
+    git checkout $PKG_VERSION
+    GIT_REV=`git log -n1 --format=%h`
+  cd ..
+
+echo "copying sources..."
+  rm -rf SickBeard-$GIT_REV
+  cp -R build.SickBeard.git SickBeard-$GIT_REV
+
+echo "cleaning sources..."
+  rm -rf SickBeard-$GIT_REV/.git* SickBeard-$GIT_REV/.travis.yml SickBeard-$GIT_REV/init.* SickBeard-$GIT_REV/COPYING.txt SickBeard-$GIT_REV/*.md SickBeard-$GIT_REV/autoProcessTV/autoProcessTV.cfg.sample
+
+echo "packing sources..."
+  tar cJf SickBeard-$GIT_REV.tar.xz SickBeard-$GIT_REV
+
+echo "remove temporary sourcedir..."
+  rm -rf SickBeard-$GIT_REV
+
+echo "copying to dev folder"
+  if [ ! -e /home/otkaz/Dropbox/Public/repository.lsellens/devel/SickBeard-$GIT_REV.tar.xz ]; then
+    cp SickBeard-$GIT_REV.tar.xz /home/otkaz/Dropbox/Public/repository.lsellens/devel/; else
+    echo "file exists"
+  fi
+
+echo "copying to source folder"
+  cd ../../
+  if [ ! -e sources/SickBeard/SickBeard-$GIT_REV.tar.xz ]; then
+    mkdir -p sources/SickBeard/
+    mv tools/mkpkg/SickBeard-$GIT_REV.tar.xz sources/SickBeard/
+    md5sum -t sources/SickBeard/SickBeard-$GIT_REV.tar.xz > sources/SickBeard/SickBeard-$GIT_REV.tar.xz.md5
+    echo "http://dl.dropbox.com/u/42265484/repository.lsellens/devel/SickBeard-$GIT_REV.tar.xz" > sources/SickBeard/SickBeard-$GIT_REV.tar.xz.url
+    echo "done"; else
+    echo "file exists"
+  fi

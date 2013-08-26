@@ -1,0 +1,44 @@
+#!/bin/sh
+
+cd tools/mkpkg
+. ../../packages/3rdparty/download/CouchPotatoServer/meta
+
+echo "getting sources..."
+  if [ ! -d build.CouchPotatoServer.git ]; then
+    git clone git://github.com/RuudBurger/CouchPotatoServer.git build.CouchPotatoServer.git
+  fi
+
+  cd build.CouchPotatoServer.git
+    git checkout $PKG_VERSION
+    GIT_REV=`git log -n1 --format=%h`
+  cd ..
+
+echo "copying sources..."
+  rm -rf CouchPotatoServer-$GIT_REV
+  cp -R build.CouchPotatoServer.git CouchPotatoServer-$GIT_REV
+
+echo "cleaning sources..."
+  rm -rf CouchPotatoServer-$GIT_REV/.git* CouchPotatoServer-$GIT_REV/init CouchPotatoServer-$GIT_REV/license.txt CouchPotatoServer-$GIT_REV/*.md
+
+echo "packing sources..."
+  tar cJf CouchPotatoServer-$GIT_REV.tar.xz CouchPotatoServer-$GIT_REV
+
+echo "remove temporary sourcedir..."
+  rm -rf CouchPotatoServer-$GIT_REV
+
+echo "copying to dev folder"
+  if [ ! -e /home/otkaz/Dropbox/Public/repository.lsellens/devel/CouchPotatoServer-$GIT_REV.tar.xz ]; then
+    cp CouchPotatoServer-$GIT_REV.tar.xz /home/otkaz/Dropbox/Public/repository.lsellens/devel/; else
+    echo "file exists"
+  fi
+
+echo "copying to source folder"
+  cd ../../
+  if [ ! -e sources/CouchPotatoServer/CouchPotatoServer-$GIT_REV.tar.xz ]; then
+    mkdir -p sources/CouchPotatoServer/
+    mv tools/mkpkg/CouchPotatoServer-$GIT_REV.tar.xz sources/CouchPotatoServer/
+    md5sum -t sources/CouchPotatoServer/CouchPotatoServer-$GIT_REV.tar.xz > sources/CouchPotatoServer/CouchPotatoServer-$GIT_REV.tar.xz.md5
+    echo "http://dl.dropbox.com/u/42265484/repository.lsellens/devel/CouchPotatoServer-$GIT_REV.tar.xz" > sources/CouchPotatoServer/CouchPotatoServer-$GIT_REV.tar.xz.url
+    echo "done"; else
+    echo "file exists"
+  fi

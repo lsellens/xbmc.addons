@@ -1,37 +1,11 @@
-# determines PROJECT, if not forced by user
-# default is Generic
-if [ -z "$PROJECT" ]; then
-  PROJECT="Generic"
-else
-  PROJECT="$PROJECT"
-fi
-
-# determines TARGET_ARCH, if not forced by user (i386 / x86_64 / arm)
-# default is i386
-if [ -z "$ARCH" ]; then
-  TARGET_ARCH="i386"
-else
-  TARGET_ARCH="$ARCH"
-fi
-
 ROOT=`pwd`
-PROJECT_DIR="$ROOT/projects"
 
 # include versioning
   . config/version
 
-# read project options if available
- if [ -f "$PROJECT_DIR/$PROJECT/options" ]; then
-   . $PROJECT_DIR/$PROJECT/options
- fi
 
 # verbose compilation mode (yes/no)
   VERBOSE="yes"
-
-# Concurrency make level (-j option)
-#  Try value 1 (default) to 4 on single CPU computer, or more on
-#  multi-processor computer (like hyperthreading SMP CPU)
-  CONCURRENCY_MAKE_LEVEL=`cat /proc/cpuinfo | grep -c '^processor[[:cntrl:]]*:'`
 
 
 # forcing install of all packages (yes/no)

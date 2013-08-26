@@ -13,26 +13,27 @@ echo "getting sources..."
     GIT_REV=`git log -n1 --format=%h`
   cd ..
 
-echo "copying sources..."
-  rm -rf Headphones-$GIT_REV
-  cp -R build.Headphones.git Headphones-$GIT_REV
+  if [ ! -e ../../sources/Headphones/Headphones-$GIT_REV.tar.xz ]; then
 
-echo "cleaning sources..."
-  rm -rf Headphones-$GIT_REV/.git* Headphones-$GIT_REV/init* Headphones-$GIT_REV/TODO Headphones-$GIT_REV/README.md Headphones-$GIT_REV/COPYING Headphones-$GIT_REV/API_REFERENCE
+    echo "copying sources..."
+     rm -rf Headphones-$GIT_REV
+     cp -R build.Headphones.git Headphones-$GIT_REV
 
-echo "packing sources..."
-  tar cJf Headphones-$GIT_REV.tar.xz Headphones-$GIT_REV
+    echo "cleaning sources..."
+     rm -rf Headphones-$GIT_REV/.git* Headphones-$GIT_REV/init* Headphones-$GIT_REV/TODO Headphones-$GIT_REV/README.md Headphones-$GIT_REV/COPYING Headphones-$GIT_REV/API_REFERENCE
 
-echo "remove temporary sourcedir..."
-  rm -rf Headphones-$GIT_REV
+    echo "packing sources..."
+     tar cJf Headphones-$GIT_REV.tar.xz Headphones-$GIT_REV
 
-echo "copying to source folder"
-  cd ../../
-  if [ ! -e sources/Headphones/Headphones-$GIT_REV.tar.xz ]; then
-    mkdir -p sources/Headphones/
-    mv tools/mkpkg/Headphones-$GIT_REV.tar.xz sources/Headphones/
-    md5sum -t sources/Headphones/Headphones-$GIT_REV.tar.xz > sources/Headphones/Headphones-$GIT_REV.tar.xz.md5
-    echo "http://dl.dropbox.com/u/42265484/repository.lsellens/devel/Headphones-$GIT_REV.tar.xz" > sources/Headphones/Headphones-$GIT_REV.tar.xz.url
+    echo "remove temporary sourcedir..."
+     rm -rf Headphones-$GIT_REV
+
+    echo "copying to source folder"
+     cd ../../
+     mkdir -p sources/Headphones/
+     mv tools/mkpkg/Headphones-$GIT_REV.tar.xz sources/Headphones/
+     md5sum -t sources/Headphones/Headphones-$GIT_REV.tar.xz > sources/Headphones/Headphones-$GIT_REV.tar.xz.md5
+     echo "http://dl.dropbox.com/u/42265484/repository.lsellens/devel/Headphones-$GIT_REV.tar.xz" > sources/Headphones/Headphones-$GIT_REV.tar.xz.url
     echo "done"; else
-    echo "file exists"
+    echo "All ready at $GIT_REV. Skipping"
   fi

@@ -22,12 +22,6 @@ echo "packing sources..."
 echo "remove temporary sourcedir..."
   rm -rf SABnzbd-$PKG_VERSION
 
-echo "copying to dev folder"
-  if [ ! -e /home/otkaz/Dropbox/Public/repository.lsellens/devel/SABnzbd-$PKG_VERSION-src.tar.gz ]; then
-    cp SABnzbd-$PKG_VERSION-src.tar.gz /home/otkaz/Dropbox/Public/repository.lsellens/devel/; else
-    echo "file exists"
-  fi
-
 echo "copying to source folder"
   cd ../../
   if [ ! -e sources/SABnzbd/SABnzbd-$PKG_VERSION-src.tar.gz ]; then

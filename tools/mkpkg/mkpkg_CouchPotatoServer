@@ -9,6 +9,7 @@ echo "getting sources..."
   fi
 
   cd build.CouchPotatoServer.git
+    git pull
     git checkout $PKG_VERSION
     GIT_REV=`git log -n1 --format=%h`
   cd ..

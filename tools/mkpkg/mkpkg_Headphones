@@ -9,6 +9,7 @@ echo "getting sources..."
   fi
 
   cd build.Headphones.git
+    git pull
     git checkout $PKG_VERSION
     GIT_REV=`git log -n1 --format=%h`
   cd ..

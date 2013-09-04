@@ -1,3 +1,7 @@
+1.2.4
+- update to SickBeard-c59063a
+- update to Headphones-dc69421
+
 1.2.3
 - Attemping to fix unable to start error with 1.2.2
 

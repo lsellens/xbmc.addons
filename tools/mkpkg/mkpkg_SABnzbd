@@ -1,34 +1,34 @@
 #!/bin/sh
 
+. packages/3rdparty/download/SABnzbd/meta
 cd tools/mkpkg
-. ../../packages/3rdparty/download/SABnzbd/meta
 
 echo "getting sources..."
-  if [ ! -d build.SABnzbd-$PKG_VERSION-src ]; then
-    wget http://prdownloads.sourceforge.net/sabnzbdplus/sabnzbdplus/$PKG_VERSION/SABnzbd-$PKG_VERSION-src.tar.gz
+  if [ ! -d build.$PKG_NAME-$PKG_VERSION-src ]; then
+    wget $PKG_URL
     echo "extracting sources..."
-    tar xzf SABnzbd-$PKG_VERSION-src.tar.gz
-    mv SABnzbd-$PKG_VERSION build.SABnzbd-$PKG_VERSION-src
-    rm SABnzbd-$PKG_VERSION-src.tar.gz
+    tar xzf $PKG_NAME-$PKG_VERSION-src.tar.gz
+    mv $PKG_NAME-$PKG_VERSION build.$PKG_NAME-$PKG_VERSION-src
+    rm $PKG_NAME-$PKG_VERSION-src.tar.gz
   fi
 
 echo "cleaning sources..."
-  cp -rf build.SABnzbd-$PKG_VERSION-src SABnzbd-$PKG_VERSION
-  rm -rf SABnzbd-$PKG_VERSION/*.txt SABnzbd-$PKG_VERSION/Sample-* SABnzbd-$PKG_VERSION/PKG-INFO SABnzbd-$PKG_VERSION/licenses
+  cp -rf build.$PKG_NAME-$PKG_VERSION-src $PKG_NAME-$PKG_VERSION
+  rm -rf $PKG_NAME-$PKG_VERSION/*.txt $PKG_NAME-$PKG_VERSION/Sample-* $PKG_NAME-$PKG_VERSION/PKG-INFO $PKG_NAME-$PKG_VERSION/licenses
 
 echo "packing sources..."
-  tar cf SABnzbd-$PKG_VERSION-src.tar SABnzbd-$PKG_VERSION ; gzip -9f SABnzbd-$PKG_VERSION-src.tar
+  tar cf $PKG_NAME-$PKG_VERSION-src.tar $PKG_NAME-$PKG_VERSION ; gzip -9f $PKG_NAME-$PKG_VERSION-src.tar
 
 echo "remove temporary sourcedir..."
-  rm -rf SABnzbd-$PKG_VERSION
+  rm -rf $PKG_NAME-$PKG_VERSION
 
 echo "copying to source folder"
   cd ../../
-  if [ ! -e sources/SABnzbd/SABnzbd-$PKG_VERSION-src.tar.gz ]; then
-    mkdir -p sources/SABnzbd/
-    mv tools/mkpkg/SABnzbd-$PKG_VERSION-src.tar.gz sources/SABnzbd/
-    md5sum -t sources/SABnzbd/SABnzbd-$PKG_VERSION-src.tar.gz > sources/SABnzbd/SABnzbd-$PKG_VERSION-src.tar.gz.md5
-    echo "http://dl.dropbox.com/u/42265484/repository.lsellens/devel/SABnzbd-$PKG_VERSION-src.tar.gz" > sources/SABnzbd/SABnzbd-$PKG_VERSION-src.tar.gz.url
+  if [ ! -e sources/$PKG_NAME/$PKG_NAME-$PKG_VERSION-src.tar.gz ]; then
+    mkdir -p sources/$PKG_NAME/
+    mv tools/mkpkg/$PKG_NAME-$PKG_VERSION-src.tar.gz sources/$PKG_NAME/
+    md5sum -t sources/$PKG_NAME/$PKG_NAME-$PKG_VERSION-src.tar.gz > sources/$PKG_NAME/$PKG_NAME-$PKG_VERSION-src.tar.gz.md5
+    echo "$PKG_URL" > sources/$PKG_NAME/$PKG_NAME-$PKG_VERSION-src.tar.gz.url
     echo "done"; else
     echo "file exists"
   fi

@@ -1,41 +1,41 @@
 #!/bin/sh
 
+. packages/3rdparty/download/SickBeard/meta
 cd tools/mkpkg
-. ../../packages/3rdparty/download/SickBeard/meta
 
 echo "getting sources..."
-  if [ ! -d build.SickBeard.git ]; then
-    git clone git://github.com/lsellens/Sick-Beard.git build.SickBeard.git
+  if [ ! -d build.$PKG_NAME.git ]; then
+    git clone $PKG_SITE.git build.$PKG_NAME.git
   fi
 
-  cd build.SickBeard.git
+  cd build.$PKG_NAME.git
     git checkout master
     git pull
     git checkout $PKG_VERSION
     GIT_REV=`git log -n1 --format=%h`
   cd ..
 
-  if [ ! -e ../../sources/SickBeard/SickBeard-$GIT_REV.tar.xz ]; then
+  if [ ! -e ../../sources/$PKG_NAME/$PKG_NAME-$GIT_REV.tar.xz ]; then
 
     echo "copying sources..."
-     rm -rf SickBeard-$GIT_REV
-     cp -R build.SickBeard.git SickBeard-$GIT_REV
+     rm -rf $PKG_NAME-$GIT_REV
+     cp -R build.$PKG_NAME.git $PKG_NAME-$GIT_REV
 
     echo "cleaning sources..."
-     rm -rf SickBeard-$GIT_REV/.git* SickBeard-$GIT_REV/.travis.yml SickBeard-$GIT_REV/init.* SickBeard-$GIT_REV/COPYING.txt SickBeard-$GIT_REV/*.md SickBeard-$GIT_REV/autoProcessTV/autoProcessTV.cfg.sample
+     rm -rf $PKG_NAME-$GIT_REV/.git* $PKG_NAME-$GIT_REV/.travis.yml $PKG_NAME-$GIT_REV/init.* $PKG_NAME-$GIT_REV/COPYING.txt $PKG_NAME-$GIT_REV/*.md $PKG_NAME-$GIT_REV/autoProcessTV/autoProcessTV.cfg.sample
 
     echo "packing sources..."
-     tar cJf SickBeard-$GIT_REV.tar.xz SickBeard-$GIT_REV
+     tar cJf $PKG_NAME-$GIT_REV.tar.xz $PKG_NAME-$GIT_REV
 
     echo "remove temporary sourcedir..."
-     rm -rf SickBeard-$GIT_REV
+     rm -rf $PKG_NAME-$GIT_REV
 
     echo "copying to source folder"
      cd ../../
-     mkdir -p sources/SickBeard/
-     mv tools/mkpkg/SickBeard-$GIT_REV.tar.xz sources/SickBeard/
-     md5sum -t sources/SickBeard/SickBeard-$GIT_REV.tar.xz > sources/SickBeard/SickBeard-$GIT_REV.tar.xz.md5
-     echo "http://dl.dropbox.com/u/42265484/repository.lsellens/devel/SickBeard-$GIT_REV.tar.xz" > sources/SickBeard/SickBeard-$GIT_REV.tar.xz.url
+     mkdir -p sources/$PKG_NAME/
+     mv tools/mkpkg/$PKG_NAME-$GIT_REV.tar.xz sources/$PKG_NAME/
+     md5sum -t sources/$PKG_NAME/$PKG_NAME-$GIT_REV.tar.xz > sources/$PKG_NAME/$PKG_NAME-$GIT_REV.tar.xz.md5
+     echo "$PKG_URL" > sources/$PKG_NAME/$PKG_NAME-$GIT_REV.tar.xz.url
     echo "done"; else
     echo "All ready at $GIT_REV. Skipping"
   fi

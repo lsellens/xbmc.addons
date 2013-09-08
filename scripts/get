@@ -5,7 +5,7 @@
 [ -z "$PKG_URL" ] && exit 0
 
 if [ -n "$PKG_URL" ]; then
-tools/mkpkg/mkpkg_$1
+  tools/mkpkg/mkpkg_$1
   URLS="$URLS `echo $PKG_URL | sed s%GEEXBOX_SRCS%$GEEXBOX_SRCS%`"
 
   for i in $URLS; do
@@ -34,7 +34,7 @@ tools/mkpkg/mkpkg_$1
     until [ -f "$STAMP" ] || $WGET_CMD $i; do
       NBWGET=$(($NBWGET+1))
       if [ "$NBWGET" -gt "10" ]; then
-        echo -e "\nCant't get $1 sources : $i\n Try later !!"
+        echo -e "\nCan't get $1 sources : $i\n Try later !!"
         exit 1
       fi
     done

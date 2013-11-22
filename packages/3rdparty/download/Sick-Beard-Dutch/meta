@@ -20,7 +20,7 @@
 ################################################################################
 
 PKG_NAME="Sick-Beard-Dutch"
-PKG_VERSION="9031728"
+PKG_VERSION="d05eaa0"
 PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="OSS"

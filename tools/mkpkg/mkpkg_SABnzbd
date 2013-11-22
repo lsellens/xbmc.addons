@@ -3,6 +3,7 @@
 . packages/3rdparty/download/SABnzbd/meta
 cd tools/mkpkg
 
+echo "building $PKG_NAME..."
 echo "getting sources..."
   if [ ! -d build.$PKG_NAME-$PKG_VERSION-src ]; then
     wget $PKG_URL

@@ -1,3 +1,12 @@
+3.2.8
+- update to CouchPotatoServer-b427563
+- update to SickBeard-d05eaa0
+- update to Headphones-8ffd451
+
+3.2.7
+- update to CouchPotatoServer-d764d0f
+- update to SickBeard-6492fe7
+
 3.2.6
 - update to SABnzbd-0.7.16
 - update to SickBeard-9031728

@@ -3,6 +3,7 @@
 . packages/3rdparty/download/Sick-Beard-Dutch/meta
 cd tools/mkpkg
 
+echo "building $PKG_NAME..."
 echo "getting sources..."
   if [ ! -d build.$PKG_NAME.git ]; then
     git clone $PKG_SITE.git build.$PKG_NAME.git

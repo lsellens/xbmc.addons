@@ -20,7 +20,7 @@
 
 PKG_NAME="SickPotatoHead"
 PKG_VERSION="1.2"
-PKG_REV="4"
+PKG_REV="6"
 PKG_ARCH="any"
 PKG_LICENSE="OSS"
 PKG_SITE="http://dl.dropbox.com/u/42265484/repository.lsellens/"$TARGET_ARCH"repository.SickPotatoHead/"

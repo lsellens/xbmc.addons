@@ -1,3 +1,8 @@
+4.3.5
+- update to CouchPotatoServer-b468048
+- bumped required python version to 2.1.0 for gotham
+- bumped required openelec version to 3.0 (frodo)
+
 4.3.4
 - version bump to keep ahead of openelec
 - update to CouchPotatoServer-b427563

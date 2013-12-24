@@ -1,3 +1,6 @@
+3.3.0
+- update to CouchPotatoServer-190e1d2
+
 3.2.9
 - update to CouchPotatoServer-b468048
 - bumped required python version to 2.1.0 for gotham

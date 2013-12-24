@@ -19,8 +19,8 @@
 ################################################################################
 
 PKG_NAME="SABnzbd-Suite-Foreign"
-PKG_VERSION="3.2"
-PKG_REV="9"
+PKG_VERSION="3.3"
+PKG_REV="0"
 PKG_ARCH="any"
 PKG_LICENSE="OSS"
 PKG_SITE="http://www.openelec.tv"

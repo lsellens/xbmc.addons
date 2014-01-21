@@ -1,3 +1,7 @@
+4.3.7
+- update to CouchPotatoServer-2cfff73
+- update to HeadPhones-e879af6
+
 4.3.6
 - update to CouchPotatoServer-190e1d2
 

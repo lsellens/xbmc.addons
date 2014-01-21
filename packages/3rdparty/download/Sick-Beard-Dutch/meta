@@ -20,11 +20,11 @@
 ################################################################################
 
 PKG_NAME="Sick-Beard-Dutch"
-PKG_VERSION="d05eaa0"
+PKG_VERSION="035e818"
 PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="OSS"
-PKG_SITE="http://github.com/schumi2004/Sick-Beard-Dutch"
+PKG_SITE="http://github.com/schumi2004/Sick-Beard"
 PKG_URL="http://dl.dropbox.com/u/42265484/repository.lsellens/devel/${PKG_NAME}-${PKG_VERSION}.tar.xz"
 PKG_DEPENDS="Python Cheetah"
 PKG_BUILD_DEPENDS=""

@@ -10,7 +10,7 @@ echo "getting sources..."
   fi
 
   cd build.$PKG_NAME.git
-    git checkout master
+    git checkout ThePirateBay-Dutch
     git pull
     git checkout $PKG_VERSION
     GIT_REV=`git log -n1 --format=%h`

@@ -1,5 +1,5 @@
 4.3.8
-- update to CouchPotatoServer-b9a724c
+- update to CouchPotatoServer-d7445df
 
 4.3.7
 - update to CouchPotatoServer-2cfff73

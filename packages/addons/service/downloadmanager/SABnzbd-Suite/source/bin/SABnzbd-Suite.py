@@ -57,6 +57,7 @@ pTransmission_Addon_Settings  ='/storage/.xbmc/userdata/addon_data/service.downl
 
 # directories
 pSabNzbdComplete      = '/storage/downloads'
+pSabNzbdCompleteTV    = '/storage/downloads/tvshows'
 pSabNzbdCompleteMov   = '/storage/downloads/movies'
 pSabNzbdCompleteMusic = '/storage/downloads/music'
 pSabNzbdIncomplete    = '/storage/downloads/incomplete'
@@ -77,7 +78,7 @@ headphones            = ['python', os.path.join(pAddon, 'Headphones/Headphones.p
                          '-d', '--datadir', pAddonHome, '--config', pHeadphonesSettings]
 
 # Other stuff
-sabNzbdHost           = '127.0.0.1:8081'
+sabNzbdHost           = 'localhost:8081'
 addonId               = 'service.downloadmanager.SABnzbd-Suite'
 
 # create directories and settings on first launch
@@ -92,6 +93,7 @@ if firstLaunch:
     logging.debug('First launch, creating directories')
     createDir(pAddonHome)
     createDir(pSabNzbdComplete)
+    createDir(pSabNzbdCompleteTV)
     createDir(pSabNzbdCompleteMov)
     createDir(pSabNzbdCompleteMusic)
     createDir(pSabNzbdIncomplete)
@@ -289,7 +291,7 @@ try:
         defaultConfig['misc']['complete_dir']  = pSabNzbdComplete
         servers = {}
         servers['localhost'] = {}
-        servers['localhost']['host']           = '127.0.0.1'
+        servers['localhost']['host']           = 'localhost'
         servers['localhost']['port']           = '119'
         servers['localhost']['enable']         = '0'
         categories = {}
@@ -315,7 +317,7 @@ try:
     autoProcessConfig = ConfigObj(os.path.join(pSabNzbdScripts, 'autoProcessTV.cfg'), create_empty=True)
     defaultConfig = ConfigObj()
     defaultConfig['SickBeard'] = {}
-    defaultConfig['SickBeard']['host']         = '127.0.0.1'
+    defaultConfig['SickBeard']['host']         = 'localhost'
     defaultConfig['SickBeard']['port']         = '8082'
     defaultConfig['SickBeard']['username']     = user
     defaultConfig['SickBeard']['password']     = pwd
@@ -361,7 +363,7 @@ try:
     defaultConfig['SABnzbd'] = {}
     defaultConfig['XBMC'] = {}
     defaultConfig['XBMC']['use_xbmc']          = '1'
-    defaultConfig['XBMC']['xbmc_host']         = '127.0.0.1:' + xbmcPort
+    defaultConfig['XBMC']['xbmc_host']         = 'localhost:' + xbmcPort
     defaultConfig['XBMC']['xbmc_username']     = xbmcUser
     defaultConfig['XBMC']['xbmc_password']     = xbmcPwd
 
@@ -371,8 +373,15 @@ try:
         defaultConfig['SABnzbd']['sab_apikey']     = sabNzbdApiKey
         defaultConfig['SABnzbd']['sab_host']       = 'http://' + sabNzbdHost + '/'
 
+    if 'true' in transauth:
+        defaultConfig['TORRENT'] = {}
+        defaultConfig['TORRENT']['torrent_username']         = transuser
+        defaultConfig['TORRENT']['torrent_password']         = transpwd
+        defaultConfig['TORRENT']['torrent_path']             = pSabNzbdCompleteTV
+        defaultConfig['TORRENT']['torrent_host']             = 'localhost:9091'
+
     if sbfirstLaunch:
-        defaultConfig['General']['metadata_xbmc']         = '1|1|1|1|1|1'
+        defaultConfig['General']['metadata_xbmc_12plus']  = '1|1|1|1|1|1|1|1|1|1'
         defaultConfig['General']['nzb_method']            = 'sabnzbd'
         defaultConfig['General']['keep_processed_dir']    = '0'
         defaultConfig['General']['use_banner']            = '1'
@@ -382,6 +391,8 @@ try:
         defaultConfig['General']['naming_sep_type']       = '1'
         defaultConfig['General']['naming_ep_type']        = '1'
         defaultConfig['General']['root_dirs']             = '0|/storage/tvshows'
+        defaultConfig['General']['naming_custom_abd']     = '0'
+        defaultConfig['General']['naming_abd_pattern']    = '%SN - %A-D - %EN'
         defaultConfig['SABnzbd']['sab_category']          = 'tv'
         # workaround: on first launch, sick beard will always add 
         # 'http://' and trailing '/' on its own
@@ -434,7 +445,7 @@ try:
     defaultConfig['updater']['automatic']        = '0'
     defaultConfig['xbmc'] = {}
     defaultConfig['xbmc']['enabled']             = '1'
-    defaultConfig['xbmc']['host']                = '127.0.0.1:' + xbmcPort
+    defaultConfig['xbmc']['host']                = 'localhost:' + xbmcPort
     defaultConfig['xbmc']['username']            = xbmcUser
     defaultConfig['xbmc']['password']            = xbmcPwd
     defaultConfig['Sabnzbd'] = {}
@@ -450,7 +461,7 @@ try:
         defaultConfig['transmission']['username']         = transuser
         defaultConfig['transmission']['password']         = transpwd
         defaultConfig['transmission']['directory']        = pSabNzbdCompleteMov
-        defaultConfig['transmission']['host']             = '127.0.0.1:9091'
+        defaultConfig['transmission']['host']             = 'localhost:9091'
 
     if cp2firstLaunch:
         defaultConfig['xbmc']['xbmc_update_library']      = '1'
@@ -501,7 +512,7 @@ try:
     defaultConfig['General']['log_dir']                   = pAddonHome + '/logs'
     defaultConfig['XBMC'] = {}
     defaultConfig['XBMC']['xbmc_enabled']                 = '1'
-    defaultConfig['XBMC']['xbmc_host']                    = '127.0.0.1:' + xbmcPort
+    defaultConfig['XBMC']['xbmc_host']                    = 'localhost:' + xbmcPort
     defaultConfig['XBMC']['xbmc_username']                = xbmcUser
     defaultConfig['XBMC']['xbmc_password']                = xbmcPwd
     defaultConfig['SABnzbd'] = {}

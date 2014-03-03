@@ -20,10 +20,10 @@
 
 PKG_NAME="SickPotatoHead"
 PKG_VERSION="1.3"
-PKG_REV="0"
+PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="OSS"
-PKG_SITE="http://dl.dropbox.com/u/42265484/repository.lsellens/"$TARGET_ARCH"repository.SickPotatoHead/"
+PKG_SITE="https://code.google.com/p/repository-lsellens/"
 PKG_URL=""
 PKG_DEPENDS="Python"
 PKG_BUILD_DEPENDS="SickBeard Headphones CouchPotatoServer"

@@ -20,10 +20,10 @@
 
 PKG_NAME="SABnzbd-Suite"
 PKG_VERSION="4.3"
-PKG_REV="8"
+PKG_REV="9"
 PKG_ARCH="any"
 PKG_LICENSE="OSS"
-PKG_SITE="http://www.openelec.tv"
+PKG_SITE="http://code.google.com/p/repository-lsellens/"
 PKG_URL=""
 PKG_DEPENDS="Python"
 PKG_BUILD_DEPENDS="SABnzbd SickBeard Headphones CouchPotatoServer"

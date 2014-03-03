@@ -6,3 +6,4 @@ target
 target/*
 tools/mkpkg/build.*
 tools/mkpkg/build.*/*
+tools/mkpkg/SABnzbd-*

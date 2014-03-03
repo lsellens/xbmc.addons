@@ -1,3 +1,6 @@
+4.3.9
+- Switching SickBeard to mr-orange branch-cea9bd2
+
 4.3.8
 - update to CouchPotatoServer-d7445df
 

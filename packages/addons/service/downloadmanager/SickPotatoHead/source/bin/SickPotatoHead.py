@@ -326,6 +326,12 @@ try:
     defaultConfig['XBMC']['xbmc_username']                = xbmcUser
     defaultConfig['XBMC']['xbmc_password']                = xbmcPwd
 
+    if 'true' in transauth:
+        defaultConfig['Transmission'] = {}
+        defaultConfig['Transmission']['transmission_username'] = transuser
+        defaultConfig['Transmission']['transmission_password'] = transpwd
+        defaultConfig['Transmission']['transmission_host']     = 'http://localhost:9091'
+
     if hpfirstLaunch:
         defaultConfig['XBMC']['xbmc_update']                  = '1'
         defaultConfig['XBMC']['xbmc_notify']                  = '1'
@@ -336,6 +342,10 @@ try:
         defaultConfig['General']['move_files']                = '1'
         defaultConfig['General']['rename_files']              = '1'
         defaultConfig['General']['folder_permissions']        = '0644'
+        defaultConfig['General']['isohunt']                   = '1'
+        defaultConfig['General']['kat']                       = '1'
+        defaultConfig['General']['mininova']                  = '1'
+        defaultConfig['General']['piratebay']                 = '1'
 
     headphonesConfig.merge(defaultConfig)
     headphonesConfig.write()

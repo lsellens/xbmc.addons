@@ -473,6 +473,10 @@ try:
         defaultConfig['xbmc']['xbmc_update_full']         = '1'
         defaultConfig['xbmc']['xbmc_notify_onsnatch']     = '1'
         defaultConfig['xbmc']['xbmc_notify_ondownload']   = '1'
+        defaultConfig['blackhole'] = {}
+        defaultConfig['blackhole']['directory']           = pSabNzbdWatchDir
+        defaultConfig['blackhole']['use_for']             = 'both'
+        defaultConfig['blackhole']['enabled']             = '0'
         defaultConfig['Sabnzbd']['category']              = 'movies'
         defaultConfig['Sabnzbd']['pp_directory']          = pSabNzbdCompleteMov
         defaultConfig['Renamer'] = {}
@@ -527,6 +531,12 @@ try:
         defaultConfig['SABnzbd']['sab_host']           = sabNzbdHost
         defaultConfig['SABnzbd']['sab_username']       = user
         defaultConfig['SABnzbd']['sab_password']       = pwd
+
+    if 'true' in transauth:
+        defaultConfig['Transmission'] = {}
+        defaultConfig['Transmission']['transmission_username'] = transuser
+        defaultConfig['Transmission']['transmission_password'] = transpwd
+        defaultConfig['Transmission']['transmission_host']     = 'http://localhost:9091'
 
     if hpfirstLaunch:
         defaultConfig['SABnzbd']['sab_category']       = 'music'

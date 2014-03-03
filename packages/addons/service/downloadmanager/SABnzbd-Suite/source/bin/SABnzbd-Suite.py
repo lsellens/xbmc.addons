@@ -102,6 +102,10 @@ if firstLaunch:
     shutil.copy(os.path.join(pSickBeardTvScripts,'autoProcessTV.py'), pSabNzbdScripts)
     os.chmod(os.path.join(pSabNzbdScripts,'sabToSickBeard.py'), 0755)
 
+# fix for old installs
+if not os.path.exists(pSabNzbdCompleteTV)
+    createDir(pSabNzbdCompleteTV)
+
 # the settings file already exists if the user set settings before the first launch
 if not os.path.exists(pSuiteSettings):
     shutil.copy(pDefaultSuiteSettings, pSuiteSettings)
@@ -354,12 +358,12 @@ try:
     defaultConfig['General'] = {}
     defaultConfig['General']['launch_browser'] = '0'
     defaultConfig['General']['version_notify'] = '0'
-    defaultConfig['General']['log_dir']        = 'logs'
-    defaultConfig['General']['cache_dir']      = 'sbcache'
     defaultConfig['General']['web_port']       = '8082'
     defaultConfig['General']['web_host']       = host
     defaultConfig['General']['web_username']   = user
     defaultConfig['General']['web_password']   = pwd
+    defaultConfig['General']['cache_dir']      = pAddonHome + '/sbcache'
+    defaultConfig['General']['log_dir']        = pAddonHome + '/logs'
     defaultConfig['SABnzbd'] = {}
     defaultConfig['XBMC'] = {}
     defaultConfig['XBMC']['use_xbmc']          = '1'
@@ -381,7 +385,8 @@ try:
         defaultConfig['TORRENT']['torrent_host']             = 'localhost:9091'
 
     if sbfirstLaunch:
-        defaultConfig['General']['metadata_xbmc_12plus']  = '1|1|1|1|1|1|1|1|1|1'
+        defaultConfig['General']['tv_download_dir']       = pSabNzbdComplete
+        defaultConfig['General']['metadata_xbmc_12plus']  = '0|0|0|0|0|0|0|0|0|0'
         defaultConfig['General']['nzb_method']            = 'sabnzbd'
         defaultConfig['General']['keep_processed_dir']    = '0'
         defaultConfig['General']['use_banner']            = '1'
@@ -529,7 +534,7 @@ try:
         defaultConfig['XBMC']['xbmc_notify']           = '1'
         defaultConfig['General']['music_dir']          = '/storage/music'
         defaultConfig['General']['destination_dir']    = '/storage/music'
-        defaultConfig['General']['download_dir']       = '/storage/downloads/music'
+        defaultConfig['General']['download_dir']       = pSabNzbdCompleteMusic
         defaultConfig['General']['move_files']         = '1'
         defaultConfig['General']['rename_files']       = '1'
         defaultConfig['General']['folder_permissions'] = '0644'

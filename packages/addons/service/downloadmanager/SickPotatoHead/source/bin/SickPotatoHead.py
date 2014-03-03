@@ -47,6 +47,7 @@ pTransmission_Addon_Settings  ='/storage/.xbmc/userdata/addon_data/service.downl
 
 # directories
 pSickPotatoHeadComplete       = '/storage/downloads'
+pSickPotatoHeadCompleteTV     = '/storage/downloads/tvshows'
 pSickPotatoHeadCompleteMov    = '/storage/downloads/movies'
 pSickPotatoHeadWatchDir       = '/storage/downloads/watch'
 
@@ -67,8 +68,13 @@ hpfirstLaunch = not os.path.exists(pHeadphonesSettings)
 if sbfirstLaunch or cpfirstLaunch or hpfirstLaunch:
     createDir(pAddonHome)
     createDir(pSickPotatoHeadComplete)
+    createDir(pSickPotatoHeadCompleteTV)
     createDir(pSickPotatoHeadCompleteMov)
     createDir(pSickPotatoHeadWatchDir)
+
+# fix for old installs
+if not os.path.exists(pSabNzbdCompleteTV)
+    createDir(pSabNzbdCompleteTV)
 
 # create the settings file if missing
 if not os.path.exists(pSuiteSettings):
@@ -168,13 +174,20 @@ try:
     defaultConfig['General']['log_dir']             = pAddonHome + '/logs'
     defaultConfig['XBMC'] = {}
     defaultConfig['XBMC']['use_xbmc']               = '1'
-    defaultConfig['XBMC']['xbmc_host']              = '127.0.0.1:' + xbmcPort
+    defaultConfig['XBMC']['xbmc_host']              = 'localhost:' + xbmcPort
     defaultConfig['XBMC']['xbmc_username']          = xbmcUser
     defaultConfig['XBMC']['xbmc_password']          = xbmcPwd
 
+    if 'true' in transauth:
+        defaultConfig['TORRENT'] = {}
+        defaultConfig['TORRENT']['torrent_username']         = transuser
+        defaultConfig['TORRENT']['torrent_password']         = transpwd
+        defaultConfig['TORRENT']['torrent_path']             = pSabNzbdCompleteTV
+        defaultConfig['TORRENT']['torrent_host']             = 'localhost:9091'
+
     if sbfirstLaunch:
         defaultConfig['General']['tv_download_dir']       = pSickPotatoHeadComplete
-        defaultConfig['General']['metadata_xbmc']         = '0|0|0|0|0|0'
+        defaultConfig['General']['metadata_xbmc_12plus']  = '0|0|0|0|0|0|0|0|0|0'
         defaultConfig['General']['keep_processed_dir']    = '0'
         defaultConfig['General']['use_banner']            = '1'
         defaultConfig['General']['rename_episodes']       = '1'
@@ -183,10 +196,18 @@ try:
         defaultConfig['General']['naming_sep_type']       = '1'
         defaultConfig['General']['naming_ep_type']        = '1'
         defaultConfig['General']['root_dirs']             = '0|/storage/tvshows'
+        defaultConfig['General']['naming_custom_abd']     = '0'
+        defaultConfig['General']['naming_abd_pattern']    = '%SN - %A-D - %EN'
         defaultConfig['Blackhole'] = {}
         defaultConfig['Blackhole']['torrent_dir']         = pSickPotatoHeadWatchDir
         defaultConfig['EZRSS'] = {}
         defaultConfig['EZRSS']['ezrss']                   = '1'
+        defaultConfig['PUBLICHD'] = {}
+        defaultConfig['PUBLICHD']['publichd']             = '1'
+        defaultConfig['KAT'] = {}
+        defaultConfig['KAT']['kat']                       = '1'
+        defaultConfig['THEPIRATEBAY'] = {}
+        defaultConfig['THEPIRATEBAY']['thepiratebay']     = '1'
         defaultConfig['Womble'] = {}
         defaultConfig['Womble']['womble']                 = '0'
         defaultConfig['XBMC']['xbmc_notify_ondownload']   = '1'
@@ -236,7 +257,7 @@ try:
     defaultConfig['updater']['automatic']           = '0'
     defaultConfig['xbmc'] = {}
     defaultConfig['xbmc']['enabled']                = '1'
-    defaultConfig['xbmc']['host']                   = '127.0.0.1:' + xbmcPort
+    defaultConfig['xbmc']['host']                   = 'localhost:' + xbmcPort
     defaultConfig['xbmc']['username']               = xbmcUser
     defaultConfig['xbmc']['password']               = xbmcPwd
 
@@ -245,7 +266,7 @@ try:
         defaultConfig['transmission']['username']         = transuser
         defaultConfig['transmission']['password']         = transpwd
         defaultConfig['transmission']['directory']        = pSickPotatoHeadCompleteMov
-        defaultConfig['transmission']['host']             = '127.0.0.1:9091'
+        defaultConfig['transmission']['host']             = 'localhost:9091'
 
     if cpfirstLaunch:
         defaultConfig['xbmc']['xbmc_update_library']      = '1'
@@ -301,16 +322,18 @@ try:
     defaultConfig['General']['log_dir']                   = pAddonHome + '/logs'
     defaultConfig['XBMC'] = {}
     defaultConfig['XBMC']['xbmc_enabled']                 = '1'
-    defaultConfig['XBMC']['xbmc_host']                    = '127.0.0.1:' + xbmcPort
+    defaultConfig['XBMC']['xbmc_host']                    = 'localhost:' + xbmcPort
     defaultConfig['XBMC']['xbmc_username']                = xbmcUser
     defaultConfig['XBMC']['xbmc_password']                = xbmcPwd
 
     if hpfirstLaunch:
         defaultConfig['XBMC']['xbmc_update']                  = '1'
         defaultConfig['XBMC']['xbmc_notify']                  = '1'
+        defaultConfig['General']['music_dir']                 = '/storage/music'
+        defaultConfig['General']['destination_dir']           = '/storage/music'
         defaultConfig['General']['torrentblackhole_dir']      = pSickPotatoHeadWatchDir
         defaultConfig['General']['download_torrent_dir']      = pSickPotatoHeadComplete
-        defaultConfig['General']['move_files']                = '0'
+        defaultConfig['General']['move_files']                = '1'
         defaultConfig['General']['rename_files']              = '1'
         defaultConfig['General']['folder_permissions']        = '0644'
 

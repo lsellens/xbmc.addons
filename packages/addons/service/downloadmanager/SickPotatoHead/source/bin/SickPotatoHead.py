@@ -142,6 +142,8 @@ parch                         = platform.machine()
 pnamemapper                   = os.path.join(pPylib, 'Cheetah/_namemapper.so')
 petree                        = os.path.join(pPylib, 'lxml/etree.so')
 pobjectify                    = os.path.join(pPylib, 'lxml/objectify.so')
+punrar                        = os.path.join(pAddon, 'bin/unrar')
+
 logging.debug(parch + ' architecture detected')
 
 if parch.startswith('arm'):
@@ -172,6 +174,16 @@ if not os.path.exists(pobjectify):
         logging.debug('Copied objectify.so for ' + parch)
     except Exception,e:
         logging.error('Error Copying objectify.so for ' + parch)
+        logging.exception(e)
+
+if not os.path.exists(punrar):
+    try:
+        funrar                        = os.path.join(pPylib, 'multiarch/unrar.' + parch)
+        shutil.copy(funrar, punrar)
+        os.chmod(punrar, 0755)
+        logging.debug('Copied unrar for ' + parch)
+    except Exception,e:
+        logging.error('Error Copying unrar for ' + parch)
         logging.exception(e)
 
 os.environ['PYTHONPATH']      = str(os.environ.get('PYTHONPATH')) + ':' + pPylib

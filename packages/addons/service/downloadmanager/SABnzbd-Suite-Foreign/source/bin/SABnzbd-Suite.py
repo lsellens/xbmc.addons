@@ -179,6 +179,8 @@ petree                        = os.path.join(pPylib, 'lxml/etree.so')
 pobjectify                    = os.path.join(pPylib, 'lxml/objectify.so')
 pyenc                         = os.path.join(pPylib, '_yenc.so')
 ppar2                         = os.path.join(pAddon, 'bin/par2')
+punrar                        = os.path.join(pAddon, 'bin/unrar')
+punzip                        = os.path.join(pAddon, 'bin/unzip')
 
 logging.debug(parch + ' architecture detected')
 
@@ -256,6 +258,26 @@ if not os.path.exists(ppar2):
         logging.debug('Copied par2 for ' + parch)
     except Exception,e:
         logging.error('Error Copying par2 for ' + parch)
+        logging.exception(e)
+
+if not os.path.exists(punrar):
+    try:
+        funrar                        = os.path.join(pPylib, 'multiarch/unrar.' + parch)
+        shutil.copy(funrar, punrar)
+        os.chmod(punrar, 0755)
+        logging.debug('Copied unrar for ' + parch)
+    except Exception,e:
+        logging.error('Error Copying unrar for ' + parch)
+        logging.exception(e)
+
+if not os.path.exists(punzip):
+    try:
+        funzip                        = os.path.join(pPylib, 'multiarch/unzip.' + parch)
+        shutil.copy(funzip, punzip)
+        os.chmod(punzip, 0755)
+        logging.debug('Copied unzip for ' + parch)
+    except Exception,e:
+        logging.error('Error Copying unzip for ' + parch)
         logging.exception(e)
 
 os.environ['PYTHONPATH'] = str(os.environ.get('PYTHONPATH')) + ':' + pPylib

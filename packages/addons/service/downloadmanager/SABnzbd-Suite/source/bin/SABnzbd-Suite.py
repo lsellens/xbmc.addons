@@ -122,8 +122,13 @@ if os.path.exists(pTransmission_Addon_Settings):
     transuser                          = getAddonSetting(transmission_addon_settings, 'TRANSMISSION_USER')
     transpwd                           = getAddonSetting(transmission_addon_settings, 'TRANSMISSION_PWD')
     transauth                          = getAddonSetting(transmission_addon_settings, 'TRANSMISSION_AUTH')
+    if 'true' in transauth:
+        logging.debug('Transmission Authentication Enabled')
+    else:
+        logging.debug('Transmission Authentication Not Enabled')
 else:
     transauth                          = 'false'
+    logging.debug('Transmission Settings are not present')
 
 # SABnzbd-Suite
 fSuiteSettings = open(pSuiteSettings, 'r')
@@ -177,10 +182,14 @@ pnamemapper                   = os.path.join(pPylib, 'Cheetah/_namemapper.so')
 pssl                          = os.path.join(pPylib, 'OpenSSL/SSL.so')
 prand                         = os.path.join(pPylib, 'OpenSSL/rand.so')
 pcrypto                       = os.path.join(pPylib, 'OpenSSL/crypto.so')
+petree                        = os.path.join(pPylib, 'lxml/etree.so')
+pobjectify                    = os.path.join(pPylib, 'lxml/objectify.so')
 pyenc                         = os.path.join(pPylib, '_yenc.so')
 ppar2                         = os.path.join(pAddon, 'bin/par2')
 punrar                        = os.path.join(pAddon, 'bin/unrar')
 punzip                        = os.path.join(pAddon, 'bin/unzip')
+
+logging.debug(parch + ' architecture detected')
 
 if parch.startswith('arm'):
    parch = 'arm'
@@ -219,6 +228,24 @@ if not os.path.exists(pcrypto):
         logging.debug('Copied crypto.so for ' + parch)
     except Exception,e:
         logging.error('Error Copying crypto.so for ' + parch)
+        logging.exception(e)
+
+if not os.path.exists(petree):
+    try:
+        fetree                        = os.path.join(pPylib, 'multiarch/etree.so.' + parch)
+        shutil.copy(fetree, petree)
+        logging.debug('Copied etree.so for ' + parch)
+    except Exception,e:
+        logging.error('Error Copying etree.so for ' + parch)
+        logging.exception(e)
+
+if not os.path.exists(pobjectify):
+    try:
+        fobjectify                    = os.path.join(pPylib, 'multiarch/objectify.so.' + parch)
+        shutil.copy(fobjectify, pobjectify)
+        logging.debug('Copied objectify.so for ' + parch)
+    except Exception,e:
+        logging.error('Error Copying objectify.so for ' + parch)
         logging.exception(e)
 
 if not os.path.exists(pyenc):
@@ -343,6 +370,7 @@ try:
         logging.debug('SABnzbd api key: ' + sabNzbdApiKey)
         if firstLaunch and "false" in sabnzbd_launch:
             urllib2.urlopen('http://' + sabNzbdHost + '/api?mode=shutdown&apikey=' + sabNzbdApiKey)
+            logging.debug('Shutting SABnzbd down...')
 except Exception,e:
     logging.exception(e)
     print 'SABnzbd: exception occurred:', e

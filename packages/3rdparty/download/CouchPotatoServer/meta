@@ -20,7 +20,7 @@
 ################################################################################
 
 PKG_NAME="CouchPotatoServer"
-PKG_VERSION="d7445df"
+PKG_VERSION="c389790"
 PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="OSS"

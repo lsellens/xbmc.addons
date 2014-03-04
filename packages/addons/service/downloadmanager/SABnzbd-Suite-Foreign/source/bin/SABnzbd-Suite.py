@@ -78,7 +78,6 @@ headphones            = ['python', os.path.join(pAddon, 'Headphones/Headphones.p
 
 # Other stuff
 sabNzbdHost           = '127.0.0.1:8081'
-addonId               = 'service.downloadmanager.SABnzbd-Suite-Foreign'
 
 # create directories and settings on first launch
 # -----------------------------------------------
@@ -116,8 +115,13 @@ if os.path.exists(pTransmission_Addon_Settings):
     transuser                          = getAddonSetting(transmission_addon_settings, 'TRANSMISSION_USER')
     transpwd                           = getAddonSetting(transmission_addon_settings, 'TRANSMISSION_PWD')
     transauth                          = getAddonSetting(transmission_addon_settings, 'TRANSMISSION_AUTH')
+    if 'true' in transauth:
+        logging.debug('Transmission Authentication Enabled')
+    else:
+        logging.debug('Transmission Authentication Not Enabled')
 else:
     transauth                          = 'false'
+    logging.debug('Transmission Settings are not present')
 
 # SABnzbd-Suite
 fSuiteSettings = open(pSuiteSettings, 'r')
@@ -171,13 +175,15 @@ pnamemapper                   = os.path.join(pPylib, 'Cheetah/_namemapper.so')
 pssl                          = os.path.join(pPylib, 'OpenSSL/SSL.so')
 prand                         = os.path.join(pPylib, 'OpenSSL/rand.so')
 pcrypto                       = os.path.join(pPylib, 'OpenSSL/crypto.so')
+petree                        = os.path.join(pPylib, 'lxml/etree.so')
+pobjectify                    = os.path.join(pPylib, 'lxml/objectify.so')
 pyenc                         = os.path.join(pPylib, '_yenc.so')
 ppar2                         = os.path.join(pAddon, 'bin/par2')
-punrar                        = os.path.join(pAddon, 'bin/unrar')
-punzip                        = os.path.join(pAddon, 'bin/unzip')
+
+logging.debug(parch + ' architecture detected')
 
 if parch.startswith('arm'):
-   parch = 'arm'
+    parch = 'arm'
 
 if not os.path.exists(pnamemapper):
     try:
@@ -215,6 +221,24 @@ if not os.path.exists(pcrypto):
         logging.error('Error Copying crypto.so for ' + parch)
         logging.exception(e)
 
+if not os.path.exists(petree):
+    try:
+        fetree                        = os.path.join(pPylib, 'multiarch/etree.so.' + parch)
+        shutil.copy(fetree, petree)
+        logging.debug('Copied etree.so for ' + parch)
+    except Exception,e:
+        logging.error('Error Copying etree.so for ' + parch)
+        logging.exception(e)
+
+if not os.path.exists(pobjectify):
+    try:
+        fobjectify                    = os.path.join(pPylib, 'multiarch/objectify.so.' + parch)
+        shutil.copy(fobjectify, pobjectify)
+        logging.debug('Copied objectify.so for ' + parch)
+    except Exception,e:
+        logging.error('Error Copying objectify.so for ' + parch)
+        logging.exception(e)
+
 if not os.path.exists(pyenc):
     try:
         fyenc                         = os.path.join(pPylib, 'multiarch/_yenc.so.' + parch)
@@ -232,26 +256,6 @@ if not os.path.exists(ppar2):
         logging.debug('Copied par2 for ' + parch)
     except Exception,e:
         logging.error('Error Copying par2 for ' + parch)
-        logging.exception(e)
-
-if not os.path.exists(punrar):
-    try:
-        funrar                        = os.path.join(pPylib, 'multiarch/unrar.' + parch)
-        shutil.copy(funrar, punrar)
-        os.chmod(punrar, 0755)
-        logging.debug('Copied unrar for ' + parch)
-    except Exception,e:
-        logging.error('Error Copying unrar for ' + parch)
-        logging.exception(e)
-
-if not os.path.exists(punzip):
-    try:
-        funzip                        = os.path.join(pPylib, 'multiarch/unzip.' + parch)
-        shutil.copy(funzip, punzip)
-        os.chmod(punzip, 0755)
-        logging.debug('Copied unzip for ' + parch)
-    except Exception,e:
-        logging.error('Error Copying unzip for ' + parch)
         logging.exception(e)
 
 os.environ['PYTHONPATH'] = str(os.environ.get('PYTHONPATH')) + ':' + pPylib
@@ -289,7 +293,7 @@ try:
         defaultConfig['misc']['complete_dir']  = pSabNzbdComplete
         servers = {}
         servers['localhost'] = {}
-        servers['localhost']['host']           = '127.0.0.1'
+        servers['localhost']['host']           = 'localhost'
         servers['localhost']['port']           = '119'
         servers['localhost']['enable']         = '0'
         categories = {}
@@ -315,7 +319,7 @@ try:
     autoProcessConfig = ConfigObj(os.path.join(pSabNzbdScripts, 'autoProcessTV.cfg'), create_empty=True)
     defaultConfig = ConfigObj()
     defaultConfig['SickBeard'] = {}
-    defaultConfig['SickBeard']['host']         = '127.0.0.1'
+    defaultConfig['SickBeard']['host']         = 'localhost'
     defaultConfig['SickBeard']['port']         = '8082'
     defaultConfig['SickBeard']['username']     = user
     defaultConfig['SickBeard']['password']     = pwd
@@ -337,6 +341,7 @@ try:
         logging.debug('SABnzbd api key: ' + sabNzbdApiKey)
         if firstLaunch and "false" in sabnzbd_launch:
             urllib2.urlopen('http://' + sabNzbdHost + '/api?mode=shutdown&apikey=' + sabNzbdApiKey)
+            logging.debug('Shutting SABnzbd down...')
 except Exception,e:
     logging.exception(e)
     print 'SABnzbd: exception occurred:', e
@@ -352,16 +357,16 @@ try:
     defaultConfig['General'] = {}
     defaultConfig['General']['launch_browser'] = '0'
     defaultConfig['General']['version_notify'] = '0'
-    defaultConfig['General']['log_dir']        = 'logs'
-    defaultConfig['General']['cache_dir']      = 'sbcache'
     defaultConfig['General']['web_port']       = '8082'
     defaultConfig['General']['web_host']       = host
     defaultConfig['General']['web_username']   = user
     defaultConfig['General']['web_password']   = pwd
+    defaultConfig['General']['cache_dir']      = pAddonHome + '/sbcache'
+    defaultConfig['General']['log_dir']        = pAddonHome + '/logs'
     defaultConfig['SABnzbd'] = {}
     defaultConfig['XBMC'] = {}
     defaultConfig['XBMC']['use_xbmc']          = '1'
-    defaultConfig['XBMC']['xbmc_host']         = '127.0.0.1:' + xbmcPort
+    defaultConfig['XBMC']['xbmc_host']         = 'localhost:' + xbmcPort
     defaultConfig['XBMC']['xbmc_username']     = xbmcUser
     defaultConfig['XBMC']['xbmc_password']     = xbmcPwd
 
@@ -371,8 +376,16 @@ try:
         defaultConfig['SABnzbd']['sab_apikey']     = sabNzbdApiKey
         defaultConfig['SABnzbd']['sab_host']       = 'http://' + sabNzbdHost + '/'
 
+    if 'true' in transauth:
+        defaultConfig['TORRENT'] = {}
+        defaultConfig['TORRENT']['torrent_username']         = transuser
+        defaultConfig['TORRENT']['torrent_password']         = transpwd
+        defaultConfig['TORRENT']['torrent_path']             = pSabNzbdCompleteTV
+        defaultConfig['TORRENT']['torrent_host']             = 'http://localhost:9091/'
+
     if sbfirstLaunch:
-        defaultConfig['General']['metadata_xbmc']         = '1|1|1|1|1|1'
+        defaultConfig['General']['tv_download_dir']       = pSabNzbdComplete
+        defaultConfig['General']['metadata_xbmc_12plus']  = '0|0|0|0|0|0|0|0|0|0'
         defaultConfig['General']['nzb_method']            = 'sabnzbd'
         defaultConfig['General']['keep_processed_dir']    = '0'
         defaultConfig['General']['use_banner']            = '1'
@@ -382,6 +395,8 @@ try:
         defaultConfig['General']['naming_sep_type']       = '1'
         defaultConfig['General']['naming_ep_type']        = '1'
         defaultConfig['General']['root_dirs']             = '0|/storage/tvshows'
+        defaultConfig['General']['naming_custom_abd']     = '0'
+        defaultConfig['General']['naming_abd_pattern']    = '%SN - %A-D - %EN'
         defaultConfig['SABnzbd']['sab_category']          = 'tv'
         # workaround: on first launch, sick beard will always add 
         # 'http://' and trailing '/' on its own
@@ -434,7 +449,7 @@ try:
     defaultConfig['updater']['automatic']        = '0'
     defaultConfig['xbmc'] = {}
     defaultConfig['xbmc']['enabled']             = '1'
-    defaultConfig['xbmc']['host']                = '127.0.0.1:' + xbmcPort
+    defaultConfig['xbmc']['host']                = 'localhost:' + xbmcPort
     defaultConfig['xbmc']['username']            = xbmcUser
     defaultConfig['xbmc']['password']            = xbmcPwd
     defaultConfig['Sabnzbd'] = {}
@@ -450,13 +465,17 @@ try:
         defaultConfig['transmission']['username']         = transuser
         defaultConfig['transmission']['password']         = transpwd
         defaultConfig['transmission']['directory']        = pSabNzbdCompleteMov
-        defaultConfig['transmission']['host']             = '127.0.0.1:9091'
+        defaultConfig['transmission']['host']             = 'localhost:9091'
 
     if cp2firstLaunch:
         defaultConfig['xbmc']['xbmc_update_library']      = '1'
         defaultConfig['xbmc']['xbmc_update_full']         = '1'
         defaultConfig['xbmc']['xbmc_notify_onsnatch']     = '1'
         defaultConfig['xbmc']['xbmc_notify_ondownload']   = '1'
+        defaultConfig['blackhole'] = {}
+        defaultConfig['blackhole']['directory']           = pSabNzbdWatchDir
+        defaultConfig['blackhole']['use_for']             = 'both'
+        defaultConfig['blackhole']['enabled']             = '0'
         defaultConfig['Sabnzbd']['category']              = 'movies'
         defaultConfig['Sabnzbd']['pp_directory']          = pSabNzbdCompleteMov
         defaultConfig['Renamer'] = {}
@@ -501,7 +520,7 @@ try:
     defaultConfig['General']['log_dir']                   = pAddonHome + '/logs'
     defaultConfig['XBMC'] = {}
     defaultConfig['XBMC']['xbmc_enabled']                 = '1'
-    defaultConfig['XBMC']['xbmc_host']                    = '127.0.0.1:' + xbmcPort
+    defaultConfig['XBMC']['xbmc_host']                    = 'localhost:' + xbmcPort
     defaultConfig['XBMC']['xbmc_username']                = xbmcUser
     defaultConfig['XBMC']['xbmc_password']                = xbmcPwd
     defaultConfig['SABnzbd'] = {}
@@ -512,13 +531,19 @@ try:
         defaultConfig['SABnzbd']['sab_username']       = user
         defaultConfig['SABnzbd']['sab_password']       = pwd
 
+    if 'true' in transauth:
+        defaultConfig['Transmission'] = {}
+        defaultConfig['Transmission']['transmission_username'] = transuser
+        defaultConfig['Transmission']['transmission_password'] = transpwd
+        defaultConfig['Transmission']['transmission_host']     = 'http://localhost:9091'
+
     if hpfirstLaunch:
         defaultConfig['SABnzbd']['sab_category']       = 'music'
         defaultConfig['XBMC']['xbmc_update']           = '1'
         defaultConfig['XBMC']['xbmc_notify']           = '1'
         defaultConfig['General']['music_dir']          = '/storage/music'
         defaultConfig['General']['destination_dir']    = '/storage/music'
-        defaultConfig['General']['download_dir']       = '/storage/downloads/music'
+        defaultConfig['General']['download_dir']       = pSabNzbdCompleteMusic
         defaultConfig['General']['move_files']         = '1'
         defaultConfig['General']['rename_files']       = '1'
         defaultConfig['General']['folder_permissions'] = '0644'

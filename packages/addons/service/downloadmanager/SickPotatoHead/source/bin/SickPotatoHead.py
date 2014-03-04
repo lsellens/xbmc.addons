@@ -138,21 +138,42 @@ except:
 # prepare execution environment
 # -----------------------------
 signal.signal(signal.SIGCHLD, signal.SIG_DFL)
-pPylib                        = os.path.join(pAddon, 'pylib')
-if "true" in sickbeard_launch:
-    pnamemapper                   = os.path.join(pPylib, 'Cheetah/_namemapper.so')
-    if not os.path.exists(pnamemapper):
-        try:
-            parch                         = platform.machine()
-            if parch.startswith('arm'):
-                parch = 'arm'
-            pmultiarch                    = os.path.join(pPylib, 'multiarch/_namemapper.so.' + parch)
-            shutil.copy(pmultiarch, pnamemapper)
-            logging.debug('Copied _namemapper.so for ' + parch)
-        except Exception,e:
-            logging.error('Error Copying _namemapper.so for ' + parch)
-            logging.exception(e)
-        
+parch                         = platform.machine()
+pnamemapper                   = os.path.join(pPylib, 'Cheetah/_namemapper.so')
+petree                        = os.path.join(pPylib, 'lxml/etree.so')
+pobjectify                    = os.path.join(pPylib, 'lxml/objectify.so')
+logging.debug(parch + ' architecture detected')
+
+if parch.startswith('arm'):
+    parch = 'arm'
+
+if not os.path.exists(pnamemapper):
+    try:
+        fnamemapper                    = os.path.join(pPylib, 'multiarch/_namemapper.so.' + parch)
+        shutil.copy(fnamemapper, pnamemapper)
+        logging.debug('Copied _namemapper.so for ' + parch)
+    except Exception,e:
+        logging.error('Error Copying _namemapper.so for ' + parch)
+        logging.exception(e)
+
+if not os.path.exists(petree):
+    try:
+        fetree                        = os.path.join(pPylib, 'multiarch/etree.so.' + parch)
+        shutil.copy(fetree, petree)
+        logging.debug('Copied etree.so for ' + parch)
+    except Exception,e:
+        logging.error('Error Copying etree.so for ' + parch)
+        logging.exception(e)
+
+if not os.path.exists(pobjectify):
+    try:
+        fobjectify                    = os.path.join(pPylib, 'multiarch/objectify.so.' + parch)
+        shutil.copy(fobjectify, pobjectify)
+        logging.debug('Copied objectify.so for ' + parch)
+    except Exception,e:
+        logging.error('Error Copying objectify.so for ' + parch)
+        logging.exception(e)
+
 os.environ['PYTHONPATH']      = str(os.environ.get('PYTHONPATH')) + ':' + pPylib
 sys.path.append(pPylib)
 from configobj import ConfigObj
@@ -183,7 +204,7 @@ try:
         defaultConfig['TORRENT']['torrent_username']         = transuser
         defaultConfig['TORRENT']['torrent_password']         = transpwd
         defaultConfig['TORRENT']['torrent_path']             = pSabNzbdCompleteTV
-        defaultConfig['TORRENT']['torrent_host']             = 'localhost:9091'
+        defaultConfig['TORRENT']['torrent_host']             = 'http://localhost:9091/'
 
     if sbfirstLaunch:
         defaultConfig['General']['tv_download_dir']       = pSickPotatoHeadComplete

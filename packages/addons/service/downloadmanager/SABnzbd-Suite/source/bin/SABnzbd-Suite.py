@@ -79,7 +79,6 @@ headphones            = ['python', os.path.join(pAddon, 'Headphones/Headphones.p
 
 # Other stuff
 sabNzbdHost           = 'localhost:8081'
-addonId               = 'service.downloadmanager.SABnzbd-Suite'
 
 # create directories and settings on first launch
 # -----------------------------------------------
@@ -190,7 +189,7 @@ ppar2                         = os.path.join(pAddon, 'bin/par2')
 logging.debug(parch + ' architecture detected')
 
 if parch.startswith('arm'):
-   parch = 'arm'
+    parch = 'arm'
 
 if not os.path.exists(pnamemapper):
     try:

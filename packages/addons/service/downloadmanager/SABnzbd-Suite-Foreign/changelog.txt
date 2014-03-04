@@ -1,3 +1,9 @@
+3.3.3
+- update to CouchPotatoServer-c389790
+- added lxml
+- removed unrar, and unzip should be included in OE now
+- several general updates
+
 3.3.2
 - update to CouchPotatoServer-d7445df
 

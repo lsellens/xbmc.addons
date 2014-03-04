@@ -103,7 +103,7 @@ if firstLaunch:
     os.chmod(os.path.join(pSabNzbdScripts,'sabToSickBeard.py'), 0755)
 
 # fix for old installs
-if not os.path.exists(pSabNzbdCompleteTV)
+if not os.path.exists(pSabNzbdCompleteTV):
     createDir(pSabNzbdCompleteTV)
 
 # the settings file already exists if the user set settings before the first launch
@@ -388,7 +388,7 @@ try:
         defaultConfig['TORRENT']['torrent_username']         = transuser
         defaultConfig['TORRENT']['torrent_password']         = transpwd
         defaultConfig['TORRENT']['torrent_path']             = pSabNzbdCompleteTV
-        defaultConfig['TORRENT']['torrent_host']             = 'localhost:9091'
+        defaultConfig['TORRENT']['torrent_host']             = 'http://localhost:9091/'
 
     if sbfirstLaunch:
         defaultConfig['General']['tv_download_dir']       = pSabNzbdComplete

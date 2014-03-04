@@ -1,5 +1,9 @@
 4.3.9
+- update to CouchPotatoServer-c389790
 - Switching SickBeard to mr-orange branch-cea9bd2
+- added lxml
+- removed unrar, and unzip should be included in OE now
+- several general updates
 
 4.3.8
 - update to CouchPotatoServer-d7445df

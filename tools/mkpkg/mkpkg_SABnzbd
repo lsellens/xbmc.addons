@@ -11,23 +11,18 @@ echo "getting sources..."
     tar xzf $PKG_NAME-$PKG_VERSION-src.tar.gz
     mv $PKG_NAME-$PKG_VERSION build.$PKG_NAME-$PKG_VERSION-src
     rm $PKG_NAME-$PKG_VERSION-src.tar.gz
-  fi
-
-echo "cleaning sources..."
-  cp -rf build.$PKG_NAME-$PKG_VERSION-src $PKG_NAME-$PKG_VERSION
-  rm -rf $PKG_NAME-$PKG_VERSION/*.txt $PKG_NAME-$PKG_VERSION/Sample-* $PKG_NAME-$PKG_VERSION/PKG-INFO $PKG_NAME-$PKG_VERSION/licenses
-
-echo "packing sources..."
-  tar cf $PKG_NAME-$PKG_VERSION-src.tar $PKG_NAME-$PKG_VERSION ; gzip -9f $PKG_NAME-$PKG_VERSION-src.tar
-
-echo "remove temporary sourcedir..."
-  rm -rf $PKG_NAME-$PKG_VERSION
+    echo "cleaning sources..."
+      rm -rf build.$PKG_NAME-$PKG_VERSION-src/*.txt build.$PKG_NAME-$PKG_VERSION-src/Sample-* build.$PKG_NAME-$PKG_VERSION/PKG-INFO build.$PKG_NAME-$PKG_VERSION-src/licenses
+    fi
 
 echo "copying to source folder"
-  cd ../../
-  if [ ! -e sources/$PKG_NAME/$PKG_NAME-$PKG_VERSION-src.tar.gz ]; then
-    mkdir -p sources/$PKG_NAME/
-    mv tools/mkpkg/$PKG_NAME-$PKG_VERSION-src.tar.gz sources/$PKG_NAME/
+  if [ ! -e ../../sources/$PKG_NAME/$PKG_NAME-$PKG_VERSION-src.tar.gz ]; then
+    mkdir -p ../../sources/$PKG_NAME/
+    cp -R build.$PKG_NAME-$PKG_VERSION-src $PKG_NAME-$PKG_VERSION
+    tar cf $PKG_NAME-$PKG_VERSION-src.tar $PKG_NAME-$PKG_VERSION ; gzip -9f $PKG_NAME-$PKG_VERSION-src.tar
+    rm -rf $PKG_NAME-$PKG_VERSION
+    mv $PKG_NAME-$PKG_VERSION-src.tar.gz ../../sources/$PKG_NAME/
+    cd ../../
     md5sum -t sources/$PKG_NAME/$PKG_NAME-$PKG_VERSION-src.tar.gz > sources/$PKG_NAME/$PKG_NAME-$PKG_VERSION-src.tar.gz.md5
     echo "$PKG_URL" > sources/$PKG_NAME/$PKG_NAME-$PKG_VERSION-src.tar.gz.url
     echo "done"; else

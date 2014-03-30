@@ -15,7 +15,7 @@ import platform
 logging.basicConfig(filename='/var/log/audo.log',
                     filemode='w',
                     format='%(asctime)s audo: %(message)s',
-                    level=logging.WARNING)
+                    level=logging.DEBUG)
 
 # helper functions
 # ----------------

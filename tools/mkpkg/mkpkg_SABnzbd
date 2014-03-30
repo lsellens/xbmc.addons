@@ -13,7 +13,7 @@ echo "getting sources..."
     rm $PKG_NAME-$PKG_VERSION-src.tar.gz
     echo "cleaning sources..."
       rm -rf build.$PKG_NAME-$PKG_VERSION-src/*.txt build.$PKG_NAME-$PKG_VERSION-src/Sample-* build.$PKG_NAME-$PKG_VERSION/PKG-INFO build.$PKG_NAME-$PKG_VERSION-src/licenses
-    fi
+  fi
 
 echo "copying to source folder"
   if [ ! -e ../../sources/$PKG_NAME/$PKG_NAME-$PKG_VERSION-src.tar.gz ]; then

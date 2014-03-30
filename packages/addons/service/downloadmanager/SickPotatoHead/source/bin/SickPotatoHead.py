@@ -14,7 +14,7 @@ import platform
 logging.basicConfig(filename='/var/log/sickpotatohead.log',
                     filemode='w',
                     format='%(asctime)s SickPotatoHead: %(message)s',
-                    level=logging.WARNING)
+                    level=logging.DEBUG)
 
 # helper functions
 # ----------------

@@ -495,7 +495,6 @@ try:
         defaultConfig['xbmc']['xbmc_notify_onsnatch']     = '1'
         defaultConfig['xbmc']['xbmc_notify_ondownload']   = '1'
         defaultConfig['blackhole'] = {}
-        defaultConfig['blackhole']['directory']           = pSabNzbdWatchDir
         defaultConfig['blackhole']['use_for']             = 'both'
         defaultConfig['blackhole']['enabled']             = '0'
         defaultConfig['Sabnzbd']['category']              = 'movies'

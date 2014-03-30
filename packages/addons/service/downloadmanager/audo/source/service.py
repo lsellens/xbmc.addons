@@ -17,9 +17,6 @@ __cwd__        = __settings__.getAddonInfo('path')
 __start__      = xbmc.translatePath( os.path.join( __cwd__, 'bin', "audo.py") )
 __stop__       = xbmc.translatePath( os.path.join( __cwd__, 'bin', "audo.stop") )
 
-#make binary files executable in addons bin folder
-#subprocess.Popen("chmod -R +x " + __cwd__ + "/bin/*" , shell=True, close_fds=True)
-
 checkInterval  = 240
 timeout        = 20
 wake_times     = ['01:00','03:00','05:00','07:00','09:00','11:00','13:00','15:00','17:00','19:00','21:00','23:00']

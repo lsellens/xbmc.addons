@@ -57,6 +57,7 @@ pTransmission_Addon_Settings  ='/storage/.xbmc/userdata/addon_data/service.downl
 
 # directories
 pSabNzbdComplete      = '/storage/downloads'
+pSabNzbdWatchDir      = '/storage/downloads/watch'
 pSabNzbdCompleteTV    = '/storage/downloads/tvshows'
 pSabNzbdCompleteMov   = '/storage/downloads/movies'
 pSabNzbdCompleteMusic = '/storage/downloads/music'
@@ -92,6 +93,7 @@ if firstLaunch:
     logging.debug('First launch, creating directories')
     createDir(pAddonHome)
     createDir(pSabNzbdComplete)
+    createDir(pSabNzbdWatchDir)
     createDir(pSabNzbdCompleteTV)
     createDir(pSabNzbdCompleteMov)
     createDir(pSabNzbdCompleteMusic)
@@ -425,6 +427,8 @@ try:
         defaultConfig['General']['root_dirs']             = '0|/storage/tvshows'
         defaultConfig['General']['naming_custom_abd']     = '0'
         defaultConfig['General']['naming_abd_pattern']    = '%SN - %A-D - %EN'
+        defaultConfig['Blackhole'] = {}
+        defaultConfig['Blackhole']['torrent_dir']         = pSabNzbdWatchDir
         defaultConfig['SABnzbd']['sab_category']          = 'tv'
         # workaround: on first launch, sick beard will always add 
         # 'http://' and trailing '/' on its own
@@ -501,6 +505,7 @@ try:
         defaultConfig['xbmc']['xbmc_notify_onsnatch']     = '1'
         defaultConfig['xbmc']['xbmc_notify_ondownload']   = '1'
         defaultConfig['blackhole'] = {}
+        defaultConfig['blackhole']['directory']           = pSabNzbdWatchDir
         defaultConfig['blackhole']['use_for']             = 'both'
         defaultConfig['blackhole']['enabled']             = '0'
         defaultConfig['Sabnzbd']['category']              = 'movies'
@@ -565,15 +570,16 @@ try:
         defaultConfig['Transmission']['transmission_host']     = 'http://localhost:9091'
 
     if hpfirstLaunch:
-        defaultConfig['SABnzbd']['sab_category']       = 'music'
-        defaultConfig['XBMC']['xbmc_update']           = '1'
-        defaultConfig['XBMC']['xbmc_notify']           = '1'
-        defaultConfig['General']['music_dir']          = '/storage/music'
-        defaultConfig['General']['destination_dir']    = '/storage/music'
-        defaultConfig['General']['download_dir']       = pSabNzbdCompleteMusic
-        defaultConfig['General']['move_files']         = '1'
-        defaultConfig['General']['rename_files']       = '1'
-        defaultConfig['General']['folder_permissions'] = '0644'
+        defaultConfig['SABnzbd']['sab_category']               = 'music'
+        defaultConfig['XBMC']['xbmc_update']                   = '1'
+        defaultConfig['XBMC']['xbmc_notify']                   = '1'
+        defaultConfig['General']['music_dir']                  = '/storage/music'
+        defaultConfig['General']['destination_dir']            = '/storage/music'
+        defaultConfig['General']['torrentblackhole_dir']       = pSabNzbdWatchDir
+        defaultConfig['General']['download_dir']               = pSabNzbdCompleteMusic
+        defaultConfig['General']['move_files']                 = '1'
+        defaultConfig['General']['rename_files']               = '1'
+        defaultConfig['General']['folder_permissions']         = '0644'
 
     headphonesConfig.merge(defaultConfig)
     headphonesConfig.write()

@@ -11,7 +11,7 @@ PKG_BUILD_DEPENDS="SABnzbd SickBeard Headphones CouchPotatoServer"
 PKG_PRIORITY="optional"
 PKG_SECTION="service/downloadmanager"
 PKG_SHORTDESC="Audo (Automatic Downloader) is a fork of SABnzbd-Suite. SABnzbd-Suite Metapackage which combines SABnzbd, SickBeard, Couchpotato and Headphones in one Addon"
-PKG_LONGDESC="Audo is your adorable little slave buddy who will grab all the music, movies, and TV shows you tell him to! Plus, look at that face!!!"
+PKG_LONGDESC="Audo (Automatic Downloader) is a fork of SABnzbd-Suite. Updated frequently to newest versions of SAB, SB-mr.orange branch, CPv2, and HP."
 
 PKG_IS_ADDON="yes"
 PKG_ADDON_TYPE="xbmc.python.script"

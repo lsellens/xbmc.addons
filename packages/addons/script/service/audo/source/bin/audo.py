@@ -364,8 +364,16 @@ try:
 
         # SABnzbd will only complete the .ini file when we first access the web interface
         if firstLaunch:
-            load_web_interface('http://' + sabNzbdHost, user, pwd)
-            sabNzbdConfig.reload()
+            while True:
+                try:
+                    load_web_interface('http://' + sabNzbdHost, user, pwd)
+                    sabNzbdConfig.reload()
+                    break
+                except urllib.HTTPError, detail:
+                    if detail.errno == 500:
+                        continue
+                    else:
+                        raise
 
         sabNzbdApiKey = sabNzbdConfig['misc']['api_key']
         logging.debug('SABnzbd api key: ' + sabNzbdApiKey)

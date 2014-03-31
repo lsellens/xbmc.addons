@@ -14,16 +14,17 @@ __author__     = "lsellens"
 __url__        = "http://code.google.com/p/repository-lsellens/"
 __settings__   = xbmcaddon.Addon(id='service.downloadmanager.audo')
 __cwd__        = __settings__.getAddonInfo('path')
-__start__      = xbmc.translatePath( os.path.join( __cwd__, 'bin', "audo.py") )
-__stop__       = xbmc.translatePath( os.path.join( __cwd__, 'bin', "audo.stop") )
+__start__      = xbmc.translatePath(os.path.join(__cwd__, 'bin', "audo.py"))
+__stop__       = xbmc.translatePath(os.path.join(__cwd__, 'bin', "audo.stop"))
 
 checkInterval  = 240
 timeout        = 20
-wake_times     = ['01:00','03:00','05:00','07:00','09:00','11:00','13:00','15:00','17:00','19:00','21:00','23:00']
+wake_times     = ['01:00', '03:00', '05:00', '07:00', '09:00', '11:00', '13:00', '15:00', '17:00', '19:00', '21:00',
+                  "23:00"]
 idleTimer      = 0
 
 # Launch audo
-subprocess.call(['python',__start__])
+subprocess.call(['python', __start__])
 
 # check for launching sabnzbd
 sabNzbdLaunch = (__settings__.getSetting('SABNZBD_LAUNCH').lower() == 'true')
@@ -39,14 +40,16 @@ if sabNzbdLaunch:
     sabNzbdApiKey     = sabConfiguration['misc']['api_key']
     sabNzbdUser       = sabConfiguration['misc']['username']
     sabNzbdPass       = sabConfiguration['misc']['password']
-    sabNzbdQueue      = 'http://' + sabNzbdAddress + '/api?mode=queue&output=xml&apikey=' + sabNzbdApiKey + '&ma_username=' + sabNzbdUser + '&ma_password=' + sabNzbdPass
-    sabNzbdHistory    = 'http://' + sabNzbdAddress + '/api?mode=history&output=xml&apikey=' + sabNzbdApiKey + '&ma_username=' + sabNzbdUser + '&ma_password=' + sabNzbdPass
+    sabNzbdQueue      = ['http://' + sabNzbdAddress + '/api?mode=queue&output=xml&apikey=' + sabNzbdApiKey +
+                         '&ma_username=' + sabNzbdUser + '&ma_password=' + sabNzbdPass]
+    sabNzbdHistory    = ['http://' + sabNzbdAddress + '/api?mode=history&output=xml&apikey=' + sabNzbdApiKey +
+                         '&ma_username=' + sabNzbdUser + '&ma_password=' + sabNzbdPass]
     sabNzbdQueueKeywords = ['<status>Downloading</status>', '<status>Fetching</status>', '<priority>Force</priority>']
     sabNzbdHistoryKeywords = ['<status>Repairing</status>', '<status>Verifying</status>', '<status>Extracting</status>']
 
     # start checking SABnzbd for activity and prevent sleeping if necessary
     socket.setdefaulttimeout(timeout)
-    
+
     # perform some initial checks and log essential settings
     shouldKeepAwake = (__settings__.getSetting('SABNZBD_KEEP_AWAKE').lower() == 'true')
     wakePeriodically = (__settings__.getSetting('SABNZBD_PERIODIC_WAKE').lower() == 'true')
@@ -57,7 +60,7 @@ if sabNzbdLaunch:
         xbmc.log('audo: will try to wake system daily at ' + wake_times[wakeHourIdx])
 
 
-while (not xbmc.abortRequested):
+while not xbmc.abortRequested:
 
     if sabNzbdLaunch:
         # reread setting in case it has changed
@@ -72,8 +75,9 @@ while (not xbmc.abortRequested):
             if idleTimer == checkInterval:
                 sabIsActive = False
                 idleTimer = 0
-                req = urllib2.Request(sabNzbdQueue)
-                try: handle = urllib2.urlopen(req)
+                req = urllib2.Request('sabNzbdQueue')
+                try:
+                    handle = urllib2.urlopen(req)
                 except IOError, e:
                     xbmc.log('audo: could not determine SABnzbds queue status', level=xbmc.LOGERROR)
                 else:
@@ -82,8 +86,9 @@ while (not xbmc.abortRequested):
                     if any(x in queue for x in sabNzbdQueueKeywords):
                         sabIsActive = True
 
-                req = urllib2.Request(sabNzbdHistory)
-                try: handle = urllib2.urlopen(req)
+                req = urllib2.Request('sabNzbdHistory')
+                try:
+                    handle = urllib2.urlopen(req)
                 except IOError, e:
                     xbmc.log('audo: could not determine SABnzbds history status', level=xbmc.LOGERROR)
                 else:
@@ -105,7 +110,7 @@ while (not xbmc.abortRequested):
             wakeHour = wakeHourIdx * 2 + 1
             timeOfDay = datetime.time(hour=wakeHour)
             now = datetime.datetime.now()
-            wakeTime = now.combine(now.date(),timeOfDay)
+            wakeTime = now.combine(now.date(), timeOfDay)
             if now.time() > timeOfDay:
                 wakeTime += datetime.timedelta(days=1)
             secondsSinceEpoch = time.mktime(wakeTime.timetuple())

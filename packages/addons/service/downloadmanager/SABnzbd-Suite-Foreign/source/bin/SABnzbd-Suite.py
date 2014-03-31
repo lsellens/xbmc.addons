@@ -15,23 +15,26 @@ import platform
 logging.basicConfig(filename='/var/log/sabnzbd-suite.log',
                     filemode='w',
                     format='%(asctime)s SABnzbd-Suite: %(message)s',
-                    level=logging.WARNING)
+                    level=logging.DEBUG)
 
 # helper functions
 # ----------------
 
-def createDir(dir):
-    if not os.path.isdir(dir):
-        os.makedirs(dir)
 
-def getAddonSetting(doc,id):
+def create_dir(dirname):
+    if not os.path.isdir(dirname):
+        os.makedirs(dirname)
+
+
+def get_addon_setting(doc, ids):
     for element in doc.getElementsByTagName('setting'):
-        if element.getAttribute('id')==id:
+        if element.getAttribute('id') == ids:
             return element.getAttribute('value')
 
-def loadWebInterface(url,user,pwd):
+
+def load_web_interface(url, users, pwds):
     passman = urllib2.HTTPPasswordMgrWithDefaultRealm()
-    passman.add_password(None, url, user, pwd)
+    passman.add_password(None, url, users, pwds)
     authhandler = urllib2.HTTPBasicAuthHandler(passman)
     opener = urllib2.build_opener(authhandler)
     urllib2.install_opener(opener)
@@ -42,8 +45,8 @@ def loadWebInterface(url,user,pwd):
 # ------------------------------------------------------
 
 # addon
-pAddon                = os.path.expanduser('/storage/.xbmc/addons/service.downloadmanager.SABnzbd-Suite-Foreign')
-pAddonHome            = os.path.expanduser('/storage/.xbmc/userdata/addon_data/service.downloadmanager.SABnzbd-Suite-Foreign')
+pAddon         = os.path.expanduser('/storage/.xbmc/addons/service.downloadmanager.SABnzbd-Suite-Foreign')
+pAddonHome     = os.path.expanduser('/storage/.xbmc/userdata/addon_data/service.downloadmanager.SABnzbd-Suite-Foreign')
 
 # settings
 pDefaultSuiteSettings = os.path.join(pAddon, 'settings-default.xml')
@@ -53,10 +56,12 @@ pSabNzbdSettings      = os.path.join(pAddonHome, 'sabnzbd.ini')
 pSickBeardSettings    = os.path.join(pAddonHome, 'sickbeard.ini')
 pCouchPotatoServerSettings  = os.path.join(pAddonHome, 'couchpotatoserver.ini')
 pHeadphonesSettings   = os.path.join(pAddonHome, 'headphones.ini')
-pTransmission_Addon_Settings  ='/storage/.xbmc/userdata/addon_data/service.downloadmanager.transmission/settings.xml'
+pTransmission_Addon_Settings = '/storage/.xbmc/userdata/addon_data/service.downloadmanager.transmission/settings.xml'
 
 # directories
 pSabNzbdComplete      = '/storage/downloads'
+pSabNzbdWatchDir      = '/storage/downloads/watch'
+pSabNzbdCompleteTV    = '/storage/downloads/tvshows'
 pSabNzbdCompleteMov   = '/storage/downloads/movies'
 pSabNzbdCompleteMusic = '/storage/downloads/music'
 pSabNzbdIncomplete    = '/storage/downloads/incomplete'
@@ -68,11 +73,11 @@ pPylib                = os.path.join(pAddon, 'pylib')
 
 # service commands
 sabnzbd               = ['python', os.path.join(pAddon, 'SABnzbd/SABnzbd.py'),
-                         '-d', '-f',  pSabNzbdSettings, '-l 0']
+                         '-d', '-f', pSabNzbdSettings, '-l 0']
 sickBeard             = ['python', os.path.join(pAddon, 'SickBeard/SickBeard.py'),
                          '--daemon', '--datadir', pAddonHome, '--config', pSickBeardSettings]
-couchPotatoServer     = ['python', os.path.join(pAddon, 'CouchPotatoServer/CouchPotato.py'),
-                         '--daemon', '--pid_file', os.path.join(pAddonHome, 'couchpotato.pid'), '--config_file', pCouchPotatoServerSettings]
+couchPotatoServer     = ['python', os.path.join(pAddon, 'CouchPotatoServer/CouchPotato.py'), '--daemon', '--pid_file',
+                         os.path.join(pAddonHome, 'couchpotato.pid'), '--config_file', pCouchPotatoServerSettings]
 headphones            = ['python', os.path.join(pAddon, 'Headphones/Headphones.py'),
                          '-d', '--datadir', pAddonHome, '--config', pHeadphonesSettings]
 
@@ -89,15 +94,21 @@ hpfirstLaunch = not os.path.exists(pHeadphonesSettings)
 
 if firstLaunch:
     logging.debug('First launch, creating directories')
-    createDir(pAddonHome)
-    createDir(pSabNzbdComplete)
-    createDir(pSabNzbdCompleteMov)
-    createDir(pSabNzbdCompleteMusic)
-    createDir(pSabNzbdIncomplete)
-    createDir(pSabNzbdScripts)
-    shutil.copy(os.path.join(pSickBeardTvScripts,'sabToSickBeard.py'), pSabNzbdScripts)
-    shutil.copy(os.path.join(pSickBeardTvScripts,'autoProcessTV.py'), pSabNzbdScripts)
-    os.chmod(os.path.join(pSabNzbdScripts,'sabToSickBeard.py'), 0755)
+    create_dir(pAddonHome)
+    create_dir(pSabNzbdComplete)
+    create_dir(pSabNzbdWatchDir)
+    create_dir(pSabNzbdCompleteTV)
+    create_dir(pSabNzbdCompleteMov)
+    create_dir(pSabNzbdCompleteMusic)
+    create_dir(pSabNzbdIncomplete)
+    create_dir(pSabNzbdScripts)
+    shutil.copy(os.path.join(pSickBeardTvScripts, 'sabToSickBeard.py'), pSabNzbdScripts)
+    shutil.copy(os.path.join(pSickBeardTvScripts, 'autoProcessTV.py'), pSabNzbdScripts)
+    os.chmod(os.path.join(pSabNzbdScripts, 'sabToSickBeard.py'), 0755)
+
+# fix for old installs
+if not os.path.exists(pSabNzbdCompleteTV):
+    create_dir(pSabNzbdCompleteTV)
 
 # the settings file already exists if the user set settings before the first launch
 if not os.path.exists(pSuiteSettings):
@@ -110,12 +121,12 @@ if not os.path.exists(pSuiteSettings):
 if os.path.exists(pTransmission_Addon_Settings):
     fTransmission_Addon_Settings = open(pTransmission_Addon_Settings, 'r')
     data = fTransmission_Addon_Settings.read()
-    fTransmission_Addon_Settings.close
+    fTransmission_Addon_Settings.close()
     transmission_addon_settings = parseString(data)
-    transuser                          = getAddonSetting(transmission_addon_settings, 'TRANSMISSION_USER')
-    transpwd                           = getAddonSetting(transmission_addon_settings, 'TRANSMISSION_PWD')
-    transauth                          = getAddonSetting(transmission_addon_settings, 'TRANSMISSION_AUTH')
-    if 'true' in transauth:
+    transuser                          = get_addon_setting(transmission_addon_settings, 'TRANSMISSION_USER')
+    transpwd                           = get_addon_setting(transmission_addon_settings, 'TRANSMISSION_PWD')
+    transauth                          = get_addon_setting(transmission_addon_settings, 'TRANSMISSION_AUTH')
+    if "true" in transauth:
         logging.debug('Transmission Authentication Enabled')
     else:
         logging.debug('Transmission Authentication Not Enabled')
@@ -126,45 +137,45 @@ else:
 # SABnzbd-Suite
 fSuiteSettings = open(pSuiteSettings, 'r')
 data = fSuiteSettings.read()
-fSuiteSettings.close
+fSuiteSettings.close()
 suiteSettings = parseString(data)
-user                 = getAddonSetting(suiteSettings, 'SABNZBD_USER')
-pwd                  = getAddonSetting(suiteSettings, 'SABNZBD_PWD')
-host                 = getAddonSetting(suiteSettings, 'SABNZBD_IP')
-sabNzbdKeepAwake     = getAddonSetting(suiteSettings, 'SABNZBD_KEEP_AWAKE')
-sabnzbd_launch       = getAddonSetting(suiteSettings, 'SABNZBD_LAUNCH')
-sickbeard_launch     = getAddonSetting(suiteSettings, 'SICKBEARD_LAUNCH')
-couchpotato_launch   = getAddonSetting(suiteSettings, 'COUCHPOTATO_LAUNCH')
-headphones_launch    = getAddonSetting(suiteSettings, 'HEADPHONES_LAUNCH')
+user                 = get_addon_setting(suiteSettings, 'SABNZBD_USER')
+pwd                  = get_addon_setting(suiteSettings, 'SABNZBD_PWD')
+host                 = get_addon_setting(suiteSettings, 'SABNZBD_IP')
+sabNzbdKeepAwake     = get_addon_setting(suiteSettings, 'SABNZBD_KEEP_AWAKE')
+sabnzbd_launch       = get_addon_setting(suiteSettings, 'SABNZBD_LAUNCH')
+sickbeard_launch     = get_addon_setting(suiteSettings, 'SICKBEARD_LAUNCH')
+couchpotato_launch   = get_addon_setting(suiteSettings, 'COUCHPOTATO_LAUNCH')
+headphones_launch    = get_addon_setting(suiteSettings, 'HEADPHONES_LAUNCH')
 
 # merge defaults
 fDefaultSuiteSettings = open(pDefaultSuiteSettings, 'r')
 data = fDefaultSuiteSettings.read()
-fDefaultSuiteSettings.close
+fDefaultSuiteSettings.close()
 DefaultSuiteSettings = parseString(data)
 if not sabnzbd_launch:
-    sabnzbd_launch       = getAddonSetting(DefaultSuiteSettings, 'SABNZBD_LAUNCH')
+    sabnzbd_launch       = get_addon_setting(DefaultSuiteSettings, 'SABNZBD_LAUNCH')
 if not sickbeard_launch:
-    sickbeard_launch     = getAddonSetting(DefaultSuiteSettings, 'SICKBEARD_LAUNCH')
+    sickbeard_launch     = get_addon_setting(DefaultSuiteSettings, 'SICKBEARD_LAUNCH')
 if not couchpotato_launch:
-    couchpotato_launch   = getAddonSetting(DefaultSuiteSettings, 'COUCHPOTATO_LAUNCH')
+    couchpotato_launch   = get_addon_setting(DefaultSuiteSettings, 'COUCHPOTATO_LAUNCH')
 if not headphones_launch:
-    headphones_launch    = getAddonSetting(DefaultSuiteSettings, 'HEADPHONES_LAUNCH')
+    headphones_launch    = get_addon_setting(DefaultSuiteSettings, 'HEADPHONES_LAUNCH')
 
 # XBMC
 fXbmcSettings = open(pXbmcSettings, 'r')
 data = fXbmcSettings.read()
-fXbmcSettings.close
+fXbmcSettings.close()
 xbmcSettings = parseString(data)
 xbmcServices = xbmcSettings.getElementsByTagName('services')[0]
 xbmcPort         = xbmcServices.getElementsByTagName('webserverport')[0].firstChild.data
 try:
     xbmcUser     = xbmcServices.getElementsByTagName('webserverusername')[0].firstChild.data
-except:
+except StandardError:
     xbmcUser = ''
 try:
     xbmcPwd      = xbmcServices.getElementsByTagName('webserverpassword')[0].firstChild.data
-except:
+except StandardError:
     xbmcPwd = ''
 
 # prepare execution environment
@@ -192,7 +203,7 @@ if not os.path.exists(pnamemapper):
         fnamemapper                   = os.path.join(pPylib, 'multiarch/_namemapper.so.' + parch)
         shutil.copy(fnamemapper, pnamemapper)
         logging.debug('Copied _namemapper.so for ' + parch)
-    except Exception,e:
+    except Exception, e:
         logging.error('Error Copying _namemapper.so for ' + parch)
         logging.exception(e)
 
@@ -201,7 +212,7 @@ if not os.path.exists(pssl):
         fssl                          = os.path.join(pPylib, 'multiarch/SSL.so.' + parch)
         shutil.copy(fssl, pssl)
         logging.debug('Copied SSL.so for ' + parch)
-    except Exception,e:
+    except Exception, e:
         logging.error('Error Copying SSL.so for ' + parch)
         logging.exception(e)
 
@@ -210,7 +221,7 @@ if not os.path.exists(prand):
         frand                         = os.path.join(pPylib, 'multiarch/rand.so.' + parch)
         shutil.copy(frand, prand)
         logging.debug('Copied rand.so for ' + parch)
-    except Exception,e:
+    except Exception, e:
         logging.error('Error Copying rand.so for ' + parch)
         logging.exception(e)
 
@@ -219,7 +230,7 @@ if not os.path.exists(pcrypto):
         fcrypto                       = os.path.join(pPylib, 'multiarch/crypto.so.' + parch)
         shutil.copy(fcrypto, pcrypto)
         logging.debug('Copied crypto.so for ' + parch)
-    except Exception,e:
+    except Exception, e:
         logging.error('Error Copying crypto.so for ' + parch)
         logging.exception(e)
 
@@ -228,7 +239,7 @@ if not os.path.exists(petree):
         fetree                        = os.path.join(pPylib, 'multiarch/etree.so.' + parch)
         shutil.copy(fetree, petree)
         logging.debug('Copied etree.so for ' + parch)
-    except Exception,e:
+    except Exception, e:
         logging.error('Error Copying etree.so for ' + parch)
         logging.exception(e)
 
@@ -237,7 +248,7 @@ if not os.path.exists(pobjectify):
         fobjectify                    = os.path.join(pPylib, 'multiarch/objectify.so.' + parch)
         shutil.copy(fobjectify, pobjectify)
         logging.debug('Copied objectify.so for ' + parch)
-    except Exception,e:
+    except Exception, e:
         logging.error('Error Copying objectify.so for ' + parch)
         logging.exception(e)
 
@@ -246,7 +257,7 @@ if not os.path.exists(pyenc):
         fyenc                         = os.path.join(pPylib, 'multiarch/_yenc.so.' + parch)
         shutil.copy(fyenc, pyenc)
         logging.debug('Copied _yenc.so for ' + parch)
-    except Exception,e:
+    except Exception, e:
         logging.error('Error Copying _yenc.so for ' + parch)
         logging.exception(e)
 
@@ -256,7 +267,7 @@ if not os.path.exists(ppar2):
         shutil.copy(fpar2, ppar2)
         os.chmod(ppar2, 0755)
         logging.debug('Copied par2 for ' + parch)
-    except Exception,e:
+    except Exception, e:
         logging.error('Error Copying par2 for ' + parch)
         logging.exception(e)
 
@@ -266,7 +277,7 @@ if not os.path.exists(punrar):
         shutil.copy(funrar, punrar)
         os.chmod(punrar, 0755)
         logging.debug('Copied unrar for ' + parch)
-    except Exception,e:
+    except Exception, e:
         logging.error('Error Copying unrar for ' + parch)
         logging.exception(e)
 
@@ -276,7 +287,7 @@ if not os.path.exists(punzip):
         shutil.copy(funzip, punzip)
         os.chmod(punzip, 0755)
         logging.debug('Copied unzip for ' + parch)
-    except Exception,e:
+    except Exception, e:
         logging.error('Error Copying unzip for ' + parch)
         logging.exception(e)
 
@@ -288,7 +299,7 @@ from configobj import ConfigObj
 try:
     # write SABnzbd settings
     # ----------------------
-    sabNzbdConfig = ConfigObj(pSabNzbdSettings,create_empty=True)
+    sabNzbdConfig = ConfigObj(pSabNzbdSettings, create_empty=True)
     defaultConfig = ConfigObj()
     defaultConfig['misc'] = {}
     defaultConfig['misc']['disable_api_key']   = '0'
@@ -352,19 +363,21 @@ try:
     # ----------------------------------
     if firstLaunch or "true" in sabnzbd_launch:
         logging.debug('Launching SABnzbd...')
-        subprocess.call(sabnzbd,close_fds=True)
+        subprocess.call(sabnzbd, close_fds=True)
         logging.debug('...done')
 
         # SABnzbd will only complete the .ini file when we first access the web interface
         if firstLaunch:
-            loadWebInterface('http://' + sabNzbdHost,user,pwd)
-        sabNzbdConfig.reload()
+            load_web_interface('http://' + sabNzbdHost, user, pwd)
+            sabNzbdConfig.reload()
+
         sabNzbdApiKey = sabNzbdConfig['misc']['api_key']
         logging.debug('SABnzbd api key: ' + sabNzbdApiKey)
+
         if firstLaunch and "false" in sabnzbd_launch:
             urllib2.urlopen('http://' + sabNzbdHost + '/api?mode=shutdown&apikey=' + sabNzbdApiKey)
             logging.debug('Shutting SABnzbd down...')
-except Exception,e:
+except Exception, e:
     logging.exception(e)
     print 'SABnzbd: exception occurred:', e
     print traceback.format_exc()
@@ -374,7 +387,7 @@ except Exception,e:
 try:
     # write SickBeard settings
     # ------------------------
-    sickBeardConfig = ConfigObj(pSickBeardSettings,create_empty=True)
+    sickBeardConfig = ConfigObj(pSickBeardSettings, create_empty=True)
     defaultConfig = ConfigObj()
     defaultConfig['General'] = {}
     defaultConfig['General']['launch_browser'] = '0'
@@ -398,7 +411,7 @@ try:
         defaultConfig['SABnzbd']['sab_apikey']     = sabNzbdApiKey
         defaultConfig['SABnzbd']['sab_host']       = 'http://' + sabNzbdHost + '/'
 
-    if 'true' in transauth:
+    if "true" in transauth:
         defaultConfig['TORRENT'] = {}
         defaultConfig['TORRENT']['torrent_username']         = transuser
         defaultConfig['TORRENT']['torrent_password']         = transpwd
@@ -419,6 +432,8 @@ try:
         defaultConfig['General']['root_dirs']             = '0|/storage/tvshows'
         defaultConfig['General']['naming_custom_abd']     = '0'
         defaultConfig['General']['naming_abd_pattern']    = '%SN - %A-D - %EN'
+        defaultConfig['Blackhole'] = {}
+        defaultConfig['Blackhole']['torrent_dir']         = pSabNzbdWatchDir
         defaultConfig['SABnzbd']['sab_category']          = 'tv'
         # workaround: on first launch, sick beard will always add 
         # 'http://' and trailing '/' on its own
@@ -434,9 +449,9 @@ try:
     # ----------------
     if "true" in sickbeard_launch:
         logging.debug('Launching SickBeard...')
-        subprocess.call(sickBeard,close_fds=True)
+        subprocess.call(sickBeard, close_fds=True)
         logging.debug('...done')
-except Exception,e:
+except Exception, e:
     logging.exception(e)
     print 'SickBeard: exception occurred:', e
     print traceback.format_exc()
@@ -449,11 +464,11 @@ try:
         md5pwd = ''
     else:
         #convert password to md5
-        md5pwd =  hashlib.md5(str(pwd)).hexdigest()
+        md5pwd = hashlib.md5(str(pwd)).hexdigest()
 
     # write CouchPotatoServer settings
     # --------------------------
-    couchPotatoServerConfig = ConfigObj(pCouchPotatoServerSettings,create_empty=True, list_values=False)
+    couchPotatoServerConfig = ConfigObj(pCouchPotatoServerSettings, create_empty=True, list_values=False)
     defaultConfig = ConfigObj()
     defaultConfig['core'] = {}
     defaultConfig['core']['username']            = user
@@ -482,7 +497,7 @@ try:
         defaultConfig['Sabnzbd']['api_key']      = sabNzbdApiKey
         defaultConfig['Sabnzbd']['host']         = sabNzbdHost
 
-    if 'true' in transauth:
+    if "true" in transauth:
         defaultConfig['transmission'] = {}
         defaultConfig['transmission']['username']         = transuser
         defaultConfig['transmission']['password']         = transpwd
@@ -495,6 +510,7 @@ try:
         defaultConfig['xbmc']['xbmc_notify_onsnatch']     = '1'
         defaultConfig['xbmc']['xbmc_notify_ondownload']   = '1'
         defaultConfig['blackhole'] = {}
+        defaultConfig['blackhole']['directory']           = pSabNzbdWatchDir
         defaultConfig['blackhole']['use_for']             = 'both'
         defaultConfig['blackhole']['enabled']             = '0'
         defaultConfig['Sabnzbd']['category']              = 'movies'
@@ -515,9 +531,9 @@ try:
     # ------------------
     if "true" in couchpotato_launch:
         logging.debug('Launching CouchPotatoServer...')
-        subprocess.call(couchPotatoServer,close_fds=True)
+        subprocess.call(couchPotatoServer, close_fds=True)
         logging.debug('...done')
-except Exception,e:
+except Exception, e:
     logging.exception(e)
     print 'CouchPotatoServer: exception occurred:', e
     print traceback.format_exc()
@@ -527,7 +543,7 @@ except Exception,e:
 try:
     # write Headphones settings
     # -------------------------
-    headphonesConfig = ConfigObj(pHeadphonesSettings,create_empty=True)
+    headphonesConfig = ConfigObj(pHeadphonesSettings, create_empty=True)
     defaultConfig = ConfigObj()
     defaultConfig['General'] = {}
     defaultConfig['General']['launch_browser']            = '0'
@@ -552,22 +568,23 @@ try:
         defaultConfig['SABnzbd']['sab_username']       = user
         defaultConfig['SABnzbd']['sab_password']       = pwd
 
-    if 'true' in transauth:
+    if "true" in transauth:
         defaultConfig['Transmission'] = {}
         defaultConfig['Transmission']['transmission_username'] = transuser
         defaultConfig['Transmission']['transmission_password'] = transpwd
         defaultConfig['Transmission']['transmission_host']     = 'http://localhost:9091'
 
     if hpfirstLaunch:
-        defaultConfig['SABnzbd']['sab_category']       = 'music'
-        defaultConfig['XBMC']['xbmc_update']           = '1'
-        defaultConfig['XBMC']['xbmc_notify']           = '1'
-        defaultConfig['General']['music_dir']          = '/storage/music'
-        defaultConfig['General']['destination_dir']    = '/storage/music'
-        defaultConfig['General']['download_dir']       = pSabNzbdCompleteMusic
-        defaultConfig['General']['move_files']         = '1'
-        defaultConfig['General']['rename_files']       = '1'
-        defaultConfig['General']['folder_permissions'] = '0644'
+        defaultConfig['SABnzbd']['sab_category']               = 'music'
+        defaultConfig['XBMC']['xbmc_update']                   = '1'
+        defaultConfig['XBMC']['xbmc_notify']                   = '1'
+        defaultConfig['General']['music_dir']                  = '/storage/music'
+        defaultConfig['General']['destination_dir']            = '/storage/music'
+        defaultConfig['General']['torrentblackhole_dir']       = pSabNzbdWatchDir
+        defaultConfig['General']['download_dir']               = pSabNzbdCompleteMusic
+        defaultConfig['General']['move_files']                 = '1'
+        defaultConfig['General']['rename_files']               = '1'
+        defaultConfig['General']['folder_permissions']         = '0644'
 
     headphonesConfig.merge(defaultConfig)
     headphonesConfig.write()
@@ -576,9 +593,9 @@ try:
     # -----------------
     if "true" in headphones_launch:
         logging.debug('Launching Headphones...')
-        subprocess.call(headphones,close_fds=True)
+        subprocess.call(headphones, close_fds=True)
         logging.debug('...done')
-except Exception,e:
+except Exception, e:
     logging.exception(e)
     print 'Headphones: exception occurred:', e
     print traceback.format_exc()

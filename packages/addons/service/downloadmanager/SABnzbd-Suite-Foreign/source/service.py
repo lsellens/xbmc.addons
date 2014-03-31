@@ -14,19 +14,18 @@ __author__     = "OpenELEC"
 __url__        = "http://www.openelec.tv"
 __settings__   = xbmcaddon.Addon(id='service.downloadmanager.SABnzbd-Suite-Foreign')
 __cwd__        = __settings__.getAddonInfo('path')
-__start__      = xbmc.translatePath( os.path.join( __cwd__, 'bin', "SABnzbd-Suite.py") )
-__stop__       = xbmc.translatePath( os.path.join( __cwd__, 'bin', "SABnzbd-Suite.stop") )
+__start__      = xbmc.translatePath(os.path.join(__cwd__, 'bin', "SABnzbd-Suite.py"))
+__stop__       = xbmc.translatePath(os.path.join(__cwd__, 'bin', "SABnzbd-Suite.stop"))
 
-#make binary files executable in addons bin folder
-#subprocess.Popen("chmod -R +x " + __cwd__ + "/bin/*" , shell=True, close_fds=True)
 
-checkInterval  = 240
-timeout        = 20
-wake_times     = ['01:00','03:00','05:00','07:00','09:00','11:00','13:00','15:00','17:00','19:00','21:00','23:00']
-idleTimer      = 0
+checkInterval = 240
+timeout       = 20
+wake_times    = ['01:00', '03:00', '05:00', '07:00', '09:00', '11:00', '13:00', '15:00', '17:00', '19:00', '21:00',
+                 '23:00']
+idleTimer     = 0
 
 # Launch Suite
-subprocess.call(['python',__start__])
+subprocess.call(['python', __start__])
 
 # check for launching sabnzbd
 sabNzbdLaunch = (__settings__.getSetting('SABNZBD_LAUNCH').lower() == 'true')
@@ -42,8 +41,10 @@ if sabNzbdLaunch:
     sabNzbdApiKey     = sabConfiguration['misc']['api_key']
     sabNzbdUser       = sabConfiguration['misc']['username']
     sabNzbdPass       = sabConfiguration['misc']['password']
-    sabNzbdQueue      = 'http://' + sabNzbdAddress + '/api?mode=queue&output=xml&apikey=' + sabNzbdApiKey + '&ma_username=' + sabNzbdUser + '&ma_password=' + sabNzbdPass
-    sabNzbdHistory    = 'http://' + sabNzbdAddress + '/api?mode=history&output=xml&apikey=' + sabNzbdApiKey + '&ma_username=' + sabNzbdUser + '&ma_password=' + sabNzbdPass
+    sabNzbdQueue      = ['http://' + sabNzbdAddress + '/api?mode=queue&output=xml&apikey=' + sabNzbdApiKey +
+                         '&ma_username=' + sabNzbdUser + '&ma_password=' + sabNzbdPass]
+    sabNzbdHistory    = ['http://' + sabNzbdAddress + '/api?mode=history&output=xml&apikey=' + sabNzbdApiKey +
+                         '&ma_username=' + sabNzbdUser + '&ma_password=' + sabNzbdPass]
     sabNzbdQueueKeywords = ['<status>Downloading</status>', '<status>Fetching</status>', '<priority>Force</priority>']
     sabNzbdHistoryKeywords = ['<status>Repairing</status>', '<status>Verifying</status>', '<status>Extracting</status>']
 
@@ -60,7 +61,7 @@ if sabNzbdLaunch:
         xbmc.log('SABnzbd-Suite: will try to wake system daily at ' + wake_times[wakeHourIdx])
 
 
-while (not xbmc.abortRequested):
+while not xbmc.abortRequested:
 
     if sabNzbdLaunch:
         # reread setting in case it has changed
@@ -76,7 +77,8 @@ while (not xbmc.abortRequested):
                 sabIsActive = False
                 idleTimer = 0
                 req = urllib2.Request(sabNzbdQueue)
-                try: handle = urllib2.urlopen(req)
+                try:
+                    handle = urllib2.urlopen(req)
                 except IOError, e:
                     xbmc.log('SABnzbd-Suite: could not determine SABnzbds queue status', level=xbmc.LOGERROR)
                 else:
@@ -86,7 +88,8 @@ while (not xbmc.abortRequested):
                         sabIsActive = True
 
                 req = urllib2.Request(sabNzbdHistory)
-                try: handle = urllib2.urlopen(req)
+                try:
+                    handle = urllib2.urlopen(req)
                 except IOError, e:
                     xbmc.log('SABnzbd-Suite: could not determine SABnzbds history status', level=xbmc.LOGERROR)
                 else:
@@ -108,7 +111,7 @@ while (not xbmc.abortRequested):
             wakeHour = wakeHourIdx * 2 + 1
             timeOfDay = datetime.time(hour=wakeHour)
             now = datetime.datetime.now()
-            wakeTime = now.combine(now.date(),timeOfDay)
+            wakeTime = now.combine(now.date(), timeOfDay)
             if now.time() > timeOfDay:
                 wakeTime += datetime.timedelta(days=1)
             secondsSinceEpoch = time.mktime(wakeTime.timetuple())

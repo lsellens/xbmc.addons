@@ -19,13 +19,15 @@ logging.basicConfig(filename='/var/log/sickpotatohead.log',
 # helper functions
 # ----------------
 
-def createDir(dir):
-    if not os.path.isdir(dir):
-        os.makedirs(dir)
 
-def getAddonSetting(doc,id):
+def create_dir(dirname):
+    if not os.path.isdir(dirname):
+        os.makedirs(dirname)
+
+
+def get_addon_setting(doc, ids):
     for element in doc.getElementsByTagName('setting'):
-        if element.getAttribute('id')==id:
+        if element.getAttribute('id') == ids:
             return element.getAttribute('value')
 
 
@@ -33,8 +35,8 @@ def getAddonSetting(doc,id):
 # ------------------------------------------------------
 
 # addon
-pAddon                        = os.path.expanduser('/storage/.xbmc/addons/service.downloadmanager.SickPotatoHead')
-pAddonHome                    = os.path.expanduser('/storage/.xbmc/userdata/addon_data/service.downloadmanager.SickPotatoHead')
+pAddon                = os.path.expanduser('/storage/.xbmc/addons/service.downloadmanager.SickPotatoHead')
+pAddonHome            = os.path.expanduser('/storage/.xbmc/userdata/addon_data/service.downloadmanager.SickPotatoHead')
 
 # settings
 pDefaultSuiteSettings         = os.path.join(pAddon, 'settings-default.xml')
@@ -43,7 +45,7 @@ pXbmcSettings                 = '/storage/.xbmc/userdata/guisettings.xml'
 pSickBeardSettings            = os.path.join(pAddonHome, 'sickbeard.ini')
 pCouchPotatoServerSettings    = os.path.join(pAddonHome, 'couchpotatoserver.ini')
 pHeadphonesSettings           = os.path.join(pAddonHome, 'headphones.ini')
-pTransmission_Addon_Settings  ='/storage/.xbmc/userdata/addon_data/service.downloadmanager.transmission/settings.xml'
+pTransmission_Addon_Settings  = '/storage/.xbmc/userdata/addon_data/service.downloadmanager.transmission/settings.xml'
 
 # directories
 pSickPotatoHeadComplete       = '/storage/downloads'
@@ -51,13 +53,16 @@ pSickPotatoHeadCompleteTV     = '/storage/downloads/tvshows'
 pSickPotatoHeadCompleteMov    = '/storage/downloads/movies'
 pSickPotatoHeadWatchDir       = '/storage/downloads/watch'
 
+# pylib
+pPylib                = os.path.join(pAddon, 'pylib')
+
 # service commands
-sickBeard                     = ['python', os.path.join(pAddon, 'SickBeard/SickBeard.py'),
-                                 '--daemon', '--datadir', pAddonHome, '--config', pSickBeardSettings]
-couchPotatoServer             = ['python', os.path.join(pAddon, 'CouchPotatoServer/CouchPotato.py'),
-                                 '--daemon', '--pid_file', os.path.join(pAddonHome, 'couchpotato.pid'), '--config_file', pCouchPotatoServerSettings]
-headphones                    = ['python', os.path.join(pAddon, 'Headphones/Headphones.py'),
-                                 '-d', '--datadir', pAddonHome, '--config', pHeadphonesSettings]
+sickBeard             = ['python', os.path.join(pAddon, 'SickBeard/SickBeard.py'),
+                         '--daemon', '--datadir', pAddonHome, '--config', pSickBeardSettings]
+couchPotatoServer     = ['python', os.path.join(pAddon, 'CouchPotatoServer/CouchPotato.py'), '--daemon', '--pid_file',
+                         os.path.join(pAddonHome, 'couchpotato.pid'), '--config_file', pCouchPotatoServerSettings]
+headphones            = ['python', os.path.join(pAddon, 'Headphones/Headphones.py'),
+                         '-d', '--datadir', pAddonHome, '--config', pHeadphonesSettings]
 
 # create directories and settings if missing
 # -----------------------------------------------
@@ -66,15 +71,15 @@ sbfirstLaunch = not os.path.exists(pSickBeardSettings)
 cpfirstLaunch = not os.path.exists(pCouchPotatoServerSettings)
 hpfirstLaunch = not os.path.exists(pHeadphonesSettings)
 if sbfirstLaunch or cpfirstLaunch or hpfirstLaunch:
-    createDir(pAddonHome)
-    createDir(pSickPotatoHeadComplete)
-    createDir(pSickPotatoHeadCompleteTV)
-    createDir(pSickPotatoHeadCompleteMov)
-    createDir(pSickPotatoHeadWatchDir)
+    create_dir(pAddonHome)
+    create_dir(pSickPotatoHeadComplete)
+    create_dir(pSickPotatoHeadCompleteTV)
+    create_dir(pSickPotatoHeadCompleteMov)
+    create_dir(pSickPotatoHeadWatchDir)
 
 # fix for old installs
-if not os.path.exists(pSabNzbdCompleteTV)
-    createDir(pSabNzbdCompleteTV)
+if not os.path.exists(pSickPotatoHeadCompleteTV):
+    create_dir(pSickPotatoHeadCompleteTV)
 
 # create the settings file if missing
 if not os.path.exists(pSuiteSettings):
@@ -87,52 +92,52 @@ if not os.path.exists(pSuiteSettings):
 if os.path.exists(pTransmission_Addon_Settings):
     fTransmission_Addon_Settings = open(pTransmission_Addon_Settings, 'r')
     data = fTransmission_Addon_Settings.read()
-    fTransmission_Addon_Settings.close
+    fTransmission_Addon_Settings.close()
     transmission_addon_settings = parseString(data)
-    transuser                          = getAddonSetting(transmission_addon_settings, 'TRANSMISSION_USER')
-    transpwd                           = getAddonSetting(transmission_addon_settings, 'TRANSMISSION_PWD')
-    transauth                          = getAddonSetting(transmission_addon_settings, 'TRANSMISSION_AUTH')
+    transuser                          = get_addon_setting(transmission_addon_settings, 'TRANSMISSION_USER')
+    transpwd                           = get_addon_setting(transmission_addon_settings, 'TRANSMISSION_PWD')
+    transauth                          = get_addon_setting(transmission_addon_settings, 'TRANSMISSION_AUTH')
 else:
     transauth                          = 'false'
 
 # SickPotatoHead-Suite
 fSuiteSettings = open(pSuiteSettings, 'r')
 data = fSuiteSettings.read()
-fSuiteSettings.close
+fSuiteSettings.close()
 suiteSettings = parseString(data)
-user                          = getAddonSetting(suiteSettings, 'SICKPOTATOHEAD_USER')
-pwd                           = getAddonSetting(suiteSettings, 'SICKPOTATOHEAD_PWD')
-host                          = getAddonSetting(suiteSettings, 'SICKPOTATOHEAD_IP')
-sickbeard_launch              = getAddonSetting(suiteSettings, 'SICKBEARD_LAUNCH')
-couchpotato_launch            = getAddonSetting(suiteSettings, 'COUCHPOTATO_LAUNCH')
-headphones_launch             = getAddonSetting(suiteSettings, 'HEADPHONES_LAUNCH')
+user                          = get_addon_setting(suiteSettings, 'SICKPOTATOHEAD_USER')
+pwd                           = get_addon_setting(suiteSettings, 'SICKPOTATOHEAD_PWD')
+host                          = get_addon_setting(suiteSettings, 'SICKPOTATOHEAD_IP')
+sickbeard_launch              = get_addon_setting(suiteSettings, 'SICKBEARD_LAUNCH')
+couchpotato_launch            = get_addon_setting(suiteSettings, 'COUCHPOTATO_LAUNCH')
+headphones_launch             = get_addon_setting(suiteSettings, 'HEADPHONES_LAUNCH')
 
 # merge defaults
 fDefaultSuiteSettings         = open(pDefaultSuiteSettings, 'r')
 data = fDefaultSuiteSettings.read()
-fDefaultSuiteSettings.close
+fDefaultSuiteSettings.close()
 DefaultSuiteSettings = parseString(data)
 if not sickbeard_launch:
-    sickbeard_launch          = getAddonSetting(DefaultSuiteSettings, 'SICKBEARD_LAUNCH')
+    sickbeard_launch          = get_addon_setting(DefaultSuiteSettings, 'SICKBEARD_LAUNCH')
 if not couchpotato_launch:
-    couchpotato_launch        = getAddonSetting(DefaultSuiteSettings, 'COUCHPOTATO_LAUNCH')
+    couchpotato_launch        = get_addon_setting(DefaultSuiteSettings, 'COUCHPOTATO_LAUNCH')
 if not headphones_launch:
-    headphones_launch         = getAddonSetting(DefaultSuiteSettings, 'HEADPHONES_LAUNCH')
+    headphones_launch         = get_addon_setting(DefaultSuiteSettings, 'HEADPHONES_LAUNCH')
 
 # XBMC
 fXbmcSettings                 = open(pXbmcSettings, 'r')
 data                          = fXbmcSettings.read()
-fXbmcSettings.close
+fXbmcSettings.close()
 xbmcSettings                  = parseString(data)
 xbmcServices                  = xbmcSettings.getElementsByTagName('services')[0]
 xbmcPort                      = xbmcServices.getElementsByTagName('webserverport')[0].firstChild.data
 try:
     xbmcUser                      = xbmcServices.getElementsByTagName('webserverusername')[0].firstChild.data
-except:
+except StandardError:
     xbmcUser                      = ''
 try:
     xbmcPwd                       = xbmcServices.getElementsByTagName('webserverpassword')[0].firstChild.data
-except:
+except StandardError:
     xbmcPwd                       = ''
 
 # prepare execution environment
@@ -154,7 +159,7 @@ if not os.path.exists(pnamemapper):
         fnamemapper                    = os.path.join(pPylib, 'multiarch/_namemapper.so.' + parch)
         shutil.copy(fnamemapper, pnamemapper)
         logging.debug('Copied _namemapper.so for ' + parch)
-    except Exception,e:
+    except Exception, e:
         logging.error('Error Copying _namemapper.so for ' + parch)
         logging.exception(e)
 
@@ -163,7 +168,7 @@ if not os.path.exists(petree):
         fetree                        = os.path.join(pPylib, 'multiarch/etree.so.' + parch)
         shutil.copy(fetree, petree)
         logging.debug('Copied etree.so for ' + parch)
-    except Exception,e:
+    except Exception, e:
         logging.error('Error Copying etree.so for ' + parch)
         logging.exception(e)
 
@@ -172,7 +177,7 @@ if not os.path.exists(pobjectify):
         fobjectify                    = os.path.join(pPylib, 'multiarch/objectify.so.' + parch)
         shutil.copy(fobjectify, pobjectify)
         logging.debug('Copied objectify.so for ' + parch)
-    except Exception,e:
+    except Exception, e:
         logging.error('Error Copying objectify.so for ' + parch)
         logging.exception(e)
 
@@ -182,7 +187,7 @@ if not os.path.exists(punrar):
         shutil.copy(funrar, punrar)
         os.chmod(punrar, 0755)
         logging.debug('Copied unrar for ' + parch)
-    except Exception,e:
+    except Exception, e:
         logging.error('Error Copying unrar for ' + parch)
         logging.exception(e)
 
@@ -194,7 +199,7 @@ from configobj import ConfigObj
 try:
     # write SickBeard settings
     # ------------------------
-    sickBeardConfig = ConfigObj(pSickBeardSettings,create_empty=True)
+    sickBeardConfig = ConfigObj(pSickBeardSettings, create_empty=True)
     defaultConfig = ConfigObj()
     defaultConfig['General'] = {}
     defaultConfig['General']['launch_browser']      = '0'
@@ -215,7 +220,7 @@ try:
         defaultConfig['TORRENT'] = {}
         defaultConfig['TORRENT']['torrent_username']         = transuser
         defaultConfig['TORRENT']['torrent_password']         = transpwd
-        defaultConfig['TORRENT']['torrent_path']             = pSabNzbdCompleteTV
+        defaultConfig['TORRENT']['torrent_path']             = pSickPotatoHeadCompleteTV
         defaultConfig['TORRENT']['torrent_host']             = 'http://localhost:9091/'
 
     if sbfirstLaunch:
@@ -254,8 +259,8 @@ try:
     # launch SickBeard
     # ----------------
     if "true" in sickbeard_launch:
-        subprocess.call(sickBeard,close_fds=True)
-except Exception,e:
+        subprocess.call(sickBeard, close_fds=True)
+except Exception, e:
     logging.exception(e)
     print 'SickBeard: exception occurred:', e
     print traceback.format_exc()
@@ -268,11 +273,11 @@ try:
         md5pwd = ''
     else:
         #convert password to md5
-        md5pwd =  hashlib.md5(str(pwd)).hexdigest()
+        md5pwd = hashlib.md5(str(pwd)).hexdigest()
 
     # write CouchPotatoServer settings
     # --------------------------
-    couchPotatoServerConfig = ConfigObj(pCouchPotatoServerSettings,create_empty=True, list_values=False)
+    couchPotatoServerConfig = ConfigObj(pCouchPotatoServerSettings, create_empty=True, list_values=False)
     defaultConfig = ConfigObj()
     defaultConfig['core'] = {}
     defaultConfig['core']['username']               = user
@@ -330,8 +335,8 @@ try:
     # launch CouchPotatoServer
     # ------------------
     if "true" in couchpotato_launch:
-        subprocess.call(couchPotatoServer,close_fds=True)
-except Exception,e:
+        subprocess.call(couchPotatoServer, close_fds=True)
+except Exception, e:
     logging.exception(e)
     print 'CouchPotatoServer: exception occurred:', e
     print traceback.format_exc()
@@ -341,7 +346,7 @@ except Exception,e:
 try:
     # write Headphones settings
     # -------------------------
-    headphonesConfig = ConfigObj(pHeadphonesSettings,create_empty=True)
+    headphonesConfig = ConfigObj(pHeadphonesSettings, create_empty=True)
     defaultConfig = ConfigObj()
     defaultConfig['General'] = {}
     defaultConfig['General']['launch_browser']            = '0'
@@ -386,8 +391,8 @@ try:
     # launch Headphones
     # -----------------
     if "true" in headphones_launch:
-        subprocess.call(headphones,close_fds=True)
-except Exception,e:
+        subprocess.call(headphones, close_fds=True)
+except Exception, e:
     logging.exception(e)
     print 'Headphones: exception occurred:', e
     print traceback.format_exc()

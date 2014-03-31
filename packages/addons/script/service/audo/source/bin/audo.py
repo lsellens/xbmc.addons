@@ -32,14 +32,14 @@ def get_addon_setting(doc, ids):
             return element.getAttribute('value')
 
 
-def load_web_interface(url, users, pwds):
-    passman = urllib2.HTTPPasswordMgrWithDefaultRealm()
-    passman.add_password(None, url, users, pwds)
-    authhandler = urllib2.HTTPBasicAuthHandler(passman)
-    opener = urllib2.build_opener(authhandler)
-    urllib2.install_opener(opener)
-    pagehandle = urllib2.urlopen(url)
-    return pagehandle.read()
+#def load_web_interface(url, users, pwds):
+#    passman = urllib2.HTTPPasswordMgrWithDefaultRealm()
+#    passman.add_password(None, url, users, pwds)
+#    authhandler = urllib2.HTTPBasicAuthHandler(passman)
+#    opener = urllib2.build_opener(authhandler)
+#    urllib2.install_opener(opener)
+#    pagehandle = urllib2.urlopen(url)
+#    return pagehandle.read()
 
 # define some things that we're gonna need, mainly paths
 # ------------------------------------------------------
@@ -69,7 +69,7 @@ pSickBeardTvScripts   = os.path.join(pAddon, 'SickBeard/autoProcessTV')
 pSabNzbdScripts       = os.path.join(pAddonHome, 'scripts')
 
 # pylib
-pPylib                = os.path.join(pAddon, 'resource/lib')
+pPylib                = os.path.join(pAddon, 'resources/lib')
 
 # service commands
 sabnzbd               = ['python', os.path.join(pAddon, 'SABnzbd/SABnzbd.py'),
@@ -364,7 +364,8 @@ try:
 
         # SABnzbd will only complete the .ini file when we first access the web interface
         if firstLaunch:
-            load_web_interface('http://' + sabNzbdHost, user, pwd)
+#            load_web_interface('http://' + sabNzbdHost, user, pwd)
+            urllib2.urlopen('http://' + sabNzbdHost + '/api?mode=auth')
             sabNzbdConfig.reload()
 
         sabNzbdApiKey = sabNzbdConfig['misc']['api_key']

@@ -45,8 +45,8 @@ def load_web_interface(url, users, pwds):
 # ------------------------------------------------------
 
 # addon
-pAddon                = os.path.expanduser('/storage/.xbmc/addons/service.downloadmanager.audo')
-pAddonHome            = os.path.expanduser('/storage/.xbmc/userdata/addon_data/service.downloadmanager.audo')
+pAddon                = os.path.expanduser('/storage/.xbmc/addons/script.service.audo')
+pAddonHome            = os.path.expanduser('/storage/.xbmc/userdata/addon_data/script.service.audo')
 
 # settings
 pDefaultSuiteSettings = os.path.join(pAddon, 'settings-default.xml')
@@ -69,7 +69,7 @@ pSickBeardTvScripts   = os.path.join(pAddon, 'SickBeard/autoProcessTV')
 pSabNzbdScripts       = os.path.join(pAddonHome, 'scripts')
 
 # pylib
-pPylib                = os.path.join(pAddon, 'pylib')
+pPylib                = os.path.join(pAddon, 'resource/lib')
 
 # service commands
 sabnzbd               = ['python', os.path.join(pAddon, 'SABnzbd/SABnzbd.py'),

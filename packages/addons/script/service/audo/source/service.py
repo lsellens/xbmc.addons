@@ -12,7 +12,7 @@ import sys
 __scriptname__ = "audo"
 __author__     = "lsellens"
 __url__        = "http://code.google.com/p/repository-lsellens/"
-__settings__   = xbmcaddon.Addon(id='service.downloadmanager.audo')
+__settings__   = xbmcaddon.Addon(id='script.service.audo')
 __cwd__        = __settings__.getAddonInfo('path')
 __start__      = xbmc.translatePath(os.path.join(__cwd__, 'bin', "audo.py"))
 __stop__       = xbmc.translatePath(os.path.join(__cwd__, 'bin', "audo.stop"))
@@ -29,13 +29,13 @@ subprocess.call(['python', __start__])
 # check for launching sabnzbd
 sabNzbdLaunch = (__settings__.getSetting('SABNZBD_LAUNCH').lower() == 'true')
 
-sys.path.append(os.path.join(__cwd__, 'pylib'))
+sys.path.append(os.path.join(__cwd__, 'resources/lib'))
 from configobj import ConfigObj
 
 if sabNzbdLaunch:
     # SABnzbd addresses and api key
     sabNzbdAddress    = '127.0.0.1:8081'
-    sabNzbdConfigFile = '/storage/.xbmc/userdata/addon_data/service.downloadmanager.audo/sabnzbd.ini'
+    sabNzbdConfigFile = '/storage/.xbmc/userdata/addon_data/script.service.audo/sabnzbd.ini'
     sabConfiguration  = ConfigObj(sabNzbdConfigFile)
     sabNzbdApiKey     = sabConfiguration['misc']['api_key']
     sabNzbdUser       = sabConfiguration['misc']['username']

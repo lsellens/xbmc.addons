@@ -59,6 +59,9 @@ if [ -f $PKG_DIR/addon ]; then
       echo "*** WARNING: It's recommended to have a $PKG_DIR/changelog.txt file ***"
     fi
 
+  ./xbmc-xml2po -s $ADDON_BUILD/$PKG_ADDON_ID
+  rm $ADDON_BUILD/$PKG_ADDON_ID/resources/language/*/strings.xml
+
   cd $ADDON_BUILD
     echo "*** compressing Addon $PKG_ADDON_ID ... ***"
     zip -rq9 $PKG_ADDON_ID-$PKG_VERSION.$PKG_REV.zip $PKG_ADDON_ID;

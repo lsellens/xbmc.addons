@@ -2,7 +2,7 @@
 
 . /etc/profile
 
-ADDON_HOME="$HOME/.xbmc/userdata/addon_data/service.downloadmanager.audo"
+ADDON_HOME="$HOME/.xbmc/userdata/addon_data/script.service.audo"
 ADDON_SETTINGS="$ADDON_HOME/settings.xml"
 RESTART_ON_RESUME=`grep RESTART_ON_RESUME $ADDON_SETTINGS | awk '{print $3}' | sed -e "s,value=,," -e "s,\",,g"`
 
@@ -11,7 +11,7 @@ LOCKFILE="/var/lock/audo.sleep"
 if [ "$RESTART_ON_RESUME" == "true" ] ; then
   case "$1" in
     hibernate|suspend)
-      if [ ! -z "`ps | grep -E 'python.*service.downloadmanager.audo' | awk '{print $1}'`" ] ; then
+      if [ ! -z "`ps | grep -E 'python.*script.service.audo' | awk '{print $1}'`" ] ; then
         progress "Shutting down audo for suspending..."
         audo.stop
         touch $LOCKFILE
@@ -22,7 +22,7 @@ if [ "$RESTART_ON_RESUME" == "true" ] ; then
       progress "Restarting audo for wakeup..."
       if [ -f "$LOCKFILE" ] ; then
         rm -rf "$LOCKFILE"
-        python $HOME/.xbmc/addons/service.downloadmanager.audo/bin/audo.py
+        python $HOME/.xbmc/addons/script.service.audo/bin/audo.py
       fi
       ;;
     *) exit $NA

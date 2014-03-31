@@ -5,8 +5,6 @@
 mkdir -p $ADDON_BUILD/$PKG_ADDON_ID
   cp -PR $PKG_DIR/config/settings.xml* $ADDON_BUILD/$PKG_ADDON_ID/settings-default.xml
 
-mkdir -p $ADDON_BUILD/$PKG_ADDON_ID/pylib
-
 mkdir -p $ADDON_BUILD/$PKG_ADDON_ID/SABnzbd
   cp -PR $BUILD/SABnzbd-*/* $ADDON_BUILD/$PKG_ADDON_ID/SABnzbd
 

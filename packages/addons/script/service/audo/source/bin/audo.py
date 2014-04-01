@@ -365,12 +365,14 @@ try:
                 print 'SABnzbd: exception occurred:', e
                 print traceback.format_exc()
 
+        sabNzbdConfig.reload()
         sabNzbdApiKey = sabNzbdConfig['misc']['api_key']
         logging.debug('SABnzbd api key: ' + sabNzbdApiKey)
 
         if firstLaunch and "false" in sabnzbd_launch:
             urllib2.urlopen('http://' + sabNzbdHost + '/api?mode=shutdown&apikey=' + sabNzbdApiKey)
             logging.debug('Shutting SABnzbd down...')
+
 except Exception, e:
     logging.exception(e)
     print 'SABnzbd: exception occurred:', e

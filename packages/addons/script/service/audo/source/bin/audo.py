@@ -31,16 +31,6 @@ def get_addon_setting(doc, ids):
         if element.getAttribute('id') == ids:
             return element.getAttribute('value')
 
-
-def load_web_interface(url, users, pwds):
-    passman = urllib2.HTTPPasswordMgrWithDefaultRealm()
-    passman.add_password(None, url, users, pwds)
-    authhandler = urllib2.HTTPBasicAuthHandler(passman)
-    opener = urllib2.build_opener(authhandler)
-    urllib2.install_opener(opener)
-    pagehandle = urllib2.urlopen(url)
-    return pagehandle.read()
-
 # define some things that we're gonna need, mainly paths
 # ------------------------------------------------------
 
@@ -364,16 +354,16 @@ try:
 
         # SABnzbd will only complete the .ini file when we first access the web interface
         if firstLaunch:
-            while True:
-                try:
-                    load_web_interface('http://' + sabNzbdHost, user, pwd)
-                    sabNzbdConfig.reload()
-                    break
-                except urllib.HTTPError, detail:
-                    if detail.errno == 500:
-                        continue
-                    else:
-                        raise
+            try:
+                if not (user and pwd):
+                    urllib2.urlopen('http://' + sabNzbdHost)
+                else:
+                    urllib2.urlopen('http://' + sabNzbdHost + '/api?mode=queue&output=xml&ma_username=' + user +
+                                    '&ma_password=' + pwd)
+            except Exception, e:
+                logging.exception(e)
+                print 'SABnzbd: exception occurred:', e
+                print traceback.format_exc()
 
         sabNzbdApiKey = sabNzbdConfig['misc']['api_key']
         logging.debug('SABnzbd api key: ' + sabNzbdApiKey)

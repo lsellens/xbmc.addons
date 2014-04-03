@@ -23,7 +23,7 @@ echo "getting sources..."
      cp -R build.$PKG_NAME.git $PKG_NAME-$GIT_REV
 
     echo "cleaning sources..."
-     rm -rf $PKG_NAME-$GIT_REV/.git* $PKG_NAME-$GIT_REV/init* $PKG_NAME-$GIT_REV/TODO $PKG_NAME-$GIT_REV/README.md $PKG_NAME-$GIT_REV/COPYING $PKG_NAME-$GIT_REV/API_REFERENCE
+     rm -rf $PKG_NAME-$GIT_REV/.git* $PKG_NAME-$GIT_REV/init* $PKG_NAME-$GIT_REV/TODO $PKG_NAME-$GIT_REV/README.md $PKG_NAME-$GIT_REV/COPYING $PKG_NAME-$GIT_REV/API_REFERENCE $PKG_NAME-$GIT_REV/html5lib/tests
 
     echo "packing sources..."
      tar cJf $PKG_NAME-$GIT_REV.tar.xz $PKG_NAME-$GIT_REV

@@ -1,0 +1,31 @@
+#!/bin/sh
+
+. /etc/profile
+
+ADDON_HOME="$HOME/.xbmc/userdata/addon_data/service.filesystem/nfs-server"
+ADDON_SETTINGS="$ADDON_HOME/settings.xml"
+RESTART_ON_RESUME=`grep RESTART_ON_RESUME $ADDON_SETTINGS | awk '{print $3}' | sed -e "s,value=,," -e "s,\",,g"`
+
+LOCKFILE="/var/lock/nfs-server.sleep"
+
+if [ "$RESTART_ON_RESUME" == "true" ] ; then
+  case "$1" in
+    hibernate|suspend)
+      if [ ! -z "`ps | grep -E 'python.*service.filesystem.nfs-server' | awk '{print $1}'`" ] ; then
+        progress "Shutting down nfs-server for suspending..."
+        SABnzbd-Suite.stop
+        touch $LOCKFILE
+      fi
+      ;;
+
+    thaw|resume)
+      progress "Restarting nfs-server for wakeup..."
+      if [ -f "$LOCKFILE" ] ; then
+        rm -rf "$LOCKFILE"
+        python $HOME/.xbmc/addons/service.filesystem.nfs-server/bin/nfs-server.py
+      fi
+      ;;
+    *) exit $NA
+      ;;
+  esac
+fi

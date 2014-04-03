@@ -1,6 +1,6 @@
 1.3.1
-- update to CouchPotatoServer-c389790
-- Switching SickBeard to mr-orange branch-cea9bd2
+- update to CouchPotatoServer-b69f8b7
+- Switching SickBeard to mr-orange branch-09ddc02
 - added lxml
 - several general updates
 

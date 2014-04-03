@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <strings>
-
-	<!-- audo -->
 	<string id="32000">audo</string>
 	<string id="32001">User Settings</string>
 	<string id="32002">Username</string>
@@ -17,5 +15,4 @@
 	<string id="32012">Wake up periodically</string>
 	<string id="32013">Wake up at</string>
         <string id="32014">Restart on suspend / resume</string>
-
 </strings>

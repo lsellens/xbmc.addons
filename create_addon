@@ -59,7 +59,8 @@ if [ -f $PKG_DIR/addon ]; then
       echo "*** WARNING: It's recommended to have a $PKG_DIR/changelog.txt file ***"
     fi
 
-  ./xbmc-xml2po -s $ADDON_BUILD/$PKG_ADDON_ID
+#  ./xbmc-xml2po -s $ADDON_BUILD/$PKG_ADDON_ID
+#  ./xbmc-checkpo -s $ADDON_BUILD/$PKG_ADDON_ID/resources
   rm $ADDON_BUILD/$PKG_ADDON_ID/resources/language/*/strings.xml
 
   cd $ADDON_BUILD

@@ -1,2 +1,7 @@
+1.0.1
+- updated unrar to v5.01
+- fixed issue with SABnzbd prevent idle shutdown
+- added fanart
+
 1.0.0
 - initial version

@@ -34,16 +34,14 @@ from configobj import ConfigObj
 
 if sabNzbdLaunch:
     # SABnzbd addresses and api key
-    sabNzbdAddress    = '127.0.0.1:8081'
+    sabNzbdAddress    = 'localhost:8081'
     sabNzbdConfigFile = '/storage/.xbmc/userdata/addon_data/script.service.audo/sabnzbd.ini'
     sabConfiguration  = ConfigObj(sabNzbdConfigFile)
     sabNzbdApiKey     = sabConfiguration['misc']['api_key']
     sabNzbdUser       = sabConfiguration['misc']['username']
     sabNzbdPass       = sabConfiguration['misc']['password']
-    sabNzbdQueue      = ['http://' + sabNzbdAddress + '/api?mode=queue&output=xml&apikey=' + sabNzbdApiKey +
-                         '&ma_username=' + sabNzbdUser + '&ma_password=' + sabNzbdPass]
-    sabNzbdHistory    = ['http://' + sabNzbdAddress + '/api?mode=history&output=xml&apikey=' + sabNzbdApiKey +
-                         '&ma_username=' + sabNzbdUser + '&ma_password=' + sabNzbdPass]
+    sabNzbdQueue      = ('http://' + sabNzbdAddress + '/api?mode=queue&output=xml&apikey=' + sabNzbdApiKey)
+    sabNzbdHistory    = ('http://' + sabNzbdAddress + '/api?mode=history&output=xml&apikey=' + sabNzbdApiKey)
     sabNzbdQueueKeywords = ['<status>Downloading</status>', '<status>Fetching</status>', '<priority>Force</priority>']
     sabNzbdHistoryKeywords = ['<status>Repairing</status>', '<status>Verifying</status>', '<status>Extracting</status>']
 

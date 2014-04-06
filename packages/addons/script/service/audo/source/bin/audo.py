@@ -257,15 +257,15 @@ if not os.path.exists(ppar2):
         logging.error('Error Copying par2 for ' + parch)
         logging.exception(e)
 
-if not os.path.exists(punrar):
-    try:
-        funrar                        = os.path.join(pPylib, 'multiarch/unrar.' + parch)
-        shutil.copy(funrar, punrar)
-        os.chmod(punrar, 0755)
-        logging.debug('Copied unrar for ' + parch)
-    except Exception, e:
-        logging.error('Error Copying unrar for ' + parch)
-        logging.exception(e)
+#if not os.path.exists(punrar):
+try:
+    funrar                        = os.path.join(pPylib, 'multiarch/unrar.' + parch)
+    shutil.copy(funrar, punrar)
+    os.chmod(punrar, 0755)
+    logging.debug('Copied unrar for ' + parch)
+except Exception, e:
+    logging.error('Error Copying unrar for ' + parch)
+    logging.exception(e)
 
 if not os.path.exists(punzip):
     try:

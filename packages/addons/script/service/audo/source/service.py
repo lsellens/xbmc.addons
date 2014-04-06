@@ -73,7 +73,7 @@ while not xbmc.abortRequested:
             if idleTimer == checkInterval:
                 sabIsActive = False
                 idleTimer = 0
-                req = urllib2.Request('sabNzbdQueue')
+                req = urllib2.Request(sabNzbdQueue)
                 try:
                     handle = urllib2.urlopen(req)
                 except IOError, e:
@@ -84,7 +84,7 @@ while not xbmc.abortRequested:
                     if any(x in queue for x in sabNzbdQueueKeywords):
                         sabIsActive = True
 
-                req = urllib2.Request('sabNzbdHistory')
+                req = urllib2.Request(sabNzbdHistory)
                 try:
                     handle = urllib2.urlopen(req)
                 except IOError, e:

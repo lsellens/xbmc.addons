@@ -1,5 +1,4 @@
 #
-import os
 import subprocess
 import xbmc
 import xbmcaddon
@@ -12,10 +11,11 @@ import sys
 __scriptname__ = "audo"
 __author__     = "lsellens"
 __url__        = "http://code.google.com/p/repository-lsellens/"
-__settings__   = xbmcaddon.Addon(id='script.service.audo')
-__cwd__        = __settings__.getAddonInfo('path')
-__start__      = xbmc.translatePath(os.path.join(__cwd__, 'bin', "audo.py"))
-__stop__       = xbmc.translatePath(os.path.join(__cwd__, 'bin', "audo.stop"))
+__addon__      = xbmcaddon.Addon(id='script.service.audo')
+__cwd__        = __addon__.getAddonInfo('path')
+__addondir__   = __addon__.getAddonInfo('profile')
+__start__      = xbmc.translatePath(__cwd__ + '/bin/audo.py')
+__stop__       = xbmc.translatePath(__cwd__ + '/bin/audo.stop')
 
 checkInterval  = 240
 timeout        = 20
@@ -27,19 +27,17 @@ idleTimer      = 0
 subprocess.call(['python', __start__])
 
 # check for launching sabnzbd
-sabNzbdLaunch = (__settings__.getSetting('SABNZBD_LAUNCH').lower() == 'true')
+sabNzbdLaunch = (__addon__.getSetting('SABNZBD_LAUNCH').lower() == 'true')
 
-sys.path.append(os.path.join(__cwd__, 'resources/lib'))
+sys.path.append(xbmc.translatePath(__cwd__ + '/resources/lib'))
 from configobj import ConfigObj
 
 if sabNzbdLaunch:
     # SABnzbd addresses and api key
-    sabNzbdAddress    = 'localhost:8081'
-    sabNzbdConfigFile = '/storage/.xbmc/userdata/addon_data/script.service.audo/sabnzbd.ini'
+    sabNzbdConfigFile = (xbmc.translatePath(__addondir__ + '/sabnzbd.ini'))
     sabConfiguration  = ConfigObj(sabNzbdConfigFile)
+    sabNzbdAddress    = sabConfiguration['misc']['host']
     sabNzbdApiKey     = sabConfiguration['misc']['api_key']
-    sabNzbdUser       = sabConfiguration['misc']['username']
-    sabNzbdPass       = sabConfiguration['misc']['password']
     sabNzbdQueue      = ('http://' + sabNzbdAddress + '/api?mode=queue&output=xml&apikey=' + sabNzbdApiKey)
     sabNzbdHistory    = ('http://' + sabNzbdAddress + '/api?mode=history&output=xml&apikey=' + sabNzbdApiKey)
     sabNzbdQueueKeywords = ['<status>Downloading</status>', '<status>Fetching</status>', '<priority>Force</priority>']
@@ -49,9 +47,9 @@ if sabNzbdLaunch:
     socket.setdefaulttimeout(timeout)
 
     # perform some initial checks and log essential settings
-    shouldKeepAwake = (__settings__.getSetting('SABNZBD_KEEP_AWAKE').lower() == 'true')
-    wakePeriodically = (__settings__.getSetting('SABNZBD_PERIODIC_WAKE').lower() == 'true')
-    wakeHourIdx = int(__settings__.getSetting('SABNZBD_WAKE_AT'))
+    shouldKeepAwake = (__addon__.getSetting('SABNZBD_KEEP_AWAKE').lower() == 'true')
+    wakePeriodically = (__addon__.getSetting('SABNZBD_PERIODIC_WAKE').lower() == 'true')
+    wakeHourIdx = int(__addon__.getSetting('SABNZBD_WAKE_AT'))
     if shouldKeepAwake:
         xbmc.log('audo: will prevent idle sleep/shutdown while downloading')
     if wakePeriodically:
@@ -62,9 +60,9 @@ while not xbmc.abortRequested:
 
     if sabNzbdLaunch:
         # reread setting in case it has changed
-        shouldKeepAwake = (__settings__.getSetting('SABNZBD_KEEP_AWAKE').lower() == 'true')
-        wakePeriodically = (__settings__.getSetting('SABNZBD_PERIODIC_WAKE').lower() == 'true')
-        wakeHourIdx = int(__settings__.getSetting('SABNZBD_WAKE_AT'))
+        shouldKeepAwake = (__addon__.getSetting('SABNZBD_KEEP_AWAKE').lower() == 'true')
+        wakePeriodically = (__addon__.getSetting('SABNZBD_PERIODIC_WAKE').lower() == 'true')
+        wakeHourIdx = int(__addon__.getSetting('SABNZBD_WAKE_AT'))
 
         # check if SABnzbd is downloading
         if shouldKeepAwake:
@@ -77,7 +75,8 @@ while not xbmc.abortRequested:
                 try:
                     handle = urllib2.urlopen(req)
                 except IOError, e:
-                    xbmc.log('audo: could not determine SABnzbds queue status', level=xbmc.LOGERROR)
+                    xbmc.log('audo: could not determine SABnzbds queue status:', level=xbmc.LOGERROR)
+                    xbmc.log(e, level=xbmc.LOGERROR)
                 else:
                     queue = handle.read()
                     handle.close()
@@ -88,7 +87,8 @@ while not xbmc.abortRequested:
                 try:
                     handle = urllib2.urlopen(req)
                 except IOError, e:
-                    xbmc.log('audo: could not determine SABnzbds history status', level=xbmc.LOGERROR)
+                    xbmc.log('audo: could not determine SABnzbds history status:', level=xbmc.LOGERROR)
+                    xbmc.log(e, level=xbmc.LOGERROR)
                 else:
                     history = handle.read()
                     handle.close()
@@ -98,10 +98,10 @@ while not xbmc.abortRequested:
                 # reset idle timer if queue is downloading/reparing/verifying/extracting
                 if sabIsActive:
                     xbmc.executebuiltin('InhibitIdleShutdown(true)')
-                    xbmc.log('preventing sleep')
+                    xbmc.log('audo: preventing sleep', level=xbmc.LOGDEBUG)
                 else:
                     xbmc.executebuiltin('InhibitIdleShutdown(false)')
-                    xbmc.log('not preventing sleep')
+                    xbmc.log('audo: not preventing sleep', level=xbmc.LOGDEBUG)
 
         # calculate and set the time to wake up at (if any)
         if wakePeriodically:

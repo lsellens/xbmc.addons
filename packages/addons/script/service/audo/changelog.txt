@@ -2,6 +2,7 @@
 - updated unrar to v5.01
 - fixed issue with SABnzbd prevent idle shutdown
 - added fanart
+- reworking audo to run on other OSs then openelec(WIP)
 
 1.0.0
 - initial version

@@ -357,7 +357,8 @@ try:
                     urllib2.urlopen('http://' + sabNzbdHost + '/api?mode=queue&output=xml&ma_username=' + user +
                                     '&ma_password=' + pwd)
             except Exception, e:
-                xbmc.log('AUDO: 'e, level=xbmc.LOGERROR)
+                xbmc.log('AUDO: SABnzbd exception occurred', level=xbmc.LOGERROR)
+                xbmc.log(e, level=xbmc.LOGERROR)
                 print 'SABnzbd: exception occurred:', e
 
         sabNzbdConfig.reload()
@@ -368,7 +369,8 @@ try:
             xbmc.log('AUDO: Shutting SABnzbd down...', level=xbmc.LOGDEBUG)
 
 except Exception, e:
-    xbmc.log('AUDO: 'e, level=xbmc.LOGERROR)
+    xbmc.log('AUDO: SABnzbd exception occurred', level=xbmc.LOGERROR)
+    xbmc.log(e, level=xbmc.LOGERROR)
     print 'SABnzbd: exception occurred:', e
 # SABnzbd end
 
@@ -441,7 +443,8 @@ try:
         subprocess.call(sickBeard, close_fds=True)
         xbmc.log('AUDO: ...done', level=xbmc.LOGDEBUG)
 except Exception, e:
-    xbmc.log('AUDO: 'e, level=xbmc.LOGERROR)
+    xbmc.log('AUDO: SickBeard exception occurred', level=xbmc.LOGERROR)
+    xbmc.log(e, level=xbmc.LOGERROR)
     print 'SickBeard: exception occurred:', e
 # SickBeard end
 
@@ -522,7 +525,8 @@ try:
         subprocess.call(couchPotatoServer, close_fds=True)
         xbmc.log('AUDO: ...done', level=xbmc.LOGDEBUG)
 except Exception, e:
-    xbmc.log('AUDO: 'e, level=xbmc.LOGERROR)
+    xbmc.log('AUDO: CouchPotatoServer exception occurred', level=xbmc.LOGERROR)
+    xbmc.log(e, level=xbmc.LOGERROR)
     print 'CouchPotatoServer: exception occurred:', e
 # CouchPotatoServer end
 
@@ -583,6 +587,7 @@ try:
         subprocess.call(headphones, close_fds=True)
         xbmc.log('AUDO: ...done', level=xbmc.LOGDEBUG)
 except Exception, e:
-    xbmc.log('AUDO: 'e, level=xbmc.LOGERROR)
+    xbmc.log('AUDO: Headphones exception occurred', level=xbmc.LOGERROR)
+    xbmc.log(e, level=xbmc.LOGERROR)
     print 'Headphones: exception occurred:', e
 # Headphones end

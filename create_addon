@@ -73,5 +73,8 @@ if [ -f $PKG_DIR/addon ]; then
     cp $ADDON_BUILD/$PKG_ADDON_ID/addon.xml $TARGET/$ADDONS/$ADDON_VERSION/$PKG_ADDON_ID/addon.xml
     cp $PKG_DIR/changelog.txt $TARGET/$ADDONS/$ADDON_VERSION/$PKG_ADDON_ID/changelog-$PKG_VERSION.$PKG_REV.txt
     cp $PKG_DIR/icon/icon.png $TARGET/$ADDONS/$ADDON_VERSION/$PKG_ADDON_ID/icon.png
+    if [ -f $PKG_DIR/source/fanart.jpg ]; then
+      cp $PKG_DIR/source/fanart.jpg $TARGET/$ADDONS/$ADDON_VERSION/$PKG_ADDON_ID/fanart.jpg
+    fi
 fi
 

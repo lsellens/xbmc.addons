@@ -36,7 +36,7 @@ if sabNzbdLaunch:
     # SABnzbd addresses and api key
     sabNzbdConfigFile = (xbmc.translatePath(__addondir__ + '/sabnzbd.ini'))
     sabConfiguration  = ConfigObj(sabNzbdConfigFile)
-    sabNzbdAddress    = sabConfiguration['misc']['host']
+    sabNzbdAddress    = "localhost:8081"
     sabNzbdApiKey     = sabConfiguration['misc']['api_key']
     sabNzbdQueue      = ('http://' + sabNzbdAddress + '/api?mode=queue&output=xml&apikey=' + sabNzbdApiKey)
     sabNzbdHistory    = ('http://' + sabNzbdAddress + '/api?mode=history&output=xml&apikey=' + sabNzbdApiKey)
@@ -76,7 +76,7 @@ while not xbmc.abortRequested:
                     handle = urllib2.urlopen(req)
                 except IOError, e:
                     xbmc.log('audo: could not determine SABnzbds queue status:', level=xbmc.LOGERROR)
-                    xbmc.log(e, level=xbmc.LOGERROR)
+                    xbmc.log(str(e), level=xbmc.LOGERROR)
                 else:
                     queue = handle.read()
                     handle.close()
@@ -88,7 +88,7 @@ while not xbmc.abortRequested:
                     handle = urllib2.urlopen(req)
                 except IOError, e:
                     xbmc.log('audo: could not determine SABnzbds history status:', level=xbmc.LOGERROR)
-                    xbmc.log(e, level=xbmc.LOGERROR)
+                    xbmc.log(str(e), level=xbmc.LOGERROR)
                 else:
                     history = handle.read()
                     handle.close()

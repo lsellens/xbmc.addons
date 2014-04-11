@@ -4,7 +4,7 @@
        version="@ADDON_VERSION@"
        provider-name="lsellens">
   <requires>
-    <import addon="os.openelec.tv" version="@OS_VERSION@"/>
+    <import addon="xbmc.addon" version="12.0.0"/>
     <import addon="xbmc.python" version="2.1.0"/>
 @REQUIRES@
   </requires>
@@ -18,6 +18,6 @@
   <extension point="xbmc.addon.metadata">
     <summary lang="en">@PKG_SHORTDESC@</summary>
     <description lang="en">@PKG_LONGDESC@</description>
-    <platform>all</platform>
+    <platform>linux</platform>
   </extension>
 </addon>

@@ -2,6 +2,8 @@
 - updated unrar to v5.01
 - fixed issue with SABnzbd prevent idle shutdown
 - added fanart
+- update to HeadPhones-a6532d1
+- update to SickBeard-063a806
 - reworking audo to run on other OSs then openelec(WIP)
 
 1.0.0

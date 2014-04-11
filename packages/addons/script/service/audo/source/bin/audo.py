@@ -9,12 +9,15 @@ import urllib2
 import hashlib
 from xml.dom.minidom import parseString
 import platform
-import xbmc
-import xbmcaddon
+import logging
 
 # helper functions
 # ----------------
 
+logging.basicConfig(filename='/var/log/audo.log',
+                    filemode='w',
+                    format='%(asctime)s audo: %(message)s',
+                    level=logging.DEBUG)
 
 def create_dir(dirname):
     if not os.path.isdir(dirname):
@@ -30,9 +33,8 @@ def get_addon_setting(doc, ids):
 # ------------------------------------------------------
 
 # addon
-addonid               = xbmcaddon.Addon(id='script.service.audo')
-pAddon                = xbmc.translatePath(addonid.getAddonInfo('path'))
-pAddonHome            = xbmc.translatePath(addonid.getAddonInfo('profile'))
+pAddon                = os.path.expanduser('/storage/.xbmc/addons/script.service.audo')
+pAddonHome            = os.path.expanduser('/storage/.xbmc/userdata/addon_data/script.service.audo')
 
 # settings
 pDefaultSuiteSettings = os.path.join(pAddon, 'settings-default.xml')
@@ -79,7 +81,7 @@ cp2firstLaunch = not os.path.exists(pCouchPotatoServerSettings)
 hpfirstLaunch = not os.path.exists(pHeadphonesSettings)
 
 if firstLaunch:
-    xbmc.log('AUDO: First launch, creating directories', level=xbmc.LOGDEBUG)
+    logging.debug('First launch, creating directories')
     create_dir(pAddonHome)
     create_dir(pSabNzbdComplete)
     create_dir(pSabNzbdWatchDir)
@@ -109,12 +111,12 @@ if os.path.exists(pTransmission_Addon_Settings):
     transpwd                           = get_addon_setting(transmission_addon_settings, 'TRANSMISSION_PWD')
     transauth                          = get_addon_setting(transmission_addon_settings, 'TRANSMISSION_AUTH')
     if "true" in transauth:
-        xbmc.log('AUDO: Transmission Authentication Enabled', level=xbmc.LOGDEBUG)
+        logging.debug('Transmission Authentication Enabled')
     else:
-        xbmc.log('AUDO: Transmission Authentication Not Enabled', level=xbmc.LOGDEBUG)
+        logging.debug('Transmission Authentication Not Enabled')
 else:
     transauth                          = 'false'
-    xbmc.log('AUDO: Transmission Settings are not present', level=xbmc.LOGNOTICE)
+    logging.debug('Transmission Settings are not present')
 
 # audo
 fSuiteSettings = open(pSuiteSettings, 'r')
@@ -175,7 +177,7 @@ ppar2                         = os.path.join(pAddon, 'bin/par2')
 punrar                        = os.path.join(pAddon, 'bin/unrar')
 punzip                        = os.path.join(pAddon, 'bin/unzip')
 
-xbmc.log('AUDO: ' + parch + ' architecture detected', level=xbmc.LOGDEBUG)
+logging.debug(parch + ' architecture detected')
 
 if parch.startswith('arm'):
     parch = 'arm'
@@ -184,94 +186,94 @@ if not os.path.exists(pnamemapper):
     try:
         fnamemapper                   = os.path.join(pPylib, 'multiarch/_namemapper.so.' + parch)
         shutil.copy(fnamemapper, pnamemapper)
-        xbmc.log('AUDO: Copied _namemapper.so for ' + parch, level=xbmc.LOGDEBUG)
+        logging.debug('Copied _namemapper.so for ' + parch)
     except Exception, e:
-        xbmc.log('AUDO: Error Copying _namemapper.so for ' + parch, level=xbmc.LOGERROR)
-        xbmc.log(e, level=xbmc.LOGERROR)
+        logging.error('Error Copying _namemapper.so for ' + parch)
+        logging.exception(e)
 
 if not os.path.exists(pssl):
     try:
         fssl                          = os.path.join(pPylib, 'multiarch/SSL.so.' + parch)
         shutil.copy(fssl, pssl)
-        xbmc.log('AUDO: Copied SSL.so for ' + parch, level=xbmc.LOGDEBUG)
+        logging.debug('Copied SSL.so for ' + parch)
     except Exception, e:
-        xbmc.log('AUDO: Error Copying SSL.so for ' + parch, level=xbmc.LOGERROR)
-        xbmc.log(e, level=xbmc.LOGERROR)
+        logging.error('Error Copying SSL.so for ' + parch)
+        logging.exception(e)
 
 if not os.path.exists(prand):
     try:
         frand                         = os.path.join(pPylib, 'multiarch/rand.so.' + parch)
         shutil.copy(frand, prand)
-        xbmc.log('AUDO: Copied rand.so for ' + parch, level=xbmc.LOGDEBUG)
+        logging.debug('Copied rand.so for ' + parch)
     except Exception, e:
-        xbmc.log('AUDO: Error Copying rand.so for ' + parch, level=xbmc.LOGERROR)
-        xbmc.log(e, level=xbmc.LOGERROR)
+        logging.error('Error Copying rand.so for ' + parch)
+        logging.exception(e)
 
 if not os.path.exists(pcrypto):
     try:
         fcrypto                       = os.path.join(pPylib, 'multiarch/crypto.so.' + parch)
         shutil.copy(fcrypto, pcrypto)
-        xbmc.log('AUDO: Copied crypto.so for ' + parch, level=xbmc.LOGDEBUG)
+        logging.debug('Copied crypto.so for ' + parch)
     except Exception, e:
-        xbmc.log('AUDO: Error Copying crypto.so for ' + parch, level=xbmc.LOGERROR)
-        xbmc.log(e, level=xbmc.LOGERROR)
+        logging.error('Error Copying crypto.so for ' + parch)
+        logging.exception(e)
 
 if not os.path.exists(petree):
     try:
         fetree                        = os.path.join(pPylib, 'multiarch/etree.so.' + parch)
         shutil.copy(fetree, petree)
-        xbmc.log('AUDO: Copied etree.so for ' + parch, level=xbmc.LOGDEBUG)
+        logging.debug('Copied etree.so for ' + parch)
     except Exception, e:
-        xbmc.log('AUDO: Error Copying etree.so for ' + parch, level=xbmc.LOGERROR)
-        xbmc.log(e, level=xbmc.LOGERROR)
+        logging.error('Error Copying etree.so for ' + parch)
+        logging.exception(e)
 
 if not os.path.exists(pobjectify):
     try:
         fobjectify                    = os.path.join(pPylib, 'multiarch/objectify.so.' + parch)
         shutil.copy(fobjectify, pobjectify)
-        xbmc.log('AUDO: Copied objectify.so for ' + parch, level=xbmc.LOGDEBUG)
+        logging.debug('Copied objectify.so for ' + parch)
     except Exception, e:
-        xbmc.log('AUDO: Error Copying objectify.so for ' + parch, level=xbmc.LOGERROR)
-        xbmc.log(e, level=xbmc.LOGERROR)
+        logging.error('Error Copying objectify.so for ' + parch)
+        logging.exception(e)
 
 if not os.path.exists(pyenc):
     try:
         fyenc                         = os.path.join(pPylib, 'multiarch/_yenc.so.' + parch)
         shutil.copy(fyenc, pyenc)
-        xbmc.log('AUDO: Copied _yenc.so for ' + parch, level=xbmc.LOGDEBUG)
+        logging.debug('Copied _yenc.so for ' + parch)
     except Exception, e:
-        xbmc.log('AUDO: Error Copying _yenc.so for ' + parch, level=xbmc.LOGERROR)
-        xbmc.log(e, level=xbmc.LOGERROR)
+        logging.error('Error Copying _yenc.so for ' + parch)
+        logging.exception(e)
 
 if not os.path.exists(ppar2):
     try:
         fpar2                         = os.path.join(pPylib, 'multiarch/par2.' + parch)
         shutil.copy(fpar2, ppar2)
         os.chmod(ppar2, 0755)
-        xbmc.log('AUDO: Copied par2 for ' + parch, level=xbmc.LOGDEBUG)
+        logging.debug('Copied par2 for ' + parch)
     except Exception, e:
-        xbmc.log('AUDO: Error Copying par2 for ' + parch, level=xbmc.LOGERROR)
-        xbmc.log(e, level=xbmc.LOGERROR)
+        logging.error('Error Copying par2 for ' + parch)
+        logging.exception(e)
 
 #if not os.path.exists(punrar):
 try:
     funrar                        = os.path.join(pPylib, 'multiarch/unrar.' + parch)
     shutil.copy(funrar, punrar)
     os.chmod(punrar, 0755)
-    xbmc.log('AUDO: Copied unrar for ' + parch, level=xbmc.LOGDEBUG)
+    logging.debug('Copied unrar for ' + parch)
 except Exception, e:
-    xbmc.log('AUDO: Error Copying unrar for ' + parch, level=xbmc.LOGERROR)
-    xbmc.log(e, level=xbmc.LOGERROR)
+    logging.error('Error Copying unrar for ' + parch)
+    logging.exception(e)
 
 if not os.path.exists(punzip):
     try:
         funzip                        = os.path.join(pPylib, 'multiarch/unzip.' + parch)
         shutil.copy(funzip, punzip)
         os.chmod(punzip, 0755)
-        xbmc.log('AUDO: Copied unzip for ' + parch, level=xbmc.LOGDEBUG)
+        logging.debug('Copied unzip for ' + parch)
     except Exception, e:
-        xbmc.log('AUDO: Error Copying unzip for ' + parch, level=xbmc.LOGERROR)
-        xbmc.log(e, level=xbmc.LOGERROR)
+        logging.error('Error Copying unzip for ' + parch)
+        logging.exception(e)
 
 os.environ['PYTHONPATH'] = str(os.environ.get('PYTHONPATH')) + ':' + pPylib
 sys.path.append(pPylib)
@@ -344,9 +346,9 @@ try:
     # launch SABnzbd and get the API key
     # ----------------------------------
     if firstLaunch or "true" in sabnzbd_launch:
-        xbmc.log('AUDO: Launching SABnzbd...', level=xbmc.LOGDEBUG)
+        logging.debug('Launching SABnzbd...')
         subprocess.call(sabnzbd, close_fds=True)
-        xbmc.log('AUDO: ...done', level=xbmc.LOGDEBUG)
+        logging.debug('...done')
 
         # SABnzbd will only complete the .ini file when we first access the web interface
         if firstLaunch:
@@ -357,20 +359,19 @@ try:
                     urllib2.urlopen('http://' + sabNzbdHost + '/api?mode=queue&output=xml&ma_username=' + user +
                                     '&ma_password=' + pwd)
             except Exception, e:
-                xbmc.log('AUDO: SABnzbd exception occurred', level=xbmc.LOGERROR)
-                xbmc.log(e, level=xbmc.LOGERROR)
+                logging.exception(e)
                 print 'SABnzbd: exception occurred:', e
 
         sabNzbdConfig.reload()
         sabNzbdApiKey = sabNzbdConfig['misc']['api_key']
+        logging.debug('SABnzbd api key: ' + sabNzbdApiKey)
 
         if firstLaunch and "false" in sabnzbd_launch:
             urllib2.urlopen('http://' + sabNzbdHost + '/api?mode=shutdown&apikey=' + sabNzbdApiKey)
-            xbmc.log('AUDO: Shutting SABnzbd down...', level=xbmc.LOGDEBUG)
+            logging.debug('Shutting SABnzbd down...')
 
 except Exception, e:
-    xbmc.log('AUDO: SABnzbd exception occurred', level=xbmc.LOGERROR)
-    xbmc.log(e, level=xbmc.LOGERROR)
+    logging.exception(e)
     print 'SABnzbd: exception occurred:', e
 # SABnzbd end
 
@@ -439,12 +440,11 @@ try:
     # launch SickBeard
     # ----------------
     if "true" in sickbeard_launch:
-        xbmc.log('AUDO: Launching SickBeard...', level=xbmc.LOGDEBUG)
+        logging.debug('Launching SickBeard...')
         subprocess.call(sickBeard, close_fds=True)
-        xbmc.log('AUDO: ...done', level=xbmc.LOGDEBUG)
+        logging.debug('...done')
 except Exception, e:
-    xbmc.log('AUDO: SickBeard exception occurred', level=xbmc.LOGERROR)
-    xbmc.log(e, level=xbmc.LOGERROR)
+    logging.exception(e)
     print 'SickBeard: exception occurred:', e
 # SickBeard end
 
@@ -521,14 +521,14 @@ try:
     # launch CouchPotatoServer
     # ------------------
     if "true" in couchpotato_launch:
-        xbmc.log('AUDO: Launching CouchPotatoServer...', level=xbmc.LOGDEBUG)
+        logging.debug('Launching CouchPotatoServer...')
         subprocess.call(couchPotatoServer, close_fds=True)
-        xbmc.log('AUDO: ...done', level=xbmc.LOGDEBUG)
+        logging.debug('...done')
 except Exception, e:
-    xbmc.log('AUDO: CouchPotatoServer exception occurred', level=xbmc.LOGERROR)
-    xbmc.log(e, level=xbmc.LOGERROR)
+    logging.exception(e)
     print 'CouchPotatoServer: exception occurred:', e
 # CouchPotatoServer end
+
 
 # Headphones start
 try:
@@ -583,11 +583,10 @@ try:
     # launch Headphones
     # -----------------
     if "true" in headphones_launch:
-        xbmc.log('AUDO: Launching Headphones...', level=xbmc.LOGDEBUG)
+        logging.debug('Launching Headphones...')
         subprocess.call(headphones, close_fds=True)
-        xbmc.log('AUDO: ...done', level=xbmc.LOGDEBUG)
+        logging.debug('...done')
 except Exception, e:
-    xbmc.log('AUDO: Headphones exception occurred', level=xbmc.LOGERROR)
-    xbmc.log(e, level=xbmc.LOGERROR)
+    logging.exception(e)
     print 'Headphones: exception occurred:', e
 # Headphones end

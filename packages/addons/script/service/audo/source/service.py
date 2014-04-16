@@ -24,7 +24,12 @@ wake_times     = ['01:00', '03:00', '05:00', '07:00', '09:00', '11:00', '13:00',
 idleTimer      = 0
 
 # Launch audo
-subprocess.call(['python', __start__])
+
+try:
+    xbmc.executebuiltin('XBMC.RunScript(%s)' % __start__, True)
+except Exception, e:
+    xbmc.log('audo: could execute script:', level=xbmc.LOGERROR)
+    xbmc.log(str(e), level=xbmc.LOGERROR)
 
 # check for launching sabnzbd
 sabNzbdLaunch = (__addon__.getSetting('SABNZBD_LAUNCH').lower() == 'true')

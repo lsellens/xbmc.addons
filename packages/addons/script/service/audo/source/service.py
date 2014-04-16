@@ -1,4 +1,5 @@
 #
+from resources.lib.configobj import ConfigObj
 import subprocess
 import xbmc
 import xbmcaddon
@@ -6,7 +7,6 @@ import urllib2
 import socket
 import time
 import datetime
-import sys
 
 __scriptname__ = "audo"
 __author__     = "lsellens"
@@ -33,9 +33,6 @@ except Exception, e:
 
 # check for launching sabnzbd
 sabNzbdLaunch = (__addon__.getSetting('SABNZBD_LAUNCH').lower() == 'true')
-
-sys.path.append(xbmc.translatePath(__cwd__ + '/resources/lib'))
-from configobj import ConfigObj
 
 if sabNzbdLaunch:
     # SABnzbd addresses and api key

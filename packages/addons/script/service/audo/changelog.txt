@@ -1,3 +1,8 @@
+1.0.2
+- update to HeadPhones-e67d324
+- Update tp CouchPotatoServer-2402834
+- updates to addon structure
+
 1.0.1
 - updated unrar to v5.01
 - fixed issue with SABnzbd prevent idle shutdown

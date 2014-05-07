@@ -1,46 +1,38 @@
 # Initializes and launches SABnzbd, Couchpotato, Sickbeard and Headphones
-
+from xml.dom.minidom import parseString
+from lib.configobj import ConfigObj
 import os
-import sys
-import shutil
 import subprocess
 import urllib2
 import hashlib
-from xml.dom.minidom import parseString
 import platform
 import xbmc
 import xbmcaddon
+import xbmcvfs
 
 # helper functions
 # ----------------
 
-
 def create_dir(dirname):
-    if not os.path.isdir(dirname):
-        os.makedirs(dirname)
-
-
-def get_addon_setting(doc, ids):
-    for element in doc.getElementsByTagName('setting'):
-        if element.getAttribute('id') == ids:
-            return element.getAttribute('value')
+    if not xbmcvfs.exists(dirname):
+        xbmcvfs.mkdirs(dirname)
 
 # define some things that we're gonna need, mainly paths
 # ------------------------------------------------------
 
 # addon
-addonid               = xbmcaddon.Addon(id='script.service.audo')
-pAddon                = xbmc.translatePath(addonid.getAddonInfo('path'))
-pAddonHome            = xbmc.translatePath(addonid.getAddonInfo('profile'))
+__addon__             = xbmcaddon.Addon(id='script.service.audo')
+__addonpath__         = xbmc.translatePath(__addon__.getAddonInfo('path'))
+__addonhome__         = xbmc.translatePath(__addon__.getAddonInfo('profile'))
 
 # settings
-pDefaultSuiteSettings = os.path.join(pAddon, 'settings-default.xml')
-pSuiteSettings        = os.path.join(pAddonHome, 'settings.xml')
+pDefaultSuiteSettings = xbmc.translatePath(__addonpath__ + '/settings-default.xml')
+pSuiteSettings        = xbmc.translatePath(__addonhome__ + 'settings.xml')
 pXbmcSettings         = '/storage/.xbmc/userdata/guisettings.xml'
-pSabNzbdSettings      = os.path.join(pAddonHome, 'sabnzbd.ini')
-pSickBeardSettings    = os.path.join(pAddonHome, 'sickbeard.ini')
-pCouchPotatoServerSettings  = os.path.join(pAddonHome, 'couchpotatoserver.ini')
-pHeadphonesSettings   = os.path.join(pAddonHome, 'headphones.ini')
+pSabNzbdSettings      = xbmc.translatePath(__addonhome__ + 'sabnzbd.ini')
+pSickBeardSettings    = xbmc.translatePath(__addonhome__ + 'sickbeard.ini')
+pCouchPotatoServerSettings  = xbmc.translatePath(__addonhome__ + 'couchpotatoserver.ini')
+pHeadphonesSettings   = xbmc.translatePath(__addonhome__ + 'headphones.ini')
 pTransmission_Addon_Settings = '/storage/.xbmc/userdata/addon_data/service.downloadmanager.transmission/settings.xml'
 
 # directories
@@ -50,21 +42,21 @@ pSabNzbdCompleteTV    = '/storage/downloads/tvshows'
 pSabNzbdCompleteMov   = '/storage/downloads/movies'
 pSabNzbdCompleteMusic = '/storage/downloads/music'
 pSabNzbdIncomplete    = '/storage/downloads/incomplete'
-pSickBeardTvScripts   = os.path.join(pAddon, 'SickBeard/autoProcessTV')
-pSabNzbdScripts       = os.path.join(pAddonHome, 'scripts')
+pSickBeardTvScripts   = xbmc.translatePath(__addonpath__ + '/resources/SickBeard/autoProcessTV')
+pSabNzbdScripts       = xbmc.translatePath(__addonhome__ + 'scripts')
 
 # pylib
-pPylib                = os.path.join(pAddon, 'resources/lib')
+pPylib                = xbmc.translatePath(__addonpath__ + '/resources/lib')
 
 # service commands
-sabnzbd               = ['python', os.path.join(pAddon, 'SABnzbd/SABnzbd.py'),
+sabnzbd               = ['python', xbmc.translatePath(__addonpath__ + '/resources/SABnzbd/SABnzbd.py'),
                          '-d', '-f', pSabNzbdSettings, '-l 0']
-sickBeard             = ['python', os.path.join(pAddon, 'SickBeard/SickBeard.py'),
-                         '--daemon', '--datadir', pAddonHome, '--config', pSickBeardSettings]
-couchPotatoServer     = ['python', os.path.join(pAddon, 'CouchPotatoServer/CouchPotato.py'), '--daemon', '--pid_file',
-                         os.path.join(pAddonHome, 'couchpotato.pid'), '--config_file', pCouchPotatoServerSettings]
-headphones            = ['python', os.path.join(pAddon, 'Headphones/Headphones.py'),
-                         '-d', '--datadir', pAddonHome, '--config', pHeadphonesSettings]
+sickBeard             = ['python', xbmc.translatePath(__addonpath__ + '/resources/SickBeard/SickBeard.py'),
+                         '--daemon', '--datadir', __addonhome__, '--config', pSickBeardSettings]
+couchPotatoServer     = ['python', xbmc.translatePath(__addonpath__ + '/resources/CouchPotatoServer/CouchPotato.py'), '--daemon', '--pid_file',
+                         xbmc.translatePath(__addonhome__ + 'couchpotato.pid'), '--config_file', pCouchPotatoServerSettings]
+headphones            = ['python', xbmc.translatePath(__addonpath__ + '/resources/Headphones/Headphones.py'),
+                         '-d', '--datadir', __addonhome__, '--config', pHeadphonesSettings]
 
 # Other stuff
 sabNzbdHost           = 'localhost:8081'
@@ -72,14 +64,14 @@ sabNzbdHost           = 'localhost:8081'
 # create directories and settings on first launch
 # -----------------------------------------------
 
-firstLaunch = not os.path.exists(pSabNzbdSettings)
-sbfirstLaunch = not os.path.exists(pSickBeardSettings)
-cp2firstLaunch = not os.path.exists(pCouchPotatoServerSettings)
-hpfirstLaunch = not os.path.exists(pHeadphonesSettings)
+firstLaunch = not xbmcvfs.exists(pSabNzbdSettings)
+sbfirstLaunch = not xbmcvfs.exists(pSickBeardSettings)
+cp2firstLaunch = not xbmcvfs.exists(pCouchPotatoServerSettings)
+hpfirstLaunch = not xbmcvfs.exists(pHeadphonesSettings)
 
 if firstLaunch:
     xbmc.log('AUDO: First launch, creating directories', level=xbmc.LOGDEBUG)
-    create_dir(pAddonHome)
+    create_dir(__addonhome__)
     create_dir(pSabNzbdComplete)
     create_dir(pSabNzbdWatchDir)
     create_dir(pSabNzbdCompleteTV)
@@ -87,13 +79,12 @@ if firstLaunch:
     create_dir(pSabNzbdCompleteMusic)
     create_dir(pSabNzbdIncomplete)
     create_dir(pSabNzbdScripts)
-    shutil.copy(os.path.join(pSickBeardTvScripts, 'sabToSickBeard.py'), pSabNzbdScripts)
-    shutil.copy(os.path.join(pSickBeardTvScripts, 'autoProcessTV.py'), pSabNzbdScripts)
-    os.chmod(os.path.join(pSabNzbdScripts, 'sabToSickBeard.py'), 0755)
+    xbmcvfs.copy(xbmc.translatePath(pSickBeardTvScripts + '/sabToSickBeard.py'), pSabNzbdScripts)
+    xbmcvfs.copy(xbmc.translatePath(pSickBeardTvScripts + '/autoProcessTV.py'), pSabNzbdScripts)
 
 # the settings file already exists if the user set settings before the first launch
-if not os.path.exists(pSuiteSettings):
-    shutil.copy(pDefaultSuiteSettings, pSuiteSettings)
+if not xbmcvfs.exists(pSuiteSettings):
+    xbmcvfs.copy(pDefaultSuiteSettings, pSuiteSettings)
 
 # read addon and xbmc settings
 # ----------------------------
@@ -115,13 +106,13 @@ except Exception, e:
     xbmc.log(str(e), level=xbmc.LOGERROR)
 
 # audo
-user = (addonid.getSetting('SABNZBD_USER'))
-pwd = (addonid.getSetting('SABNZBD_PWD'))
-host = (addonid.getSetting('SABNZBD_IP'))
-sabnzbd_launch = (addonid.getSetting('SABNZBD_LAUNCH').lower() == 'true')
-sickbeard_launch = (addonid.getSetting('SICKBEARD_LAUNCH').lower() == 'true')
-couchpotato_launch = (addonid.getSetting('COUCHPOTATO_LAUNCH').lower() == 'true')
-headphones_launch = (addonid.getSetting('HEADPHONES_LAUNCH').lower() == 'true')
+user = (__addon__.getSetting('SABNZBD_USER'))
+pwd = (__addon__.getSetting('SABNZBD_PWD'))
+host = (__addon__.getSetting('SABNZBD_IP'))
+sabnzbd_launch = (__addon__.getSetting('SABNZBD_LAUNCH').lower() == 'true')
+sickbeard_launch = (__addon__.getSetting('SICKBEARD_LAUNCH').lower() == 'true')
+couchpotato_launch = (__addon__.getSetting('COUCHPOTATO_LAUNCH').lower() == 'true')
+headphones_launch = (__addon__.getSetting('HEADPHONES_LAUNCH').lower() == 'true')
 
 # XBMC
 fXbmcSettings = open(pXbmcSettings, 'r')
@@ -142,118 +133,113 @@ except StandardError:
 # prepare execution environment
 # -----------------------------
 parch                         = platform.machine()
-pnamemapper                   = os.path.join(pPylib, 'Cheetah/_namemapper.so')
-pssl                          = os.path.join(pPylib, 'OpenSSL/SSL.so')
-prand                         = os.path.join(pPylib, 'OpenSSL/rand.so')
-pcrypto                       = os.path.join(pPylib, 'OpenSSL/crypto.so')
-petree                        = os.path.join(pPylib, 'lxml/etree.so')
-pobjectify                    = os.path.join(pPylib, 'lxml/objectify.so')
-pyenc                         = os.path.join(pPylib, '_yenc.so')
-ppar2                         = os.path.join(pAddon, 'bin/par2')
-punrar                        = os.path.join(pAddon, 'bin/unrar')
-punzip                        = os.path.join(pAddon, 'bin/unzip')
+pnamemapper                   = xbmc.translatePath(pPylib + '/Cheetah/_namemapper.so')
+pssl                          = xbmc.translatePath(pPylib + '/OpenSSL/SSL.so')
+prand                         = xbmc.translatePath(pPylib + '/OpenSSL/rand.so')
+pcrypto                       = xbmc.translatePath(pPylib + '/OpenSSL/crypto.so')
+petree                        = xbmc.translatePath(pPylib + '/lxml/etree.so')
+pobjectify                    = xbmc.translatePath(pPylib + '/lxml/objectify.so')
+pyenc                         = xbmc.translatePath(pPylib + '/_yenc.so')
+ppar2                         = xbmc.translatePath(pPylib + '/par2')
+punrar                        = xbmc.translatePath(pPylib + '/unrar')
+punzip                        = xbmc.translatePath(pPylib + '/unzip')
 
 xbmc.log('AUDO: ' + parch + ' architecture detected', level=xbmc.LOGDEBUG)
 
 if parch.startswith('arm'):
     parch = 'arm'
 
-if not os.path.exists(pnamemapper):
+if not xbmcvfs.exists(pnamemapper):
     try:
-        fnamemapper                   = os.path.join(pPylib, 'multiarch/_namemapper.so.' + parch)
-        shutil.copy(fnamemapper, pnamemapper)
+        fnamemapper                   = xbmc.translatePath(pPylib + '/multiarch/_namemapper.so.' + parch)
+        xbmcvfs.copy(fnamemapper, pnamemapper)
         xbmc.log('AUDO: Copied _namemapper.so for ' + parch, level=xbmc.LOGDEBUG)
     except Exception, e:
         xbmc.log('AUDO: Error Copying _namemapper.so for ' + parch, level=xbmc.LOGERROR)
         xbmc.log(str(e), level=xbmc.LOGERROR)
 
-if not os.path.exists(pssl):
+if not xbmcvfs.exists(pssl):
     try:
-        fssl                          = os.path.join(pPylib, 'multiarch/SSL.so.' + parch)
-        shutil.copy(fssl, pssl)
+        fssl                          = xbmc.translatePath(pPylib + '/multiarch/SSL.so.' + parch)
+        xbmcvfs.copy(fssl, pssl)
         xbmc.log('AUDO: Copied SSL.so for ' + parch, level=xbmc.LOGDEBUG)
     except Exception, e:
         xbmc.log('AUDO: Error Copying SSL.so for ' + parch, level=xbmc.LOGERROR)
         xbmc.log(str(e), level=xbmc.LOGERROR)
 
-if not os.path.exists(prand):
+if not xbmcvfs.exists(prand):
     try:
-        frand                         = os.path.join(pPylib, 'multiarch/rand.so.' + parch)
-        shutil.copy(frand, prand)
+        frand                         = xbmc.translatePath(pPylib + '/multiarch/rand.so.' + parch)
+        xbmcvfs.copy(frand, prand)
         xbmc.log('AUDO: Copied rand.so for ' + parch, level=xbmc.LOGDEBUG)
     except Exception, e:
         xbmc.log('AUDO: Error Copying rand.so for ' + parch, level=xbmc.LOGERROR)
         xbmc.log(str(e), level=xbmc.LOGERROR)
 
-if not os.path.exists(pcrypto):
+if not xbmcvfs.exists(pcrypto):
     try:
-        fcrypto                       = os.path.join(pPylib, 'multiarch/crypto.so.' + parch)
-        shutil.copy(fcrypto, pcrypto)
+        fcrypto                       = xbmc.translatePath(pPylib + '/multiarch/crypto.so.' + parch)
+        xbmcvfs.copy(fcrypto, pcrypto)
         xbmc.log('AUDO: Copied crypto.so for ' + parch, level=xbmc.LOGDEBUG)
     except Exception, e:
         xbmc.log('AUDO: Error Copying crypto.so for ' + parch, level=xbmc.LOGERROR)
         xbmc.log(str(e), level=xbmc.LOGERROR)
 
-if not os.path.exists(petree):
+if not xbmcvfs.exists(petree):
     try:
-        fetree                        = os.path.join(pPylib, 'multiarch/etree.so.' + parch)
-        shutil.copy(fetree, petree)
+        fetree                        = xbmc.translatePath(pPylib + '/multiarch/etree.so.' + parch)
+        xbmcvfs.copy(fetree, petree)
         xbmc.log('AUDO: Copied etree.so for ' + parch, level=xbmc.LOGDEBUG)
     except Exception, e:
         xbmc.log('AUDO: Error Copying etree.so for ' + parch, level=xbmc.LOGERROR)
         xbmc.log(str(e), level=xbmc.LOGERROR)
 
-if not os.path.exists(pobjectify):
+if not xbmcvfs.exists(pobjectify):
     try:
-        fobjectify                    = os.path.join(pPylib, 'multiarch/objectify.so.' + parch)
-        shutil.copy(fobjectify, pobjectify)
+        fobjectify                    = xbmc.translatePath(pPylib + '/multiarch/objectify.so.' + parch)
+        xbmcvfs.copy(fobjectify, pobjectify)
         xbmc.log('AUDO: Copied objectify.so for ' + parch, level=xbmc.LOGDEBUG)
     except Exception, e:
         xbmc.log('AUDO: Error Copying objectify.so for ' + parch, level=xbmc.LOGERROR)
         xbmc.log(str(e), level=xbmc.LOGERROR)
 
-if not os.path.exists(pyenc):
+if not xbmcvfs.exists(pyenc):
     try:
-        fyenc                         = os.path.join(pPylib, 'multiarch/_yenc.so.' + parch)
-        shutil.copy(fyenc, pyenc)
+        fyenc                         = xbmc.translatePath(pPylib + '/multiarch/_yenc.so.' + parch)
+        xbmcvfs.copy(fyenc, pyenc)
         xbmc.log('AUDO: Copied _yenc.so for ' + parch, level=xbmc.LOGDEBUG)
     except Exception, e:
         xbmc.log('AUDO: Error Copying _yenc.so for ' + parch, level=xbmc.LOGERROR)
         xbmc.log(str(e), level=xbmc.LOGERROR)
 
-if not os.path.exists(ppar2):
+if not xbmcvfs.exists(ppar2):
     try:
-        fpar2                         = os.path.join(pPylib, 'multiarch/par2.' + parch)
-        shutil.copy(fpar2, ppar2)
-        os.chmod(ppar2, 0755)
+        fpar2                         = xbmc.translatePath(pPylib + '/multiarch/par2.' + parch)
+        xbmcvfs.copy(fpar2, ppar2)
         xbmc.log('AUDO: Copied par2 for ' + parch, level=xbmc.LOGDEBUG)
     except Exception, e:
         xbmc.log('AUDO: Error Copying par2 for ' + parch, level=xbmc.LOGERROR)
         xbmc.log(str(e), level=xbmc.LOGERROR)
 
-#if not os.path.exists(punrar):
-try:
-    funrar                        = os.path.join(pPylib, 'multiarch/unrar.' + parch)
-    shutil.copy(funrar, punrar)
-    os.chmod(punrar, 0755)
-    xbmc.log('AUDO: Copied unrar for ' + parch, level=xbmc.LOGDEBUG)
-except Exception, e:
-    xbmc.log('AUDO: Error Copying unrar for ' + parch, level=xbmc.LOGERROR)
-    xbmc.log(str(e), level=xbmc.LOGERROR)
-
-if not os.path.exists(punzip):
+if not xbmcvfs.exists(punrar):
     try:
-        funzip                        = os.path.join(pPylib, 'multiarch/unzip.' + parch)
-        shutil.copy(funzip, punzip)
-        os.chmod(punzip, 0755)
+        funrar                        = xbmc.translatePath(pPylib + '/multiarch/unrar.' + parch)
+        xbmcvfs.copy(funrar, punrar)
+        xbmc.log('AUDO: Copied unrar for ' + parch, level=xbmc.LOGDEBUG)
+    except Exception, e:
+        xbmc.log('AUDO: Error Copying unrar for ' + parch, level=xbmc.LOGERROR)
+        xbmc.log(str(e), level=xbmc.LOGERROR)
+
+if not xbmcvfs.exists(punzip):
+    try:
+        funzip                        = xbmc.translatePath(pPylib + '/multiarch/unzip.' + parch)
+        xbmcvfs.copy(funzip, punzip)
         xbmc.log('AUDO: Copied unzip for ' + parch, level=xbmc.LOGDEBUG)
     except Exception, e:
         xbmc.log('AUDO: Error Copying unzip for ' + parch, level=xbmc.LOGERROR)
         xbmc.log(str(e), level=xbmc.LOGERROR)
 
 os.environ['PYTHONPATH'] = str(os.environ.get('PYTHONPATH')) + ':' + pPylib
-sys.path.append(pPylib)
-from configobj import ConfigObj
 
 # SABnzbd start
 try:
@@ -309,7 +295,7 @@ try:
     sabNzbdConfig.write()
 
     # also keep the autoProcessTV config up to date
-    autoProcessConfig = ConfigObj(os.path.join(pSabNzbdScripts, 'autoProcessTV.cfg'), create_empty=True)
+    autoProcessConfig = ConfigObj(xbmc.translatePath(pSabNzbdScripts + '/autoProcessTV.cfg'), create_empty=True)
     defaultConfig = ConfigObj()
     defaultConfig['SickBeard'] = {}
     defaultConfig['SickBeard']['host']         = 'localhost'
@@ -321,7 +307,7 @@ try:
 
     # launch SABnzbd and get the API key
     # ----------------------------------
-    if (firstLaunch or sabnzbd_launch):
+    if firstLaunch or sabnzbd_launch:
         xbmc.log('AUDO: Launching SABnzbd...', level=xbmc.LOGDEBUG)
         subprocess.call(sabnzbd, close_fds=True)
         xbmc.log('AUDO: ...done', level=xbmc.LOGDEBUG)
@@ -361,12 +347,13 @@ try:
     defaultConfig['General'] = {}
     defaultConfig['General']['launch_browser'] = '0'
     defaultConfig['General']['version_notify'] = '0'
+    defaultConfig['General']['use_api']        = '1'
     defaultConfig['General']['web_port']       = '8082'
     defaultConfig['General']['web_host']       = host
     defaultConfig['General']['web_username']   = user
     defaultConfig['General']['web_password']   = pwd
-    defaultConfig['General']['cache_dir']      = pAddonHome + '/sbcache'
-    defaultConfig['General']['log_dir']        = pAddonHome + '/logs'
+    defaultConfig['General']['cache_dir']      = __addonhome__ + 'sbcache'
+    defaultConfig['General']['log_dir']        = __addonhome__ + 'logs'
     defaultConfig['SABnzbd'] = {}
     defaultConfig['XBMC'] = {}
     defaultConfig['XBMC']['use_xbmc']          = '1'
@@ -445,7 +432,7 @@ try:
     defaultConfig['core']['port']                = '8083'
     defaultConfig['core']['launch_browser']      = '0'
     defaultConfig['core']['host']                = host
-    defaultConfig['core']['data_dir']            = pAddonHome
+    defaultConfig['core']['data_dir']            = __addonhome__
     defaultConfig['core']['show_wizard']         = '0'
     defaultConfig['core']['debug']               = '0'
     defaultConfig['core']['development']         = '0'
@@ -516,14 +503,15 @@ try:
     defaultConfig = ConfigObj()
     defaultConfig['General'] = {}
     defaultConfig['General']['launch_browser']            = '0'
+    defaultConfig['General']['api_enabled']               = '1'
     defaultConfig['General']['http_port']                 = '8084'
     defaultConfig['General']['http_host']                 = host
     defaultConfig['General']['http_username']             = user
     defaultConfig['General']['http_password']             = pwd
     defaultConfig['General']['check_github']              = '0'
     defaultConfig['General']['check_github_on_startup']   = '0'
-    defaultConfig['General']['cache_dir']                 = pAddonHome + '/hpcache'
-    defaultConfig['General']['log_dir']                   = pAddonHome + '/logs'
+    defaultConfig['General']['cache_dir']                 = __addonhome__ + 'hpcache'
+    defaultConfig['General']['log_dir']                   = __addonhome__ + 'logs'
     defaultConfig['XBMC'] = {}
     defaultConfig['XBMC']['xbmc_enabled']                 = '1'
     defaultConfig['XBMC']['xbmc_host']                    = 'localhost:' + xbmcPort

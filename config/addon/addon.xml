@@ -4,6 +4,7 @@
        version="@ADDON_VERSION@"
        provider-name="lsellens">
   <requires>
+    <import addon="os.openelec.tv" version="@OS_VERSION@"/>
     <import addon="xbmc.addon" version="12.0.0"/>
     <import addon="xbmc.python" version="2.1.0"/>
 @REQUIRES@

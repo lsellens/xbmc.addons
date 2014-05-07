@@ -1,6 +1,5 @@
 #
 from resources.lib.configobj import ConfigObj
-import subprocess
 import xbmc
 import xbmcaddon
 import urllib2
@@ -12,10 +11,10 @@ __scriptname__ = "audo"
 __author__     = "lsellens"
 __url__        = "http://code.google.com/p/repository-lsellens/"
 __addon__      = xbmcaddon.Addon(id='script.service.audo')
-__cwd__        = __addon__.getAddonInfo('path')
-__addondir__   = __addon__.getAddonInfo('profile')
-__start__      = xbmc.translatePath(__cwd__ + '/bin/audo.py')
-__stop__       = xbmc.translatePath(__cwd__ + '/bin/audo.stop')
+__addonpath__  = __addon__.getAddonInfo('path')
+__addonhome__  = __addon__.getAddonInfo('profile')
+__start__      = xbmc.translatePath(__addonpath__ + '/resources/audo.py')
+__stop__       = xbmc.translatePath(__addonpath__ + '/resources/audo.stop.py')
 
 checkInterval  = 240
 timeout        = 20
@@ -24,11 +23,10 @@ wake_times     = ['01:00', '03:00', '05:00', '07:00', '09:00', '11:00', '13:00',
 idleTimer      = 0
 
 # Launch audo
-
 try:
     xbmc.executebuiltin('XBMC.RunScript(%s)' % __start__, True)
 except Exception, e:
-    xbmc.log('audo: could execute script:', level=xbmc.LOGERROR)
+    xbmc.log('audo: could not execute launch script:', level=xbmc.LOGERROR)
     xbmc.log(str(e), level=xbmc.LOGERROR)
 
 # check for launching sabnzbd
@@ -36,7 +34,7 @@ sabNzbdLaunch = (__addon__.getSetting('SABNZBD_LAUNCH').lower() == 'true')
 
 if sabNzbdLaunch:
     # SABnzbd addresses and api key
-    sabNzbdConfigFile = (xbmc.translatePath(__addondir__ + '/sabnzbd.ini'))
+    sabNzbdConfigFile = (xbmc.translatePath(__addonhome__ + 'sabnzbd.ini'))
     sabConfiguration  = ConfigObj(sabNzbdConfigFile)
     sabNzbdAddress    = "localhost:8081"
     sabNzbdApiKey     = sabConfiguration['misc']['api_key']
@@ -119,4 +117,9 @@ while not xbmc.abortRequested:
 
     time.sleep(0.250)
 
-subprocess.Popen(__stop__, shell=True, close_fds=True)
+# Shutdown audo
+try:
+    xbmc.executebuiltin('XBMC.RunScript(%s)' % __stop__, True)
+except Exception, e:
+    xbmc.log('audo: could not execute shutdown script:', level=xbmc.LOGERROR)
+    xbmc.log(str(e), level=xbmc.LOGERROR)

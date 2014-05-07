@@ -7,12 +7,12 @@ import subprocess
 __scriptname__ = "SickPotatoHead"
 __author__     = "lsellens"
 __url__        = "http://code.google.com/p/repository-lsellens/"
-__settings__   = xbmcaddon.Addon(id='service.downloadmanager.SickPotatoHead')
-__cwd__        = __settings__.getAddonInfo('path')
-__start__      = xbmc.translatePath(__cwd__ + '/bin/SickPotatoHead.py')
-__stop__       = xbmc.translatePath(__cwd__ + '/bin/SickPotatoHead.stop')
+__addon__      = xbmcaddon.Addon(id='service.downloadmanager.SickPotatoHead')
+__addonpath__  = __addon__.getAddonInfo('path')
+__start__      = xbmc.translatePath(__addonpath__ + '/bin/SickPotatoHead.py')
+__stop__       = xbmc.translatePath(__addonpath__ + '/bin/SickPotatoHead.stop')
 
-subprocess.call(['python', __start__])
+xbmc.executebuiltin('XBMC.RunScript(%s)' % __start__, True)
 
 while not xbmc.abortRequested:
     time.sleep(0.250)

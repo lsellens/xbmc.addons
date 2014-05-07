@@ -5,14 +5,14 @@
 mkdir -p $ADDON_BUILD/$PKG_ADDON_ID
   cp -PR $PKG_DIR/config/settings.xml* $ADDON_BUILD/$PKG_ADDON_ID/settings-default.xml
 
-mkdir -p $ADDON_BUILD/$PKG_ADDON_ID/SABnzbd
-  cp -PR $BUILD/SABnzbd-*/* $ADDON_BUILD/$PKG_ADDON_ID/SABnzbd
+mkdir -p $ADDON_BUILD/$PKG_ADDON_ID/resources/SABnzbd
+  cp -PR $BUILD/SABnzbd-*/* $ADDON_BUILD/$PKG_ADDON_ID/resources/SABnzbd
 
-mkdir -p $ADDON_BUILD/$PKG_ADDON_ID/SickBeard
-  cp -PR $BUILD/SickBeard-*/* $ADDON_BUILD/$PKG_ADDON_ID/SickBeard
+mkdir -p $ADDON_BUILD/$PKG_ADDON_ID/resources/SickBeard
+  cp -PR $BUILD/SickBeard-*/* $ADDON_BUILD/$PKG_ADDON_ID/resources/SickBeard
 
-mkdir -p $ADDON_BUILD/$PKG_ADDON_ID/CouchPotatoServer
-  cp -PR $BUILD/CouchPotatoServer-*/* $ADDON_BUILD/$PKG_ADDON_ID/CouchPotatoServer
+mkdir -p $ADDON_BUILD/$PKG_ADDON_ID/resources/CouchPotatoServer
+  cp -PR $BUILD/CouchPotatoServer-*/* $ADDON_BUILD/$PKG_ADDON_ID/resources/CouchPotatoServer
 
-mkdir -p $ADDON_BUILD/$PKG_ADDON_ID/Headphones
-  cp -PR $BUILD/Headphones-*/* $ADDON_BUILD/$PKG_ADDON_ID/Headphones
+mkdir -p $ADDON_BUILD/$PKG_ADDON_ID/resources/Headphones
+  cp -PR $BUILD/Headphones-*/* $ADDON_BUILD/$PKG_ADDON_ID/resources/Headphones

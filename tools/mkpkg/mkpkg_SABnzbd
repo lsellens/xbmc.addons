@@ -12,7 +12,7 @@ echo "getting sources..."
     mv $PKG_NAME-$PKG_VERSION build.$PKG_NAME-$PKG_VERSION-src
     rm $PKG_NAME-$PKG_VERSION-src.tar.gz
     echo "cleaning sources..."
-      rm -rf build.$PKG_NAME-$PKG_VERSION-src/*.txt build.$PKG_NAME-$PKG_VERSION-src/Sample-* build.$PKG_NAME-$PKG_VERSION/PKG-INFO build.$PKG_NAME-$PKG_VERSION-src/licenses
+      rm -rf build.$PKG_NAME-$PKG_VERSION-src/*.txt build.$PKG_NAME-$PKG_VERSION-src/Sample-* build.$PKG_NAME-$PKG_VERSION-src/PKG-INFO build.$PKG_NAME-$PKG_VERSION-src/licenses
   fi
 
 echo "copying to source folder"

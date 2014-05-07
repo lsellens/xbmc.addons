@@ -20,11 +20,11 @@
 ################################################################################
 
 PKG_NAME="SickBeard"
-PKG_VERSION="063a806"
+PKG_VERSION="425983c"
 PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="OSS"
-PKG_SITE="http://github.com/mr-orange/Sick-Beard"
+PKG_SITE="http://github.com/coach0742/Sick-Beard"
 PKG_URL="http://dl.dropbox.com/u/42265484/repository.lsellens/devel/${PKG_NAME}-${PKG_VERSION}.tar.xz"
 PKG_DEPENDS="Python Cheetah"
 PKG_BUILD_DEPENDS=""

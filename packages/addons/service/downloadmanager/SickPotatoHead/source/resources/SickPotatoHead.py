@@ -1,51 +1,38 @@
 # Initializes and launches Couchpotato V2, Sickbeard and Headphones
 
+from xml.dom.minidom import parseString
+from lib.configobj import ConfigObj
 import os
-import sys
-import shutil
 import subprocess
 import hashlib
-import signal
-from xml.dom.minidom import parseString
-import logging
-import traceback
 import platform
-
-logging.basicConfig(filename='/var/log/sickpotatohead.log',
-                    filemode='w',
-                    format='%(asctime)s SickPotatoHead: %(message)s',
-                    level=logging.DEBUG)
+import xbmc
+import xbmcaddon
+import xbmcvfs
 
 # helper functions
 # ----------------
 
 
 def create_dir(dirname):
-    if not os.path.isdir(dirname):
-        os.makedirs(dirname)
-
-
-def get_addon_setting(doc, ids):
-    for element in doc.getElementsByTagName('setting'):
-        if element.getAttribute('id') == ids:
-            return element.getAttribute('value')
-
+    if not xbmcvfs.exists(dirname):
+        xbmcvfs.mkdirs(dirname
 
 # define some things that we're gonna need, mainly paths
 # ------------------------------------------------------
 
 # addon
-pAddon                = os.path.expanduser('/storage/.xbmc/addons/service.downloadmanager.SickPotatoHead')
-pAddonHome            = os.path.expanduser('/storage/.xbmc/userdata/addon_data/service.downloadmanager.SickPotatoHead')
+__addon__             = xbmcaddon.Addon(id='service.downloadmanager.SickPotatoHead')
+__addonpath__         = xbmc.translatePath(__addon__.getAddonInfo('path'))
+__addonhome__         = xbmc.translatePath(__addon__.getAddonInfo('profile'))
 
 # settings
-pDefaultSuiteSettings         = os.path.join(pAddon, 'settings-default.xml')
-pSuiteSettings                = os.path.join(pAddonHome, 'settings.xml')
-pXbmcSettings                 = '/storage/.xbmc/userdata/guisettings.xml'
-pSickBeardSettings            = os.path.join(pAddonHome, 'sickbeard.ini')
-pCouchPotatoServerSettings    = os.path.join(pAddonHome, 'couchpotatoserver.ini')
-pHeadphonesSettings           = os.path.join(pAddonHome, 'headphones.ini')
-pTransmission_Addon_Settings  = '/storage/.xbmc/userdata/addon_data/service.downloadmanager.transmission/settings.xml'
+pDefaultSuiteSettings = xbmc.translatePath(__addonpath__ + '/settings-default.xml')
+pSuiteSettings        = xbmc.translatePath(__addonhome__ + 'settings.xml')
+pXbmcSettings         = '/storage/.xbmc/userdata/guisettings.xml'
+pSickBeardSettings    = xbmc.translatePath(__addonhome__ + 'sickbeard.ini')
+pCouchPotatoServerSettings  = xbmc.translatePath(__addonhome__ + 'couchpotatoserver.ini')
+pHeadphonesSettings   = xbmc.translatePath(__addonhome__ + 'headphones.ini')
 
 # directories
 pSickPotatoHeadComplete       = '/storage/downloads'
@@ -54,75 +41,65 @@ pSickPotatoHeadCompleteMov    = '/storage/downloads/movies'
 pSickPotatoHeadWatchDir       = '/storage/downloads/watch'
 
 # pylib
-pPylib                = os.path.join(pAddon, 'pylib')
+pPylib                = xbmc.translatePath(__addonpath__ + '/resources/lib')
 
 # service commands
-sickBeard             = ['python', os.path.join(pAddon, 'SickBeard/SickBeard.py'),
-                         '--daemon', '--datadir', pAddonHome, '--config', pSickBeardSettings]
-couchPotatoServer     = ['python', os.path.join(pAddon, 'CouchPotatoServer/CouchPotato.py'), '--daemon', '--pid_file',
-                         os.path.join(pAddonHome, 'couchpotato.pid'), '--config_file', pCouchPotatoServerSettings]
-headphones            = ['python', os.path.join(pAddon, 'Headphones/Headphones.py'),
-                         '-d', '--datadir', pAddonHome, '--config', pHeadphonesSettings]
+sickBeard             = ['python', xbmc.translatePath(__addonpath__ + '/resources/SickBeard/SickBeard.py'),
+                         '--daemon', '--datadir', __addonhome__, '--config', pSickBeardSettings]
+couchPotatoServer     = ['python', xbmc.translatePath(__addonpath__ + '/resources/CouchPotatoServer/CouchPotato.py'),
+                         '--daemon', '--pid_file', xbmc.translatePath(__addonhome__ + 'couchpotato.pid'),
+                         '--config_file', pCouchPotatoServerSettings]
+headphones            = ['python', xbmc.translatePath(__addonpath__ + '/resources/Headphones/Headphones.py'),
+                         '-d', '--datadir', __addonhome__, '--config', pHeadphonesSettings]
 
 # create directories and settings if missing
 # -----------------------------------------------
 
-sbfirstLaunch = not os.path.exists(pSickBeardSettings)
-cpfirstLaunch = not os.path.exists(pCouchPotatoServerSettings)
-hpfirstLaunch = not os.path.exists(pHeadphonesSettings)
+sbfirstLaunch = not xbmcvfs.exists(pSickBeardSettings)
+cp2firstLaunch = not xbmcvfs.exists(pCouchPotatoServerSettings)
+hpfirstLaunch = not xbmcvfs.exists(pHeadphonesSettings)
 if sbfirstLaunch or cpfirstLaunch or hpfirstLaunch:
-    create_dir(pAddonHome)
+    xbmc.log('SickPotatoHead: First launch, creating directories', level=xbmc.LOGDEBUG)
+    create_dir(__addonhome__)
     create_dir(pSickPotatoHeadComplete)
     create_dir(pSickPotatoHeadCompleteTV)
     create_dir(pSickPotatoHeadCompleteMov)
     create_dir(pSickPotatoHeadWatchDir)
 
 # fix for old installs
-if not os.path.exists(pSickPotatoHeadCompleteTV):
-    create_dir(pSickPotatoHeadCompleteTV)
+if not xbmcvfs.exists(pSickPotatoHeadCompleteTV):
+    xbmcvfs.copy(pSickPotatoHeadCompleteTV)
 
 # create the settings file if missing
-if not os.path.exists(pSuiteSettings):
-    shutil.copy(pDefaultSuiteSettings, pSuiteSettings)
+if not xbmcvfs.exists(pSuiteSettings):
+    xbmcvfs.copy(pDefaultSuiteSettings, pSuiteSettings)
 
 # read addon and xbmc settings
 # ----------------------------
 
 # Transmission-Daemon
-if os.path.exists(pTransmission_Addon_Settings):
-    fTransmission_Addon_Settings = open(pTransmission_Addon_Settings, 'r')
-    data = fTransmission_Addon_Settings.read()
-    fTransmission_Addon_Settings.close()
-    transmission_addon_settings = parseString(data)
-    transuser                          = get_addon_setting(transmission_addon_settings, 'TRANSMISSION_USER')
-    transpwd                           = get_addon_setting(transmission_addon_settings, 'TRANSMISSION_PWD')
-    transauth                          = get_addon_setting(transmission_addon_settings, 'TRANSMISSION_AUTH')
-else:
-    transauth                          = 'false'
+try:
+    transmissionaddon = xbmcaddon.Addon(id='service.downloadmanager.transmission')
+    transauth = (transmissionaddon.getSetting('TRANSMISSION_AUTH').lower() == 'true')
+
+    if transauth:
+        xbmc.log('SickPotatoHead: Transmission Authentication Enabled', level=xbmc.LOGDEBUG)
+        transuser = (transmissionaddon.getSetting('TRANSMISSION_USER'))
+        transpwd = (transmissionaddon.getSetting('TRANSMISSION_PWD'))
+    else:
+        xbmc.log('SickPotatoHead: Transmission Authentication Not Enabled', level=xbmc.LOGDEBUG)
+
+except Exception, e:
+    xbmc.log('SickPotatoHead: Transmission Settings are not present', level=xbmc.LOGERROR)
+    xbmc.log(str(e), level=xbmc.LOGERROR)
 
 # SickPotatoHead-Suite
-fSuiteSettings = open(pSuiteSettings, 'r')
-data = fSuiteSettings.read()
-fSuiteSettings.close()
-suiteSettings = parseString(data)
-user                          = get_addon_setting(suiteSettings, 'SICKPOTATOHEAD_USER')
-pwd                           = get_addon_setting(suiteSettings, 'SICKPOTATOHEAD_PWD')
-host                          = get_addon_setting(suiteSettings, 'SICKPOTATOHEAD_IP')
-sickbeard_launch              = get_addon_setting(suiteSettings, 'SICKBEARD_LAUNCH')
-couchpotato_launch            = get_addon_setting(suiteSettings, 'COUCHPOTATO_LAUNCH')
-headphones_launch             = get_addon_setting(suiteSettings, 'HEADPHONES_LAUNCH')
-
-# merge defaults
-fDefaultSuiteSettings         = open(pDefaultSuiteSettings, 'r')
-data = fDefaultSuiteSettings.read()
-fDefaultSuiteSettings.close()
-DefaultSuiteSettings = parseString(data)
-if not sickbeard_launch:
-    sickbeard_launch          = get_addon_setting(DefaultSuiteSettings, 'SICKBEARD_LAUNCH')
-if not couchpotato_launch:
-    couchpotato_launch        = get_addon_setting(DefaultSuiteSettings, 'COUCHPOTATO_LAUNCH')
-if not headphones_launch:
-    headphones_launch         = get_addon_setting(DefaultSuiteSettings, 'HEADPHONES_LAUNCH')
+user = (__addon__.getSetting('SICKPOTATOHEAD_USER'))
+pwd = (__addon__.getSetting('SICKPOTATOHEAD_PWD'))
+host = (__addon__.getSetting('SICKPOTATOHEAD_IP'))
+sickbeard_launch = (__addon__.getSetting('SICKBEARD_LAUNCH').lower() == 'true')
+couchpotato_launch = (__addon__.getSetting('COUCHPOTATO_LAUNCH').lower() == 'true')
+headphones_launch = (__addon__.getSetting('HEADPHONES_LAUNCH').lower() == 'true')
 
 # XBMC
 fXbmcSettings                 = open(pXbmcSettings, 'r')
@@ -142,58 +119,54 @@ except StandardError:
 
 # prepare execution environment
 # -----------------------------
-signal.signal(signal.SIGCHLD, signal.SIG_DFL)
 parch                         = platform.machine()
-pnamemapper                   = os.path.join(pPylib, 'Cheetah/_namemapper.so')
-petree                        = os.path.join(pPylib, 'lxml/etree.so')
-pobjectify                    = os.path.join(pPylib, 'lxml/objectify.so')
-punrar                        = os.path.join(pAddon, 'bin/unrar')
+pnamemapper                   = xbmc.translatePath(pPylib + '/Cheetah/_namemapper.so')
+petree                        = xbmc.translatePath(pPylib + '/lxml/etree.so')
+pobjectify                    = xbmc.translatePath(pPylib + '/lxml/objectify.so')
+punrar                        = xbmc.translatePath(pPylib + '/unrar')
 
-logging.debug(parch + ' architecture detected')
+xbmc.log('SickPotatoHead: ' + parch + ' architecture detected', level=xbmc.LOGDEBUG)
 
 if parch.startswith('arm'):
     parch = 'arm'
 
-if not os.path.exists(pnamemapper):
+if not xbmcvfs.exists(pnamemapper):
     try:
-        fnamemapper                    = os.path.join(pPylib, 'multiarch/_namemapper.so.' + parch)
-        shutil.copy(fnamemapper, pnamemapper)
-        logging.debug('Copied _namemapper.so for ' + parch)
+        fnamemapper                   = xbmc.translatePath(pPylib + '/multiarch/_namemapper.so.' + parch)
+        xbmcvfs.copy(fnamemapper, pnamemapper)
+        xbmc.log('SickPotatoHead: Copied _namemapper.so for ' + parch, level=xbmc.LOGDEBUG)
     except Exception, e:
-        logging.error('Error Copying _namemapper.so for ' + parch)
-        logging.exception(e)
+        xbmc.log('SickPotatoHead: Error Copying _namemapper.so for ' + parch, level=xbmc.LOGERROR)
+        xbmc.log(str(e), level=xbmc.LOGERROR)
 
-if not os.path.exists(petree):
+if not xbmcvfs.exists(petree):
     try:
-        fetree                        = os.path.join(pPylib, 'multiarch/etree.so.' + parch)
-        shutil.copy(fetree, petree)
-        logging.debug('Copied etree.so for ' + parch)
+        fetree                        = xbmc.translatePath(pPylib + '/multiarch/etree.so.' + parch)
+        xbmcvfs.copy(fetree, petree)
+        xbmc.log('SickPotatoHead: Copied etree.so for ' + parch, level=xbmc.LOGDEBUG)
     except Exception, e:
-        logging.error('Error Copying etree.so for ' + parch)
-        logging.exception(e)
+        xbmc.log('SickPotatoHead: Error Copying etree.so for ' + parch, level=xbmc.LOGERROR)
+        xbmc.log(str(e), level=xbmc.LOGERROR)
 
-if not os.path.exists(pobjectify):
+if not xbmcvfs.exists(pobjectify):
     try:
-        fobjectify                    = os.path.join(pPylib, 'multiarch/objectify.so.' + parch)
-        shutil.copy(fobjectify, pobjectify)
-        logging.debug('Copied objectify.so for ' + parch)
+        fobjectify                    = xbmc.translatePath(pPylib + '/multiarch/objectify.so.' + parch)
+        xbmcvfs.copy(fobjectify, pobjectify)
+        xbmc.log('SickPotatoHead: Copied objectify.so for ' + parch, level=xbmc.LOGDEBUG)
     except Exception, e:
-        logging.error('Error Copying objectify.so for ' + parch)
-        logging.exception(e)
+        xbmc.log('SickPotatoHead: Error Copying objectify.so for ' + parch, level=xbmc.LOGERROR)
+        xbmc.log(str(e), level=xbmc.LOGERROR)
 
-if not os.path.exists(punrar):
+if not xbmcvfs.exists(punrar):
     try:
-        funrar                        = os.path.join(pPylib, 'multiarch/unrar.' + parch)
-        shutil.copy(funrar, punrar)
-        os.chmod(punrar, 0755)
-        logging.debug('Copied unrar for ' + parch)
+        funrar                        = xbmc.translatePath(pPylib + '/multiarch/unrar.' + parch)
+        xbmcvfs.copy(funrar, punrar)
+        xbmc.log('AUDO: Copied unrar for ' + parch, level=xbmc.LOGDEBUG)
     except Exception, e:
-        logging.error('Error Copying unrar for ' + parch)
-        logging.exception(e)
+        xbmc.log('AUDO: Error Copying unrar for ' + parch, level=xbmc.LOGERROR)
+        xbmc.log(str(e), level=xbmc.LOGERROR)
 
-os.environ['PYTHONPATH']      = str(os.environ.get('PYTHONPATH')) + ':' + pPylib
-sys.path.append(pPylib)
-from configobj import ConfigObj
+os.environ['PYTHONPATH'] = str(os.environ.get('PYTHONPATH')) + ':' + pPylib
 
 # SickBeard start
 try:
@@ -208,15 +181,15 @@ try:
     defaultConfig['General']['web_host']            = host
     defaultConfig['General']['web_username']        = user
     defaultConfig['General']['web_password']        = pwd
-    defaultConfig['General']['cache_dir']           = pAddonHome + '/sbcache'
-    defaultConfig['General']['log_dir']             = pAddonHome + '/logs'
+    defaultConfig['General']['cache_dir']           = __addonhome__ + 'sbcache'
+    defaultConfig['General']['log_dir']             = __addonhome__ + 'logs'
     defaultConfig['XBMC'] = {}
     defaultConfig['XBMC']['use_xbmc']               = '1'
     defaultConfig['XBMC']['xbmc_host']              = 'localhost:' + xbmcPort
     defaultConfig['XBMC']['xbmc_username']          = xbmcUser
     defaultConfig['XBMC']['xbmc_password']          = xbmcPwd
 
-    if 'true' in transauth:
+    if transauth:
         defaultConfig['TORRENT'] = {}
         defaultConfig['TORRENT']['torrent_username']         = transuser
         defaultConfig['TORRENT']['torrent_password']         = transpwd
@@ -258,12 +231,14 @@ try:
 
     # launch SickBeard
     # ----------------
-    if "true" in sickbeard_launch:
+    if sickbeard_launch:
+        xbmc.log('SickPotatoHead: Launching SickBeard...', level=xbmc.LOGDEBUG)
         subprocess.call(sickBeard, close_fds=True)
+        xbmc.log('SickPotatoHead: ...done', level=xbmc.LOGDEBUG)
 except Exception, e:
-    logging.exception(e)
+    xbmc.log('SickPotatoHead: SickBeard exception occurred', level=xbmc.LOGERROR)
+    xbmc.log(str(e), level=xbmc.LOGERROR)
     print 'SickBeard: exception occurred:', e
-    print traceback.format_exc()
 # SickBeard end
 
 # CouchPotatoServer start
@@ -285,7 +260,7 @@ try:
     defaultConfig['core']['port']                   = '8083'
     defaultConfig['core']['launch_browser']         = '0'
     defaultConfig['core']['host']                   = host
-    defaultConfig['core']['data_dir']               = pAddonHome
+    defaultConfig['core']['data_dir']               = __addonhome__
     defaultConfig['core']['show_wizard']            = '0'
     defaultConfig['core']['debug']                  = '0'
     defaultConfig['core']['development']            = '0'
@@ -299,7 +274,7 @@ try:
     defaultConfig['xbmc']['username']               = xbmcUser
     defaultConfig['xbmc']['password']               = xbmcPwd
 
-    if 'true' in transauth:
+    if transauth:
         defaultConfig['transmission'] = {}
         defaultConfig['transmission']['username']         = transuser
         defaultConfig['transmission']['password']         = transpwd
@@ -334,12 +309,14 @@ try:
 
     # launch CouchPotatoServer
     # ------------------
-    if "true" in couchpotato_launch:
+    if couchpotato_launch:
+        xbmc.log('SickPotatoHead: Launching CouchPotatoServer...', level=xbmc.LOGDEBUG)
         subprocess.call(couchPotatoServer, close_fds=True)
+        xbmc.log('SickPotatoHead: ...done', level=xbmc.LOGDEBUG)
 except Exception, e:
-    logging.exception(e)
+    xbmc.log('SickPotatoHead: CouchPotatoServer exception occurred', level=xbmc.LOGERROR)
+    xbmc.log(str(e), level=xbmc.LOGERROR)
     print 'CouchPotatoServer: exception occurred:', e
-    print traceback.format_exc()
 # CouchPotatoServer end
 
 # Headphones start
@@ -356,15 +333,15 @@ try:
     defaultConfig['General']['http_password']             = pwd
     defaultConfig['General']['check_github']              = '0'
     defaultConfig['General']['check_github_on_startup']   = '0'
-    defaultConfig['General']['cache_dir']                 = pAddonHome + '/hpcache'
-    defaultConfig['General']['log_dir']                   = pAddonHome + '/logs'
+    defaultConfig['General']['cache_dir']                 = __addonhome__ + 'hpcache'
+    defaultConfig['General']['log_dir']                   = __addonhome__ + 'logs'
     defaultConfig['XBMC'] = {}
     defaultConfig['XBMC']['xbmc_enabled']                 = '1'
     defaultConfig['XBMC']['xbmc_host']                    = 'localhost:' + xbmcPort
     defaultConfig['XBMC']['xbmc_username']                = xbmcUser
     defaultConfig['XBMC']['xbmc_password']                = xbmcPwd
 
-    if 'true' in transauth:
+    if transauth:
         defaultConfig['Transmission'] = {}
         defaultConfig['Transmission']['transmission_username'] = transuser
         defaultConfig['Transmission']['transmission_password'] = transpwd
@@ -390,10 +367,12 @@ try:
 
     # launch Headphones
     # -----------------
-    if "true" in headphones_launch:
+    if headphones_launch:
+        xbmc.log('SickPotatoHead: Launching Headphones...', level=xbmc.LOGDEBUG)
         subprocess.call(headphones, close_fds=True)
+        xbmc.log('SickPotatoHead: ...done', level=xbmc.LOGDEBUG)
 except Exception, e:
-    logging.exception(e)
+    xbmc.log('SickPotatoHead: Headphones exception occurred', level=xbmc.LOGERROR)
+    xbmc.log(str(e), level=xbmc.LOGERROR)
     print 'Headphones: exception occurred:', e
-    print traceback.format_exc()
 # Headphones end

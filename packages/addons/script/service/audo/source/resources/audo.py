@@ -13,6 +13,7 @@ import xbmcvfs
 # helper functions
 # ----------------
 
+
 def create_dir(dirname):
     if not xbmcvfs.exists(dirname):
         xbmcvfs.mkdirs(dirname)
@@ -53,8 +54,9 @@ sabnzbd               = ['python', xbmc.translatePath(__addonpath__ + '/resource
                          '-d', '-f', pSabNzbdSettings, '-l 0']
 sickBeard             = ['python', xbmc.translatePath(__addonpath__ + '/resources/SickBeard/SickBeard.py'),
                          '--daemon', '--datadir', __addonhome__, '--config', pSickBeardSettings]
-couchPotatoServer     = ['python', xbmc.translatePath(__addonpath__ + '/resources/CouchPotatoServer/CouchPotato.py'), '--daemon', '--pid_file',
-                         xbmc.translatePath(__addonhome__ + 'couchpotato.pid'), '--config_file', pCouchPotatoServerSettings]
+couchPotatoServer     = ['python', xbmc.translatePath(__addonpath__ + '/resources/CouchPotatoServer/CouchPotato.py'),
+                         '--daemon', '--pid_file', xbmc.translatePath(__addonhome__ + 'couchpotato.pid'),
+                         '--config_file', pCouchPotatoServerSettings]
 headphones            = ['python', xbmc.translatePath(__addonpath__ + '/resources/Headphones/Headphones.py'),
                          '-d', '--datadir', __addonhome__, '--config', pHeadphonesSettings]
 

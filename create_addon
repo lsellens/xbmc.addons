@@ -36,8 +36,10 @@ if [ -f $PKG_DIR/addon ]; then
            -e "s|@PKG_ADDON_TYPE@|$PKG_ADDON_TYPE|g" \
            -e "s|@REQUIRES@|$REQUIRES|g" \
            -e "s|@PKG_SHORTDESC@|$PKG_SHORTDESC|g" \
+           -e "s|@PKG_SHORTTRANS@|$PKG_SHORTTRANS|g" \
            -e "s|@OS_VERSION@|$OS_VERSION|g" \
            -e "s|@PKG_LONGDESC@|$PKG_LONGDESC|g" \
+           -e "s|@PKG_LONGTRANS@|$PKG_LONGTRANS|g" \
            -i $ADDON_BUILD/$PKG_ADDON_ID/addon.xml
     fi
 

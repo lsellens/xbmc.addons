@@ -1,8 +1,4 @@
 # XBMC Media Center language file
-# Addon Name: audo
-# Addon id: script.service.audo
-# Addon version: 0.9.6
-# Addon Provider: lsellens
 # Translators:
 msgid ""
 msgstr ""
@@ -17,14 +13,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-
-msgctxt "Addon Summary"
-msgid "Audo (Automatic Downloader) is a fork of SABnzbd-Suite. SABnzbd-Suite Metapackage which combines SABnzbd, SickBeard, Couchpotato and Headphones in one Addon"
-msgstr ""
-
-msgctxt "Addon Description"
-msgid "Audo (Automatic Downloader) is a fork of SABnzbd-Suite. Updated frequently to newest versions of SAB, SB-mr.orange branch, CPv2, and HP."
-msgstr ""
 
 msgctxt "#32000"
 msgid "audo"

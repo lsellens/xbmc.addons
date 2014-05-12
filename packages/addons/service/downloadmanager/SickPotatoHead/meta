@@ -11,7 +11,12 @@ PKG_BUILD_DEPENDS="SickBeard Headphones CouchPotatoServer"
 PKG_PRIORITY="optional"
 PKG_SECTION="service/downloadmanager"
 PKG_SHORTDESC="SickPotatoHead is a Metapackage which combines SickBeard, Couchpotato V2 and Headphones in one Addon built from SABnzdb-Suite"
+
+PKG_SHORTTRANS="    <summary lang=\"nl\">SickPotatoHead is een metapackage wat Sickbeard, Couchpotato V2 en Headphones combineerd in één add-on gebouwd vanuit SABnzbd-Suite</summary>\n    <summary lang=\"fr\">SickPotatoHead est un méta-paquet qui combine SickBeard, Couchpotato V2 et Headphones en un seul add-on construit depuis SABnzdb-Suite.</summary>"
+
 PKG_LONGDESC="SickPotatoHead is a fork of SABnzbd-Suite geared toward us unfortunate enough not to have newsgroups access. Updated frequently to newest versions of SB, CPv2, and HP."
+
+PKG_LONGTRANS="    <description lang=\"nl\">SickPotatohead is een afsplitsing van SABnzbd-Suite gericht op ons die jammer genoeg niet tot nieuwsgroepen toegang hebben. Regelmatig bijgewerkt naar de nieuwste versies van SB, CPv2, en HP.</description>\n    <description lang=\"fr\">SickPotatoHead est un fork de SABnzbd-Suite destiné à vous qui n'avez malheureusement pas assez d'accès aux newsgroups. Mis à jour régulièrement vers les nouvelles versions de SB, CPv2, et HP.</description>"
 
 PKG_IS_ADDON="yes"
 PKG_ADDON_TYPE="xbmc.python.script"

@@ -16,7 +16,7 @@ import xbmcvfs
 
 def create_dir(dirname):
     if not xbmcvfs.exists(dirname):
-        xbmcvfs.mkdirs(dirname
+        xbmcvfs.mkdirs(dirname)
 
 # define some things that we're gonna need, mainly paths
 # ------------------------------------------------------
@@ -56,7 +56,7 @@ headphones            = ['python', xbmc.translatePath(__addonpath__ + '/resource
 # -----------------------------------------------
 
 sbfirstLaunch = not xbmcvfs.exists(pSickBeardSettings)
-cp2firstLaunch = not xbmcvfs.exists(pCouchPotatoServerSettings)
+cpfirstLaunch = not xbmcvfs.exists(pCouchPotatoServerSettings)
 hpfirstLaunch = not xbmcvfs.exists(pHeadphonesSettings)
 if sbfirstLaunch or cpfirstLaunch or hpfirstLaunch:
     xbmc.log('SickPotatoHead: First launch, creating directories', level=xbmc.LOGDEBUG)
@@ -67,8 +67,7 @@ if sbfirstLaunch or cpfirstLaunch or hpfirstLaunch:
     create_dir(pSickPotatoHeadWatchDir)
 
 # fix for old installs
-if not xbmcvfs.exists(pSickPotatoHeadCompleteTV):
-    xbmcvfs.copy(pSickPotatoHeadCompleteTV)
+create_dir(pSickPotatoHeadCompleteTV)
 
 # create the settings file if missing
 if not xbmcvfs.exists(pSuiteSettings):

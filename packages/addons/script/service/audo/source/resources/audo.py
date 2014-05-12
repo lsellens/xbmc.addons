@@ -34,7 +34,6 @@ pSabNzbdSettings      = xbmc.translatePath(__addonhome__ + 'sabnzbd.ini')
 pSickBeardSettings    = xbmc.translatePath(__addonhome__ + 'sickbeard.ini')
 pCouchPotatoServerSettings  = xbmc.translatePath(__addonhome__ + 'couchpotatoserver.ini')
 pHeadphonesSettings   = xbmc.translatePath(__addonhome__ + 'headphones.ini')
-pTransmission_Addon_Settings = '/storage/.xbmc/userdata/addon_data/service.downloadmanager.transmission/settings.xml'
 
 # directories
 pSabNzbdComplete      = '/storage/downloads'

@@ -3,6 +3,7 @@ import xbmc
 import xbmcaddon
 from lib.configobj import ConfigObj
 
+__addon__ = xbmcaddon.Addon(id='script.service.audo')
 __addonhome__ = xbmc.translatePath(__addon__.getAddonInfo('profile'))
 sabnzbd_launch = (__addon__.getSetting('SABNZBD_LAUNCH').lower() == 'true')
 sickbeard_launch = (__addon__.getSetting('SICKBEARD_LAUNCH').lower() == 'true')

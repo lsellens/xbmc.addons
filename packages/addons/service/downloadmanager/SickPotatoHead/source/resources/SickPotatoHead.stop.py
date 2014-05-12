@@ -3,6 +3,7 @@ import xbmc
 import xbmcaddon
 from lib.configobj import ConfigObj
 
+__addon__ = xbmcaddon.Addon(id='service.downloadmanager.SickPotatoHead')
 __addonhome__ = xbmc.translatePath(__addon__.getAddonInfo('profile'))
 sickbeard_launch = (__addon__.getSetting('SICKBEARD_LAUNCH').lower() == 'true')
 couchpotato_launch = (__addon__.getSetting('COUCHPOTATO_LAUNCH').lower() == 'true')

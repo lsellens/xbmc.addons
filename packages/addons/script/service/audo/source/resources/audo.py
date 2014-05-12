@@ -91,6 +91,7 @@ if not xbmcvfs.exists(pSuiteSettings):
 # ----------------------------
 
 # Transmission-Daemon
+transauth = False
 try:
     transmissionaddon = xbmcaddon.Addon(id='service.downloadmanager.transmission')
     transauth = (transmissionaddon.getSetting('TRANSMISSION_AUTH').lower() == 'true')

@@ -238,7 +238,6 @@ try:
 except Exception, e:
     xbmc.log('SickPotatoHead: SickBeard exception occurred', level=xbmc.LOGERROR)
     xbmc.log(str(e), level=xbmc.LOGERROR)
-    print 'SickBeard: exception occurred:', e
 # SickBeard end
 
 # CouchPotatoServer start
@@ -316,7 +315,6 @@ try:
 except Exception, e:
     xbmc.log('SickPotatoHead: CouchPotatoServer exception occurred', level=xbmc.LOGERROR)
     xbmc.log(str(e), level=xbmc.LOGERROR)
-    print 'CouchPotatoServer: exception occurred:', e
 # CouchPotatoServer end
 
 # Headphones start
@@ -374,5 +372,4 @@ try:
 except Exception, e:
     xbmc.log('SickPotatoHead: Headphones exception occurred', level=xbmc.LOGERROR)
     xbmc.log(str(e), level=xbmc.LOGERROR)
-    print 'Headphones: exception occurred:', e
 # Headphones end

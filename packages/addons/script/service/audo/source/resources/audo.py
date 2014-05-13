@@ -326,7 +326,6 @@ try:
             except Exception, e:
                 xbmc.log('AUDO: SABnzbd exception occurred', level=xbmc.LOGERROR)
                 xbmc.log(str(e), level=xbmc.LOGERROR)
-                print 'SABnzbd: exception occurred:', e
 
         sabNzbdConfig.reload()
         sabNzbdApiKey = sabNzbdConfig['misc']['api_key']
@@ -338,7 +337,6 @@ try:
 except Exception, e:
     xbmc.log('AUDO: SABnzbd exception occurred', level=xbmc.LOGERROR)
     xbmc.log(str(e), level=xbmc.LOGERROR)
-    print 'SABnzbd: exception occurred:', e
 # SABnzbd end
 
 # SickBeard start
@@ -413,7 +411,6 @@ try:
 except Exception, e:
     xbmc.log('AUDO: SickBeard exception occurred', level=xbmc.LOGERROR)
     xbmc.log(str(e), level=xbmc.LOGERROR)
-    print 'SickBeard: exception occurred:', e
 # SickBeard end
 
 # CouchPotatoServer start
@@ -495,7 +492,6 @@ try:
 except Exception, e:
     xbmc.log('AUDO: CouchPotatoServer exception occurred', level=xbmc.LOGERROR)
     xbmc.log(str(e), level=xbmc.LOGERROR)
-    print 'CouchPotatoServer: exception occurred:', e
 # CouchPotatoServer end
 
 # Headphones start
@@ -558,5 +554,4 @@ try:
 except Exception, e:
     xbmc.log('AUDO: Headphones exception occurred', level=xbmc.LOGERROR)
     xbmc.log(str(e), level=xbmc.LOGERROR)
-    print 'Headphones: exception occurred:', e
 # Headphones end

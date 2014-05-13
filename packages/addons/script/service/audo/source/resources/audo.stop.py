@@ -20,6 +20,7 @@ if sabnzbd_launch:
     except Exception, e:
         xbmc.log('AUDO: SABnzbd exception occurred', level=xbmc.LOGERROR)
         xbmc.log(str(e), level=xbmc.LOGERROR)
+        pass
 
 if sickbeard_launch:
     try:
@@ -31,6 +32,7 @@ if sickbeard_launch:
     except Exception, e:
         xbmc.log('AUDO: SickBeard exception occurred', level=xbmc.LOGERROR)
         xbmc.log(str(e), level=xbmc.LOGERROR)
+        pass
 
 if couchpotato_launch:
     try:
@@ -42,6 +44,7 @@ if couchpotato_launch:
     except Exception, e:
         xbmc.log('AUDO: CouchPotato exception occurred', level=xbmc.LOGERROR)
         xbmc.log(str(e), level=xbmc.LOGERROR)
+        pass
 
 if headphones_launch:
     try:
@@ -53,3 +56,4 @@ if headphones_launch:
     except Exception, e:
         xbmc.log('AUDO: HeadPhones exception occurred', level=xbmc.LOGERROR)
         xbmc.log(str(e), level=xbmc.LOGERROR)
+        pass

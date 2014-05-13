@@ -90,8 +90,8 @@ try:
         xbmc.log('SickPotatoHead: Transmission Authentication Not Enabled', level=xbmc.LOGDEBUG)
 
 except Exception, e:
-    xbmc.log('SickPotatoHead: Transmission Settings are not present', level=xbmc.LOGERROR)
-    xbmc.log(str(e), level=xbmc.LOGERROR)
+    xbmc.log('SickPotatoHead: Transmission Settings are not present', level=xbmc.LOGNOTICE)
+    xbmc.log(str(e), level=xbmc.LOGNOTICE)
 
 # SickPotatoHead-Suite
 user = (__addon__.getSetting('SICKPOTATOHEAD_USER'))

@@ -143,9 +143,9 @@ pcrypto                       = xbmc.translatePath(pPylib + '/OpenSSL/crypto.so'
 petree                        = xbmc.translatePath(pPylib + '/lxml/etree.so')
 pobjectify                    = xbmc.translatePath(pPylib + '/lxml/objectify.so')
 pyenc                         = xbmc.translatePath(pPylib + '/_yenc.so')
-ppar2                         = xbmc.translatePath(pPylib + '/par2')
-punrar                        = xbmc.translatePath(pPylib + '/unrar')
-punzip                        = xbmc.translatePath(pPylib + '/unzip')
+ppar2                         = xbmc.translatePath(__addonpath__ + '/bin/par2')
+punrar                        = xbmc.translatePath(__addonpath__ + '/bin/unrar')
+punzip                        = xbmc.translatePath(__addonpath__ + '/bin/unzip')
 
 xbmc.log('AUDO: ' + parch + ' architecture detected', level=xbmc.LOGDEBUG)
 
@@ -219,6 +219,7 @@ if not xbmcvfs.exists(ppar2):
     try:
         fpar2                         = xbmc.translatePath(pPylib + '/multiarch/par2.' + parch)
         xbmcvfs.copy(fpar2, ppar2)
+        os.chmod(ppar2, 0755)
         xbmc.log('AUDO: Copied par2 for ' + parch, level=xbmc.LOGDEBUG)
     except Exception, e:
         xbmc.log('AUDO: Error Copying par2 for ' + parch, level=xbmc.LOGERROR)
@@ -228,6 +229,7 @@ if not xbmcvfs.exists(punrar):
     try:
         funrar                        = xbmc.translatePath(pPylib + '/multiarch/unrar.' + parch)
         xbmcvfs.copy(funrar, punrar)
+        os.chmod(punrar, 0755)
         xbmc.log('AUDO: Copied unrar for ' + parch, level=xbmc.LOGDEBUG)
     except Exception, e:
         xbmc.log('AUDO: Error Copying unrar for ' + parch, level=xbmc.LOGERROR)
@@ -237,6 +239,7 @@ if not xbmcvfs.exists(punzip):
     try:
         funzip                        = xbmc.translatePath(pPylib + '/multiarch/unzip.' + parch)
         xbmcvfs.copy(funzip, punzip)
+        os.chmod(punzip, 0755)
         xbmc.log('AUDO: Copied unzip for ' + parch, level=xbmc.LOGDEBUG)
     except Exception, e:
         xbmc.log('AUDO: Error Copying unzip for ' + parch, level=xbmc.LOGERROR)

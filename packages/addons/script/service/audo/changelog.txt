@@ -1,5 +1,6 @@
 1.0.3
 - Fix for installs not running transmission addon
+- Fixed missing utilities
 
 1.0.2
 - update to HeadPhones-e67d324

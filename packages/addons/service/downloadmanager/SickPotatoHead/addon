@@ -13,3 +13,5 @@ mkdir -p $ADDON_BUILD/$PKG_ADDON_ID/resources/CouchPotatoServer
 
 mkdir -p $ADDON_BUILD/$PKG_ADDON_ID/resources/Headphones
   cp -PR $BUILD/Headphones-*/* $ADDON_BUILD/$PKG_ADDON_ID/resources/Headphones
+
+mkdir -p $ADDON_BUILD/$PKG_ADDON_ID/bin

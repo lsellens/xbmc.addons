@@ -92,6 +92,7 @@ try:
 except Exception, e:
     xbmc.log('SickPotatoHead: Transmission Settings are not present', level=xbmc.LOGNOTICE)
     xbmc.log(str(e), level=xbmc.LOGNOTICE)
+    pass
 
 # SickPotatoHead-Suite
 user = (__addon__.getSetting('SICKPOTATOHEAD_USER'))
@@ -123,7 +124,7 @@ parch                         = platform.machine()
 pnamemapper                   = xbmc.translatePath(pPylib + '/Cheetah/_namemapper.so')
 petree                        = xbmc.translatePath(pPylib + '/lxml/etree.so')
 pobjectify                    = xbmc.translatePath(pPylib + '/lxml/objectify.so')
-punrar                        = xbmc.translatePath(pPylib + '/unrar')
+punrar                        = xbmc.translatePath(__addonpath__ + '/bin/unrar')
 
 xbmc.log('SickPotatoHead: ' + parch + ' architecture detected', level=xbmc.LOGDEBUG)
 
@@ -161,6 +162,7 @@ if not xbmcvfs.exists(punrar):
     try:
         funrar                        = xbmc.translatePath(pPylib + '/multiarch/unrar.' + parch)
         xbmcvfs.copy(funrar, punrar)
+        os.chmod(punrar, 0755)
         xbmc.log('AUDO: Copied unrar for ' + parch, level=xbmc.LOGDEBUG)
     except Exception, e:
         xbmc.log('AUDO: Error Copying unrar for ' + parch, level=xbmc.LOGERROR)

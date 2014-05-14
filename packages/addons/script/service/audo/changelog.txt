@@ -1,10 +1,12 @@
 1.0.3
-- Fix for installs not running transmission addon
-- Fixed missing utilities
+- fix for installs not running transmission addon
+- fixed missing utilities
+- now can wake periodically when sabnzbd is disabled
+- restart when settings dialog is accessed
 
 1.0.2
 - update to HeadPhones-e67d324
-- Update tp CouchPotatoServer-2402834
+- update to CouchPotatoServer-2402834
 - updates to addon structure
 
 1.0.1

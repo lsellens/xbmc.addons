@@ -107,6 +107,10 @@ while not xbmc.abortRequested:
         secondsSinceEpoch = time.mktime(wakeTime.timetuple())
         open("/sys/class/rtc/rtc0/wakealarm", "w").write("0")
         open("/sys/class/rtc/rtc0/wakealarm", "w").write(str(secondsSinceEpoch))
+    else:
+        open("/sys/class/rtc/rtc0/wakealarm","w").close()
+
+
 
     time.sleep(0.250)
 

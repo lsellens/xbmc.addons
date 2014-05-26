@@ -98,8 +98,12 @@ try:
 
     if transauth:
         xbmc.log('AUDO: Transmission Authentication Enabled', level=xbmc.LOGDEBUG)
-        transuser = (transmissionaddon.getSetting('TRANSMISSION_USER'))
-        transpwd = (transmissionaddon.getSetting('TRANSMISSION_PWD'))
+        transuser = (transmissionaddon.getSetting('TRANSMISSION_USER').decode('utf-8'))
+        if transuser == '':
+            transuser = None
+        transpwd = (transmissionaddon.getSetting('TRANSMISSION_PWD').decode('utf-8'))
+        if transpwd == '':
+            transpwd = None
     else:
         xbmc.log('AUDO: Transmission Authentication Not Enabled', level=xbmc.LOGDEBUG)
 
@@ -109,8 +113,8 @@ except Exception, e:
     pass
 
 # audo
-user = (__addon__.getSetting('SABNZBD_USER'))
-pwd = (__addon__.getSetting('SABNZBD_PWD'))
+user = (__addon__.getSetting('SABNZBD_USER').decode('utf-8'))
+pwd = (__addon__.getSetting('SABNZBD_PWD').decode('utf-8'))
 host = (__addon__.getSetting('SABNZBD_IP'))
 sabnzbd_launch = (__addon__.getSetting('SABNZBD_LAUNCH').lower() == 'true')
 sickbeard_launch = (__addon__.getSetting('SICKBEARD_LAUNCH').lower() == 'true')

@@ -84,8 +84,12 @@ try:
 
     if transauth:
         xbmc.log('SickPotatoHead: Transmission Authentication Enabled', level=xbmc.LOGDEBUG)
-        transuser = (transmissionaddon.getSetting('TRANSMISSION_USER'))
-        transpwd = (transmissionaddon.getSetting('TRANSMISSION_PWD'))
+        transuser = (transmissionaddon.getSetting('TRANSMISSION_USER').decode('utf-8'))
+        if transuser == '':
+            transuser = None
+        transpwd = (transmissionaddon.getSetting('TRANSMISSION_PWD').decode('utf-8'))
+        if transpwd == '':
+            transpwd = None
     else:
         xbmc.log('SickPotatoHead: Transmission Authentication Not Enabled', level=xbmc.LOGDEBUG)
 
@@ -95,8 +99,8 @@ except Exception, e:
     pass
 
 # SickPotatoHead-Suite
-user = (__addon__.getSetting('SICKPOTATOHEAD_USER'))
-pwd = (__addon__.getSetting('SICKPOTATOHEAD_PWD'))
+user = (__addon__.getSetting('SICKPOTATOHEAD_USER').decode('utf-8'))
+pwd = (__addon__.getSetting('SICKPOTATOHEAD_PWD').decode('utf-8'))
 host = (__addon__.getSetting('SICKPOTATOHEAD_IP'))
 sickbeard_launch = (__addon__.getSetting('SICKBEARD_LAUNCH').lower() == 'true')
 couchpotato_launch = (__addon__.getSetting('COUCHPOTATO_LAUNCH').lower() == 'true')

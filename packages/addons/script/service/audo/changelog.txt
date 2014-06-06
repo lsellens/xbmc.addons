@@ -1,3 +1,7 @@
+1.0.4
+- update to CouchPotatoServer-f80559d
+- update to HeadPhones-88af845
+
 1.0.3
 - fix for installs not running transmission addon
 - fixed missing utilities

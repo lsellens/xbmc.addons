@@ -79,10 +79,9 @@ if firstLaunch:
     create_dir(pSabNzbdCompleteMov)
     create_dir(pSabNzbdCompleteMusic)
     create_dir(pSabNzbdIncomplete)
-
-create_dir(pSabNzbdScripts)
-xbmcvfs.copy(xbmc.translatePath(pSickBeardTvScripts + '/sabToSickBeard.py'), pSabNzbdScripts)
-xbmcvfs.copy(xbmc.translatePath(pSickBeardTvScripts + '/autoProcessTV.py'), pSabNzbdScripts)
+    create_dir(pSabNzbdScripts)
+    xbmcvfs.copy(xbmc.translatePath(pSickBeardTvScripts + '/sabToSickBeard.py'), pSabNzbdScripts)
+    xbmcvfs.copy(xbmc.translatePath(pSickBeardTvScripts + '/autoProcessTV.py'), pSabNzbdScripts)
 
 # the settings file already exists if the user set settings before the first launch
 if not xbmcvfs.exists(pSuiteSettings):

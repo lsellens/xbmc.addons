@@ -1,5 +1,5 @@
 1.0.4
-- update to CouchPotatoServer-d26a2b1
+- update to CouchPotatoServer-b45307e
 - update to HeadPhones-88af845
 
 1.0.3

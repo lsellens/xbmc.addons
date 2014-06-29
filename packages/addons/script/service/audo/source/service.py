@@ -105,11 +105,18 @@ while not xbmc.abortRequested:
         if now.time() > timeOfDay:
             wakeTime += datetime.timedelta(days=1)
         secondsSinceEpoch = time.mktime(wakeTime.timetuple())
-        open("/sys/class/rtc/rtc0/wakealarm", "w").write("0")
-        open("/sys/class/rtc/rtc0/wakealarm", "w").write(str(secondsSinceEpoch))
+        try:
+            open("/sys/class/rtc/rtc0/wakealarm", "w").write("0")
+            open("/sys/class/rtc/rtc0/wakealarm", "w").write(str(secondsSinceEpoch))
+        except IOError, e:
+            xbmc.log('audo: could not write /sys/class/rtc/rtc0/wakealarm ', level=xbmc.LOGERROR)
+            xbmc.log(str(e), level=xbmc.LOGERROR)
     else:
-        open("/sys/class/rtc/rtc0/wakealarm","w").close()
-
+        try:
+            open("/sys/class/rtc/rtc0/wakealarm","w").close()
+        except IOError, e:
+            xbmc.log('audo: could not write /sys/class/rtc/rtc0/wakealarm ', level=xbmc.LOGERROR)
+            xbmc.log(str(e), level=xbmc.LOGDEBUG)
 
 
     time.sleep(0.250)

@@ -2,6 +2,7 @@
 from resources.lib.configobj import ConfigObj
 import xbmc
 import xbmcaddon
+import xbmcvfs
 import urllib2
 import socket
 import time
@@ -29,16 +30,6 @@ except Exception, e:
     xbmc.log('audo: could not execute launch script:', level=xbmc.LOGERROR)
     xbmc.log(str(e), level=xbmc.LOGERROR)
 
-# SABnzbd addresses and api key
-sabNzbdConfigFile = (xbmc.translatePath(__addonhome__ + 'sabnzbd.ini'))
-sabConfiguration  = ConfigObj(sabNzbdConfigFile)
-sabNzbdAddress    = "localhost:8081"
-sabNzbdApiKey     = sabConfiguration['misc']['api_key']
-sabNzbdQueue      = ('http://' + sabNzbdAddress + '/api?mode=queue&output=xml&apikey=' + sabNzbdApiKey)
-sabNzbdHistory    = ('http://' + sabNzbdAddress + '/api?mode=history&output=xml&apikey=' + sabNzbdApiKey)
-sabNzbdQueueKeywords = ['<status>Downloading</status>', '<status>Fetching</status>', '<priority>Force</priority>']
-sabNzbdHistoryKeywords = ['<status>Repairing</status>', '<status>Verifying</status>', '<status>Extracting</status>']
-
 # start checking SABnzbd for activity and prevent sleeping if necessary
 socket.setdefaulttimeout(timeout)
 
@@ -50,6 +41,19 @@ if shouldKeepAwake:
     xbmc.log('audo: will prevent idle sleep/shutdown while downloading')
 if wakePeriodically:
     xbmc.log('audo: will try to wake system daily at ' + wake_times[wakeHourIdx])
+
+# SABnzbd addresses and api key
+sabNzbdConfigFile = (xbmc.translatePath(__addonhome__ + 'sabnzbd.ini'))
+while not xbmcvfs.exists(sabNzbdConfigFile):
+    time.sleep(5)
+else:
+    sabConfiguration  = ConfigObj(sabNzbdConfigFile)
+    sabNzbdAddress    = "localhost:8081"
+    sabNzbdApiKey     = sabConfiguration['misc']['api_key']
+    sabNzbdQueue      = ('http://' + sabNzbdAddress + '/api?mode=queue&output=xml&apikey=' + sabNzbdApiKey)
+    sabNzbdHistory    = ('http://' + sabNzbdAddress + '/api?mode=history&output=xml&apikey=' + sabNzbdApiKey)
+    sabNzbdQueueKeywords = ['<status>Downloading</status>', '<status>Fetching</status>', '<priority>Force</priority>']
+    sabNzbdHistoryKeywords = ['<status>Repairing</status>', '<status>Verifying</status>', '<status>Extracting</status>']
 
 while not xbmc.abortRequested:
     # reread setting in case it has changed
@@ -113,11 +117,10 @@ while not xbmc.abortRequested:
             xbmc.log(str(e), level=xbmc.LOGERROR)
     else:
         try:
-            open("/sys/class/rtc/rtc0/wakealarm","w").close()
+            open("/sys/class/rtc/rtc0/wakealarm", "w").close()
         except IOError, e:
             xbmc.log('audo: could not write /sys/class/rtc/rtc0/wakealarm ', level=xbmc.LOGERROR)
             xbmc.log(str(e), level=xbmc.LOGDEBUG)
-
 
     time.sleep(0.250)
 

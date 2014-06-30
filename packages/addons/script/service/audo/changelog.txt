@@ -1,5 +1,5 @@
 1.0.5
-- update to CouchPotatoServer-30d56b5
+- update to CouchPotatoServer-45b2dff
 - Fix XBMC crash on RPI due to wake function
 - Fix XBMC crash on frodo
 

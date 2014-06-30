@@ -70,17 +70,19 @@ sbfirstLaunch = not xbmcvfs.exists(pSickBeardSettings)
 cp2firstLaunch = not xbmcvfs.exists(pCouchPotatoServerSettings)
 hpfirstLaunch = not xbmcvfs.exists(pHeadphonesSettings)
 
-if firstLaunch:
-    xbmc.log('AUDO: First launch, creating directories', level=xbmc.LOGDEBUG)
-    create_dir(__addonhome__)
-    create_dir(pSabNzbdComplete)
-    create_dir(pSabNzbdWatchDir)
-    create_dir(pSabNzbdCompleteTV)
-    create_dir(pSabNzbdCompleteMov)
-    create_dir(pSabNzbdCompleteMusic)
-    create_dir(pSabNzbdIncomplete)
-    create_dir(pSabNzbdScripts)
+xbmc.log('AUDO: Creating directories if missing', level=xbmc.LOGDEBUG)
+create_dir(__addonhome__)
+create_dir(pSabNzbdComplete)
+create_dir(pSabNzbdWatchDir)
+create_dir(pSabNzbdCompleteTV)
+create_dir(pSabNzbdCompleteMov)
+create_dir(pSabNzbdCompleteMusic)
+create_dir(pSabNzbdIncomplete)
+create_dir(pSabNzbdScripts)
+
+if not xbmcvfs.exists(xbmc.translatePath(pSabNzbdScripts + '/sabToSickBeard.py')):
     xbmcvfs.copy(xbmc.translatePath(pSickBeardTvScripts + '/sabToSickBeard.py'), pSabNzbdScripts)
+if not xbmcvfs.exists(xbmc.translatePath(pSabNzbdScripts + '/autoProcessTV.py')):
     xbmcvfs.copy(xbmc.translatePath(pSickBeardTvScripts + '/autoProcessTV.py'), pSabNzbdScripts)
 
 # the settings file already exists if the user set settings before the first launch

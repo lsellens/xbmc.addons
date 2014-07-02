@@ -515,12 +515,12 @@ try:
         defaultConfig['blackhole']['enabled']             = '0'
         defaultConfig['Sabnzbd']['category']              = 'movies'
         defaultConfig['Sabnzbd']['pp_directory']          = pSabNzbdCompleteMov
-        defaultConfig['Renamer'] = {}
-        defaultConfig['Renamer']['enabled']               = '1'
-        defaultConfig['Renamer']['from']                  = pSabNzbdCompleteMov
-        defaultConfig['Renamer']['to']                    = '/storage/videos'
-        defaultConfig['Renamer']['separator']             = '.'
-        defaultConfig['Renamer']['cleanup']               = '0'
+        defaultConfig['renamer'] = {}
+        defaultConfig['renamer']['enabled']               = '1'
+        defaultConfig['renamer']['from']                  = pSabNzbdCompleteMov
+        defaultConfig['renamer']['to']                    = '/storage/videos'
+        defaultConfig['renamer']['separator']             = '.'
+        defaultConfig['renamer']['cleanup']               = '0'
         defaultConfig['core']['permission_folder']        = '0644'
         defaultConfig['core']['permission_file']          = '0644'
 

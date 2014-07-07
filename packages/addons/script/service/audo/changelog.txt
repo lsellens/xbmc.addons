@@ -1,3 +1,7 @@
+1.0.6
+- update to HeadPhones-54bbde5
+- update to Sabnzbd-0.7.18
+
 1.0.5
 - update to CouchPotatoServer-45b2dff
 - Fix XBMC crash on RPI due to wake function

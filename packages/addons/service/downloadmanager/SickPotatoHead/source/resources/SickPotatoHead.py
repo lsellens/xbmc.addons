@@ -295,11 +295,11 @@ try:
         defaultConfig['blackhole']['directory']           = pSickPotatoHeadWatchDir
         defaultConfig['blackhole']['use_for']             = 'torrent'
         defaultConfig['blackhole']['enabled']             = '0'
-        defaultConfig['Renamer'] = {}
-        defaultConfig['Renamer']['enabled']               = '0'
-        defaultConfig['Renamer']['from']                  = pSickPotatoHeadCompleteMov
-        defaultConfig['Renamer']['separator']             = '.'
-        defaultConfig['Renamer']['cleanup']               = '0'
+        defaultConfig['renamer'] = {}
+        defaultConfig['renamer']['enabled']               = '0'
+        defaultConfig['renamer']['from']                  = pSickPotatoHeadCompleteMov
+        defaultConfig['renamer']['separator']             = '.'
+        defaultConfig['renamer']['cleanup']               = '0'
         defaultConfig['nzbindex'] = {}
         defaultConfig['nzbindex']['enabled']              = '0'
         defaultConfig['mysterbin'] = {}

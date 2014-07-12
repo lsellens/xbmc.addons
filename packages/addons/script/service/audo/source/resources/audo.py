@@ -81,9 +81,9 @@ create_dir(pSabNzbdIncomplete)
 create_dir(pSabNzbdScripts)
 
 if not xbmcvfs.exists(xbmc.translatePath(pSabNzbdScripts + '/sabToSickBeard.py')):
-    xbmcvfs.copy(xbmc.translatePath(pSickBeardTvScripts + '/sabToSickBeard.py'), pSabNzbdScripts)
+    xbmcvfs.copy(xbmc.translatePath(pSickBeardTvScripts + '/sabToSickBeard.py'), pSabNzbdScripts + '/sabToSickBeard.py')
 if not xbmcvfs.exists(xbmc.translatePath(pSabNzbdScripts + '/autoProcessTV.py')):
-    xbmcvfs.copy(xbmc.translatePath(pSickBeardTvScripts + '/autoProcessTV.py'), pSabNzbdScripts)
+    xbmcvfs.copy(xbmc.translatePath(pSickBeardTvScripts + '/autoProcessTV.py'), pSabNzbdScripts + '/autoProcessTV.py')
 
 # the settings file already exists if the user set settings before the first launch
 if not xbmcvfs.exists(pSuiteSettings):
@@ -94,25 +94,27 @@ if not xbmcvfs.exists(pSuiteSettings):
 
 # Transmission-Daemon
 transauth = False
-try:
-    transmissionaddon = xbmcaddon.Addon(id='service.downloadmanager.transmission')
-    transauth = (transmissionaddon.getSetting('TRANSMISSION_AUTH').lower() == 'true')
+# work around for frodo crash will fix this later
+if xbmcvfs.exists('/storage/.xbmc/addons/service.downloadmanager.transmission/default.py'):
+    try:
+        transmissionaddon = xbmcaddon.Addon(id='service.downloadmanager.transmission')
+        transauth = (transmissionaddon.getSetting('TRANSMISSION_AUTH').lower() == 'true')
 
-    if transauth:
-        xbmc.log('AUDO: Transmission Authentication Enabled', level=xbmc.LOGDEBUG)
-        transuser = (transmissionaddon.getSetting('TRANSMISSION_USER').decode('utf-8'))
-        if transuser == '':
-            transuser = None
-        transpwd = (transmissionaddon.getSetting('TRANSMISSION_PWD').decode('utf-8'))
-        if transpwd == '':
-            transpwd = None
-    else:
-        xbmc.log('AUDO: Transmission Authentication Not Enabled', level=xbmc.LOGDEBUG)
+        if transauth:
+            xbmc.log('AUDO: Transmission Authentication Enabled', level=xbmc.LOGDEBUG)
+            transuser = (transmissionaddon.getSetting('TRANSMISSION_USER').decode('utf-8'))
+            if transuser == '':
+                transuser = None
+            transpwd = (transmissionaddon.getSetting('TRANSMISSION_PWD').decode('utf-8'))
+            if transpwd == '':
+                transpwd = None
+        else:
+            xbmc.log('AUDO: Transmission Authentication Not Enabled', level=xbmc.LOGDEBUG)
 
-except Exception, e:
-    xbmc.log('AUDO: Transmission Settings are not present', level=xbmc.LOGNOTICE)
-    xbmc.log(str(e), level=xbmc.LOGNOTICE)
-    pass
+    except Exception, e:
+        xbmc.log('AUDO: Transmission Settings are not present', level=xbmc.LOGNOTICE)
+        xbmc.log(str(e), level=xbmc.LOGNOTICE)
+        pass
 
 # audo
 user = (__addon__.getSetting('SABNZBD_USER').decode('utf-8'))

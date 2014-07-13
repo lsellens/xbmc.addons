@@ -1,5 +1,5 @@
 1.0.6
-- update to HeadPhones-54bbde5
+- update to HeadPhones-c170b2a
 - update to Sabnzbd-0.7.18
 - Fix XBMC crash on frodo (hopefully for real this time)
 

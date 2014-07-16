@@ -419,10 +419,10 @@ try:
         xbmc.log('AUDO: Migrating to SickRage backing up old DB files', level=xbmc.LOGNOTICE)
         xbmcvfs.mkdirs(__addonhome__ + 'oldsbdbbackup')
         try:
-            dirs = xbmcvfs.listdir(__addonhome__)
+            dirs = os.listdir(__addonhome__)
             for file in dirs:
                 if 'sickbeard.db' in file or file in ('cache.db', 'failed.db'):
-                    xbmcvfs.rename(__addonhome__ + file, __addonhome__ + 'oldsbdbbackup/' + file)
+                    os.rename(__addonhome__ + file, __addonhome__ + 'oldsbdbbackup/' + file)
         except Exception, e:
             xbmc.log('AUDO: Error backing up old DB files', level=xbmc.LOGERROR)
             xbmc.log(str(e), level=xbmc.LOGERROR)

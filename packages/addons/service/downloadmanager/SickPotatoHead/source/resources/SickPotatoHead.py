@@ -17,7 +17,7 @@ import xbmcvfs
 def create_dir(dirname):
     if not xbmcvfs.exists(dirname):
         xbmcvfs.mkdirs(dirname)
-
+        xbmc.log('SickPotatoHead: Created directory ' + dirname, level=xbmc.LOGDEBUG)
 # define some things that we're gonna need, mainly paths
 # ------------------------------------------------------
 
@@ -58,13 +58,13 @@ headphones            = ['python', xbmc.translatePath(__addonpath__ + '/resource
 sbfirstLaunch = not xbmcvfs.exists(pSickBeardSettings)
 cpfirstLaunch = not xbmcvfs.exists(pCouchPotatoServerSettings)
 hpfirstLaunch = not xbmcvfs.exists(pHeadphonesSettings)
-if sbfirstLaunch or cpfirstLaunch or hpfirstLaunch:
-    xbmc.log('SickPotatoHead: First launch, creating directories', level=xbmc.LOGDEBUG)
-    create_dir(__addonhome__)
-    create_dir(pSickPotatoHeadComplete)
-    create_dir(pSickPotatoHeadCompleteTV)
-    create_dir(pSickPotatoHeadCompleteMov)
-    create_dir(pSickPotatoHeadWatchDir)
+
+xbmc.log('SickPotatoHead: Creating directories if missing', level=xbmc.LOGDEBUG)
+create_dir(__addonhome__)
+create_dir(pSickPotatoHeadComplete)
+create_dir(pSickPotatoHeadCompleteTV)
+create_dir(pSickPotatoHeadCompleteMov)
+create_dir(pSickPotatoHeadWatchDir)
 
 # fix for old installs
 create_dir(pSickPotatoHeadCompleteTV)
@@ -85,7 +85,7 @@ if xbmcvfs.exists('/storage/.xbmc/addons/service.downloadmanager.transmission/de
         transauth = (transmissionaddon.getSetting('TRANSMISSION_AUTH').lower() == 'true')
 
         if transauth:
-            xbmc.log('AUDO: Transmission Authentication Enabled', level=xbmc.LOGDEBUG)
+            xbmc.log('SickPotatoHead: Transmission Authentication Enabled', level=xbmc.LOGDEBUG)
             transuser = (transmissionaddon.getSetting('TRANSMISSION_USER').decode('utf-8'))
             if transuser == '':
                 transuser = None
@@ -93,10 +93,10 @@ if xbmcvfs.exists('/storage/.xbmc/addons/service.downloadmanager.transmission/de
             if transpwd == '':
                 transpwd = None
         else:
-            xbmc.log('AUDO: Transmission Authentication Not Enabled', level=xbmc.LOGDEBUG)
+            xbmc.log('SickPotatoHead: Transmission Authentication Not Enabled', level=xbmc.LOGDEBUG)
 
     except Exception, e:
-        xbmc.log('AUDO: Transmission Settings are not present', level=xbmc.LOGNOTICE)
+        xbmc.log('SickPotatoHead: Transmission Settings are not present', level=xbmc.LOGNOTICE)
         xbmc.log(str(e), level=xbmc.LOGNOTICE)
         pass
 
@@ -169,9 +169,9 @@ if not xbmcvfs.exists(punrar):
         funrar                        = xbmc.translatePath(pPylib + '/multiarch/unrar.' + parch)
         xbmcvfs.copy(funrar, punrar)
         os.chmod(punrar, 0755)
-        xbmc.log('AUDO: Copied unrar for ' + parch, level=xbmc.LOGDEBUG)
+        xbmc.log('SickPotatoHead: Copied unrar for ' + parch, level=xbmc.LOGDEBUG)
     except Exception, e:
-        xbmc.log('AUDO: Error Copying unrar for ' + parch, level=xbmc.LOGERROR)
+        xbmc.log('SickPotatoHead: Error Copying unrar for ' + parch, level=xbmc.LOGERROR)
         xbmc.log(str(e), level=xbmc.LOGERROR)
 
 os.environ['PYTHONPATH'] = str(os.environ.get('PYTHONPATH')) + ':' + pPylib
@@ -236,6 +236,19 @@ try:
 
     sickBeardConfig.merge(defaultConfig)
     sickBeardConfig.write()
+
+    # migrate to SickRage branch
+    if not xbmcvfs.exists(__addonhome__ + 'oldsbdbbackup'):
+        xbmc.log('SickPotatoHead: Migrating to SickRage backing up old DB files', level=xbmc.LOGNOTICE)
+        xbmcvfs.mkdirs(__addonhome__ + 'oldsbdbbackup')
+        try:
+            dirs = xbmcvfs.listdir(__addonhome__)
+            for file in dirs:
+                if 'sickbeard.db' in file or file in ('cache.db', 'failed.db'):
+                    xbmcvfs.rename(__addonhome__ + file, __addonhome__ + 'oldsbdbbackup/' + file)
+        except Exception, e:
+            xbmc.log('SickPotatoHead: Error backing up old DB files', level=xbmc.LOGERROR)
+            xbmc.log(str(e), level=xbmc.LOGERROR)
 
     # launch SickBeard
     # ----------------

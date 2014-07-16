@@ -17,6 +17,7 @@ import xbmcvfs
 def create_dir(dirname):
     if not xbmcvfs.exists(dirname):
         xbmcvfs.mkdirs(dirname)
+        xbmc.log('AUDO: Created directory ' + dirname, level=xbmc.LOGDEBUG)
 
 # define some things that we're gonna need, mainly paths
 # ------------------------------------------------------
@@ -67,7 +68,7 @@ sabNzbdHost           = 'localhost:8081'
 
 firstLaunch = not xbmcvfs.exists(pSabNzbdSettings)
 sbfirstLaunch = not xbmcvfs.exists(pSickBeardSettings)
-cp2firstLaunch = not xbmcvfs.exists(pCouchPotatoServerSettings)
+cpfirstLaunch = not xbmcvfs.exists(pCouchPotatoServerSettings)
 hpfirstLaunch = not xbmcvfs.exists(pHeadphonesSettings)
 
 xbmc.log('AUDO: Creating directories if missing', level=xbmc.LOGDEBUG)
@@ -413,6 +414,19 @@ try:
     sickBeardConfig.merge(defaultConfig)
     sickBeardConfig.write()
 
+    # migrate to SickRage branch
+    if not xbmcvfs.exists(__addonhome__ + 'oldsbdbbackup'):
+        xbmc.log('AUDO: Migrating to SickRage backing up old DB files', level=xbmc.LOGNOTICE)
+        xbmcvfs.mkdirs(__addonhome__ + 'oldsbdbbackup')
+        try:
+            dirs = xbmcvfs.listdir(__addonhome__)
+            for file in dirs:
+                if 'sickbeard.db' in file or file in ('cache.db', 'failed.db'):
+                    xbmcvfs.rename(__addonhome__ + file, __addonhome__ + 'oldsbdbbackup/' + file)
+        except Exception, e:
+            xbmc.log('AUDO: Error backing up old DB files', level=xbmc.LOGERROR)
+            xbmc.log(str(e), level=xbmc.LOGERROR)
+
     # launch SickBeard
     # ----------------
     if sickbeard_launch:
@@ -471,7 +485,7 @@ try:
         defaultConfig['transmission']['directory']        = pSabNzbdCompleteMov
         defaultConfig['transmission']['host']             = 'localhost:9091'
 
-    if cp2firstLaunch:
+    if cpfirstLaunch:
         defaultConfig['xbmc']['xbmc_update_library']      = '1'
         defaultConfig['xbmc']['xbmc_update_full']         = '1'
         defaultConfig['xbmc']['xbmc_notify_onsnatch']     = '1'

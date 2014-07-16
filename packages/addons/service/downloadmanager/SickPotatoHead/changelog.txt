@@ -1,3 +1,6 @@
+1.3.9
+- switching to SickRage SickBeard branch
+
 1.3.8
 - Fix XBMC crash on frodo
 - update to HeadPhones-c170b2a

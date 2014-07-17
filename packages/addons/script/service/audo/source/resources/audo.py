@@ -420,9 +420,9 @@ try:
         xbmcvfs.mkdirs(__addonhome__ + 'oldsbdbbackup')
         try:
             dirs = os.listdir(__addonhome__)
-            for file in dirs:
-                if 'sickbeard.db' in file or file in ('cache.db', 'failed.db'):
-                    os.rename(__addonhome__ + file, __addonhome__ + 'oldsbdbbackup/' + file)
+            for dbfile in dirs:
+                if 'sickbeard.db' in dbfile or dbfile in ('cache.db', 'failed.db'):
+                    os.rename(__addonhome__ + dbfile, __addonhome__ + 'oldsbdbbackup/' + dbfile)
         except Exception, e:
             xbmc.log('AUDO: Error backing up old DB files', level=xbmc.LOGERROR)
             xbmc.log(str(e), level=xbmc.LOGERROR)

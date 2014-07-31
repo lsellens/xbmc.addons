@@ -1,3 +1,7 @@
+1.0.8
+- update to CouchPotatoServer-e75a852
+- update to SickRage-dbc30c4
+
 1.0.7
 - switching to SickRage SickBeard branch
 

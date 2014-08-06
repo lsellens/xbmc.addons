@@ -1,3 +1,7 @@
+1.4.1
+- update to HeadPhones-5cb9d78
+- fix for sickrage webui becoming inaccessable
+
 1.4.0
 - update to CouchPotatoServer-e75a852
 - update to SickRage-dbc30c4

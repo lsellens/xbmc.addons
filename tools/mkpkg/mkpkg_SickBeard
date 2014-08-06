@@ -10,7 +10,7 @@ echo "getting sources..."
   fi
 
   cd build.$PKG_NAME.git
-    git checkout ThePirateBay
+    git checkout master
     git pull
     git checkout $PKG_VERSION
     GIT_REV=`git log -n1 --format=%h`
@@ -23,7 +23,7 @@ echo "getting sources..."
      cp -R build.$PKG_NAME.git $PKG_NAME-$GIT_REV
 
     echo "cleaning sources..."
-     rm -rf $PKG_NAME-$GIT_REV/.git* $PKG_NAME-$GIT_REV/.travis.yml $PKG_NAME-$GIT_REV/init.* $PKG_NAME-$GIT_REV/COPYING.txt $PKG_NAME-$GIT_REV/*.md $PKG_NAME-$GIT_REV/autoProcessTV/autoProcessTV.cfg.sample $PKG_NAME-$GIT_REV/setup.py $PKG_NAME-$GIT_REV/updater.py $PKG_NAME-$GIT_REV/googlecode_upload.py $PKG_NAME-$GIT_REV/lib/bs4/tests $PKG_NAME-$GIT_REV/lib/html5lib/tests $PKG_NAME-$GIT_REV/tests
+     rm -rf $PKG_NAME-$GIT_REV/.travis.yml $PKG_NAME-$GIT_REV/init.* $PKG_NAME-$GIT_REV/COPYING.txt $PKG_NAME-$GIT_REV/*.md $PKG_NAME-$GIT_REV/autoProcessTV/autoProcessTV.cfg.sample $PKG_NAME-$GIT_REV/setup.py $PKG_NAME-$GIT_REV/updater.py $PKG_NAME-$GIT_REV/googlecode_upload.py $PKG_NAME-$GIT_REV/lib/bs4/tests $PKG_NAME-$GIT_REV/lib/html5lib/tests $PKG_NAME-$GIT_REV/tests
 
     echo "packing sources..."
      tar cJf $PKG_NAME-$GIT_REV.tar.xz $PKG_NAME-$GIT_REV

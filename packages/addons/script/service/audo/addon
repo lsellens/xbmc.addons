@@ -8,7 +8,8 @@ mkdir -p $ADDON_BUILD/$PKG_ADDON_ID
 mkdir -p $ADDON_BUILD/$PKG_ADDON_ID/resources/SABnzbd
   cp -PR $BUILD/SABnzbd-*/* $ADDON_BUILD/$PKG_ADDON_ID/resources/SABnzbd
 
-cp -PR $BUILD/SickBeard-* $ADDON_BUILD/$PKG_ADDON_ID/resources/SickBeard
+mkdir -p $ADDON_BUILD/$PKG_ADDON_ID/resources/SickBeard
+  cp -PR $BUILD/SickBeard-*/* $ADDON_BUILD/$PKG_ADDON_ID/resources/SickBeard
 
 mkdir -p $ADDON_BUILD/$PKG_ADDON_ID/resources/CouchPotatoServer
   cp -PR $BUILD/CouchPotatoServer-*/* $ADDON_BUILD/$PKG_ADDON_ID/resources/CouchPotatoServer

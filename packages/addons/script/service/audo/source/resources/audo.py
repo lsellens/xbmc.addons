@@ -414,19 +414,6 @@ try:
     sickBeardConfig.merge(defaultConfig)
     sickBeardConfig.write()
 
-    # migrate to SickRage branch
-    if not xbmcvfs.exists(__addonhome__ + 'oldsbdbbackup'):
-        xbmc.log('AUDO: Migrating to SickRage backing up old DB files', level=xbmc.LOGNOTICE)
-        xbmcvfs.mkdirs(__addonhome__ + 'oldsbdbbackup')
-        try:
-            dirs = os.listdir(__addonhome__)
-            for dbfile in dirs:
-                if 'sickbeard.db' in dbfile or dbfile in ('cache.db', 'failed.db'):
-                    os.rename(__addonhome__ + dbfile, __addonhome__ + 'oldsbdbbackup/' + dbfile)
-        except Exception, e:
-            xbmc.log('AUDO: Error backing up old DB files', level=xbmc.LOGERROR)
-            xbmc.log(str(e), level=xbmc.LOGERROR)
-
     # launch SickBeard
     # ----------------
     if sickbeard_launch:

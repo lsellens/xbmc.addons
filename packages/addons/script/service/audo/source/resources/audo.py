@@ -5,7 +5,6 @@ import os
 import subprocess
 import urllib2
 import hashlib
-import platform
 import xbmc
 import xbmcaddon
 import xbmcvfs
@@ -144,7 +143,7 @@ except StandardError:
 
 # prepare execution environment
 # -----------------------------
-parch                         = platform.machine()
+parch                         = os.uname()[4]
 pnamemapper                   = xbmc.translatePath(pPylib + '/Cheetah/_namemapper.so')
 pssl                          = xbmc.translatePath(pPylib + '/OpenSSL/SSL.so')
 prand                         = xbmc.translatePath(pPylib + '/OpenSSL/rand.so')

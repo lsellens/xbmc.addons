@@ -1,3 +1,6 @@
+1.4.3
+- update to SickRage-ace2d3d
+
 1.4.2
 - update to CouchPotatoServer-04aa2e5
 - update to HeadPhones-34097e2

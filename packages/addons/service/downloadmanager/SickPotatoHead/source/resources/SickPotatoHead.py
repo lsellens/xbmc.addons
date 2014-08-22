@@ -5,7 +5,6 @@ from lib.configobj import ConfigObj
 import os
 import subprocess
 import hashlib
-import platform
 import xbmc
 import xbmcaddon
 import xbmcvfs
@@ -126,7 +125,7 @@ except StandardError:
 
 # prepare execution environment
 # -----------------------------
-parch                         = platform.machine()
+parch                         = os.uname()[4]
 pnamemapper                   = xbmc.translatePath(pPylib + '/Cheetah/_namemapper.so')
 petree                        = xbmc.translatePath(pPylib + '/lxml/etree.so')
 pobjectify                    = xbmc.translatePath(pPylib + '/lxml/objectify.so')

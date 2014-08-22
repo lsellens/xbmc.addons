@@ -23,6 +23,11 @@ wake_times     = ['01:00', '03:00', '05:00', '07:00', '09:00', '11:00', '13:00',
                   '23:00']
 idleTimer      = 0
 
+# check if an update occurred
+if xbmcvfs.exists(xbmc.translatePath(__addonpath__ + '/justupdated')):
+    xbmcvfs.delete(xbmc.translatePath(__addonpath__ + '/justupdated'))
+    xbmc.log('audo: update occurred since last run:', level=xbmc.LOGDEBUG)
+
 # Launch audo
 try:
     xbmc.executebuiltin('XBMC.RunScript(%s)' % __start__, True)
@@ -56,6 +61,24 @@ else:
     sabNzbdHistoryKeywords = ['<status>Repairing</status>', '<status>Verifying</status>', '<status>Extracting</status>']
 
 while not xbmc.abortRequested:
+    #restart service after an update
+    if xbmcvfs.exists(xbmc.translatePath(__addonpath__ + '/justupdated')):
+        xbmc.log('audo: update occurred. attempting to restart:', level=xbmc.LOGDEBUG)
+        try:
+            xbmc.executebuiltin('XBMC.RunScript(%s)' % __stop__, True)
+        except Exception, e:
+            xbmc.log('audo: could not execute shutdown script after update:', level=xbmc.LOGERROR)
+            xbmc.log(str(e), level=xbmc.LOGERROR)
+
+        xbmcvfs.delete(xbmc.translatePath(__addonpath__ + '/justupdated'))
+        time.sleep(10)
+
+        try:
+            xbmc.executebuiltin('XBMC.RunScript(%s)' % __start__, True)
+        except Exception, e:
+            xbmc.log('audo: could not execute launch script after update:', level=xbmc.LOGERROR)
+            xbmc.log(str(e), level=xbmc.LOGERROR)
+        
     # reread setting in case it has changed
     shouldKeepAwake = (__addon__.getSetting('SABNZBD_KEEP_AWAKE').lower() == 'true')
     wakePeriodically = (__addon__.getSetting('PERIODIC_WAKE').lower() == 'true')

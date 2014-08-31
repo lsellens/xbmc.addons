@@ -14,6 +14,8 @@ if [ "$RESTART_ON_RESUME" == "true" ] ; then
       if [ ! -z "`ps | grep -E 'python.*service.downloadmanager.SickPotatoHead' | awk '{print $1}'`" ] ; then
         progress "Shutting down SickPotatoHead for suspending..."
         SickPotatoHead.stop
+        python $HOME/.xbmc/addons/service.downloadmanager.SickPotatoHead/resources/SickPotatoHead.stop.py
+        kill `ps | grep -E 'python.*service.downloadmanager.SickPotatoHead' | awk '{print $1}'` 2>/dev/null
         touch $LOCKFILE
       fi
       ;;
@@ -22,7 +24,7 @@ if [ "$RESTART_ON_RESUME" == "true" ] ; then
       progress "Restarting SickPotatoHead for wakeup..."
       if [ -f "$LOCKFILE" ] ; then
         rm -rf "$LOCKFILE"
-        python $HOME/.xbmc/addons/service.downloadmanager.SickPotatoHead/bin/SickPotatoHead.py
+        python $HOME/.xbmc/addons/service.downloadmanager.SickPotatoHead/service.py
       fi
       ;;
     *) exit $NA

@@ -148,8 +148,6 @@ pnamemapper                   = xbmc.translatePath(pPylib + '/Cheetah/_namemappe
 pssl                          = xbmc.translatePath(pPylib + '/OpenSSL/SSL.so')
 prand                         = xbmc.translatePath(pPylib + '/OpenSSL/rand.so')
 pcrypto                       = xbmc.translatePath(pPylib + '/OpenSSL/crypto.so')
-petree                        = xbmc.translatePath(pPylib + '/lxml/etree.so')
-pobjectify                    = xbmc.translatePath(pPylib + '/lxml/objectify.so')
 pyenc                         = xbmc.translatePath(pPylib + '/_yenc.so')
 ppar2                         = xbmc.translatePath(__addonpath__ + '/bin/par2')
 punrar                        = xbmc.translatePath(__addonpath__ + '/bin/unrar')
@@ -194,24 +192,6 @@ if not xbmcvfs.exists(pcrypto):
         xbmc.log('AUDO: Copied crypto.so for ' + parch, level=xbmc.LOGDEBUG)
     except Exception, e:
         xbmc.log('AUDO: Error Copying crypto.so for ' + parch, level=xbmc.LOGERROR)
-        xbmc.log(str(e), level=xbmc.LOGERROR)
-
-if not xbmcvfs.exists(petree):
-    try:
-        fetree                        = xbmc.translatePath(pPylib + '/multiarch/etree.so.' + parch)
-        xbmcvfs.copy(fetree, petree)
-        xbmc.log('AUDO: Copied etree.so for ' + parch, level=xbmc.LOGDEBUG)
-    except Exception, e:
-        xbmc.log('AUDO: Error Copying etree.so for ' + parch, level=xbmc.LOGERROR)
-        xbmc.log(str(e), level=xbmc.LOGERROR)
-
-if not xbmcvfs.exists(pobjectify):
-    try:
-        fobjectify                    = xbmc.translatePath(pPylib + '/multiarch/objectify.so.' + parch)
-        xbmcvfs.copy(fobjectify, pobjectify)
-        xbmc.log('AUDO: Copied objectify.so for ' + parch, level=xbmc.LOGDEBUG)
-    except Exception, e:
-        xbmc.log('AUDO: Error Copying objectify.so for ' + parch, level=xbmc.LOGERROR)
         xbmc.log(str(e), level=xbmc.LOGERROR)
 
 if not xbmcvfs.exists(pyenc):

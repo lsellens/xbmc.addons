@@ -13,7 +13,8 @@ if [ "$RESTART_ON_RESUME" == "true" ] ; then
     hibernate|suspend)
       if [ ! -z "`ps | grep -E 'python.*script.service.audo' | awk '{print $1}'`" ] ; then
         progress "Shutting down audo for suspending..."
-        audo.stop
+        python $HOME/.xbmc/addons/script.service.audo/resources/audo.stop.py
+        kill `ps | grep -E 'python.*script.service.audo' | awk '{print $1}'` 2>/dev/null
         touch $LOCKFILE
       fi
       ;;
@@ -22,7 +23,7 @@ if [ "$RESTART_ON_RESUME" == "true" ] ; then
       progress "Restarting audo for wakeup..."
       if [ -f "$LOCKFILE" ] ; then
         rm -rf "$LOCKFILE"
-        python $HOME/.xbmc/addons/script.service.audo/bin/audo.py
+        python $HOME/.xbmc/addons/script.service.audo/service.py
       fi
       ;;
     *) exit $NA

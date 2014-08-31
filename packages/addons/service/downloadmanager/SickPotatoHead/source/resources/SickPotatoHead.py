@@ -127,8 +127,6 @@ except StandardError:
 # -----------------------------
 parch                         = os.uname()[4]
 pnamemapper                   = xbmc.translatePath(pPylib + '/Cheetah/_namemapper.so')
-petree                        = xbmc.translatePath(pPylib + '/lxml/etree.so')
-pobjectify                    = xbmc.translatePath(pPylib + '/lxml/objectify.so')
 punrar                        = xbmc.translatePath(__addonpath__ + '/bin/unrar')
 
 xbmc.log('SickPotatoHead: ' + parch + ' architecture detected', level=xbmc.LOGDEBUG)
@@ -143,24 +141,6 @@ if not xbmcvfs.exists(pnamemapper):
         xbmc.log('SickPotatoHead: Copied _namemapper.so for ' + parch, level=xbmc.LOGDEBUG)
     except Exception, e:
         xbmc.log('SickPotatoHead: Error Copying _namemapper.so for ' + parch, level=xbmc.LOGERROR)
-        xbmc.log(str(e), level=xbmc.LOGERROR)
-
-if not xbmcvfs.exists(petree):
-    try:
-        fetree                        = xbmc.translatePath(pPylib + '/multiarch/etree.so.' + parch)
-        xbmcvfs.copy(fetree, petree)
-        xbmc.log('SickPotatoHead: Copied etree.so for ' + parch, level=xbmc.LOGDEBUG)
-    except Exception, e:
-        xbmc.log('SickPotatoHead: Error Copying etree.so for ' + parch, level=xbmc.LOGERROR)
-        xbmc.log(str(e), level=xbmc.LOGERROR)
-
-if not xbmcvfs.exists(pobjectify):
-    try:
-        fobjectify                    = xbmc.translatePath(pPylib + '/multiarch/objectify.so.' + parch)
-        xbmcvfs.copy(fobjectify, pobjectify)
-        xbmc.log('SickPotatoHead: Copied objectify.so for ' + parch, level=xbmc.LOGDEBUG)
-    except Exception, e:
-        xbmc.log('SickPotatoHead: Error Copying objectify.so for ' + parch, level=xbmc.LOGERROR)
         xbmc.log(str(e), level=xbmc.LOGERROR)
 
 if not xbmcvfs.exists(punrar):

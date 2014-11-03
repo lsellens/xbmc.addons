@@ -252,10 +252,6 @@ try:
     defaultConfig['misc']['https_cert']        = 'server.cert'
     defaultConfig['misc']['https_key']         = 'server.key'
     defaultConfig['misc']['host']              = host
-    defaultConfig['misc']['web_dir']           = 'Plush'
-    defaultConfig['misc']['web_dir2']          = 'Plush'
-    defaultConfig['misc']['web_color']         = 'gold'
-    defaultConfig['misc']['web_color2']        = 'gold'
     defaultConfig['misc']['log_dir']           = 'logs'
     defaultConfig['misc']['admin_dir']         = 'admin'
     defaultConfig['misc']['nzb_backup_dir']    = 'backup'
@@ -264,6 +260,10 @@ try:
     if firstLaunch:
         defaultConfig['misc']['download_dir']  = pSabNzbdIncomplete
         defaultConfig['misc']['complete_dir']  = pSabNzbdComplete
+        defaultConfig['misc']['web_dir']       = 'Plush'
+        defaultConfig['misc']['web_dir2']      = 'Plush'
+        defaultConfig['misc']['web_color']     = 'gold'
+        defaultConfig['misc']['web_color2']    = 'gold'
         servers = {}
         servers['localhost'] = {}
         servers['localhost']['host']           = 'localhost'

@@ -1,7 +1,7 @@
 ###
 PKG_NAME="audo"
 PKG_VERSION="1.1"
-PKG_REV="2"
+PKG_REV="3"
 PKG_ARCH="any"
 PKG_LICENSE="OSS"
 PKG_SITE="http://code.google.com/p/repository-lsellens/"
@@ -12,11 +12,11 @@ PKG_PRIORITY="optional"
 PKG_SECTION="script/service"
 PKG_SHORTDESC="Audo (Automatic Downloader) is a fork of SABnzbd-Suite. SABnzbd-Suite Metapackage which combines SABnzbd, SickBeard, Couchpotato and Headphones in one Addon"
 
-PKG_SHORTTRANS="    <summary lang=\"nl\">Audo (Automatische Downloader) is een afsplitsing van SABnzbd-Suite. Sabnzbd-Suite metapackage die SABNZBD, SickBeard, Couchpotato en Headphones combineert in een add-on.</summary>\n    <summary lang=\"fr\">Audo (pour Automatic Downloader) est un fork de SABnzbd-Suite. SABnzbd-Suite méta-paquet qui combine SABnzbd, SickBeard, Couchpotato et Headphones dans un add-on.</summary>\n    <summary lang=\"pt\">O Audo (Automatic Downloader) é uma derivação da SABnzbd-Suite. O Metapacote SABnzbd-Suite combina o SABnzbd, SickBeard, Couchpotato e Headphones num único Addon</summary>"
+PKG_SHORTTRANS="    <summary lang=\"nl\">Audo (Automatische Downloader) is een afsplitsing van SABnzbd-Suite. Sabnzbd-Suite metapackage die SABNZBD, SickBeard, Couchpotato en Headphones combineert in een add-on.</summary>\n    <summary lang=\"fr\">Audo (pour Automatic Downloader) est un fork de SABnzbd-Suite. SABnzbd-Suite méta-paquet qui combine SABnzbd, SickBeard, Couchpotato et Headphones dans un add-on.</summary>\n    <summary lang=\"pt\">O Audo (Automatic Downloader) é uma derivação da SABnzbd-Suite. O Metapacote SABnzbd-Suite combina o SABnzbd, SickBeard, Couchpotato e Headphones num único Addon</summary>\n    <summary lang=\"es\">Audo (Automatic Downloader) es un fork derivado de SABnzbd-Suite. SABnzbd-Suite Metapackage el cual combina SABnzbd, SickBeard, Couchpotato y Headphones en un solo Addon</summary>"
 
-PKG_LONGDESC="Audo (Automatic Downloader) is a fork of SABnzbd-Suite. Updated frequently to newest versions of SAB, SB(mr.orange branch), CPv2, and HP."
+PKG_LONGDESC="Audo (Automatic Downloader) is a fork of SABnzbd-Suite. Updated frequently to newest versions of SAB, SB, CP, and HP."
 
-PKG_LONGTRANS="    <description lang=\"nl\">Audo (Automatische Downloader) is een afsplitsing van SABnzbd-Suite. Wordt frequent geüpdatet naar de nieuwste versies van SAB, SB-mr.orange Branch, CPv2, en HP.</description>\n    <description lang=\"fr\">Audo (pour Automatic Downloader) est un fork de SABnzbd-Suite. Mis à jour fréquemment vers les nouvelles versions de la branche SAB, SB-mr.orange, CPv2 et HP.</description>\n    <description lang=\"pt\">O Audo (Automatic Downloader) é uma derivação da SABnzbd-Suite. É actualizado frequentemente para as mais recentes versões de SAB, ramo SB-mr.orange, CPv2, e HP.</description>"
+PKG_LONGTRANS="    <description lang=\"nl\">Audo (Automatische Downloader) is een afsplitsing van SABnzbd-Suite. Wordt frequent geüpdatet naar de nieuwste versies van SAB, SB, CP, en HP.</description>\n    <description lang=\"fr\">Audo (pour Automatic Downloader) est un fork de SABnzbd-Suite. Mis à jour fréquemment vers les nouvelles versions de la branche SAB, SB, CP et HP.</description>\n    <description lang=\"pt\">O Audo (Automatic Downloader) é uma derivação da SABnzbd-Suite. É actualizado frequentemente para as mais recentes versões de SAB, ramo SB, CP, e HP.</description>\n    <description lang=\"es\">Audo (Automatic Downloader) es un fork derivado de SABnzbd-Suite. Se actualiza con frecuencia a las últimas versiones de SAB, SB, CP, and HP.</description>"
 
 PKG_IS_ADDON="yes"
 PKG_ADDON_TYPE="xbmc.python.script"

@@ -20,11 +20,11 @@
 ################################################################################
 
 PKG_NAME="SickBeard"
-PKG_VERSION="00b323c"
+PKG_VERSION="0a362e8"
 PKG_REV="1"
 PKG_ARCH="any"
 PKG_LICENSE="OSS"
-PKG_SITE="http://github.com/echel0n/SickRage"
+PKG_SITE="http://github.com/SickragePVR/SickRage"
 PKG_URL="http://dl.dropbox.com/u/42265484/repository.lsellens/devel/${PKG_NAME}-${PKG_VERSION}.tar.xz"
 PKG_DEPENDS="Python Cheetah"
 PKG_BUILD_DEPENDS=""

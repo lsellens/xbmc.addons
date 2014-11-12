@@ -1,0 +1,12 @@
+[submodule "script.service.audo"]
+	path = script.service.audo
+	url = git@github.com:lsellens/script.service.audo.git
+[submodule "script.module.audo-programs"]
+	path = script.module.audo-programs
+	url = git@github.com:lsellens/script.module.audo-programs.git
+[submodule "script.module.audo"]
+	path = script.module.audo
+	url = git@github.com:lsellens/script.module.audo.git
+[submodule "script.module.audo-dependencies"]
+	path = script.module.audo-dependencies
+	url = git@github.com:lsellens/script.module.audo-dependencies.git

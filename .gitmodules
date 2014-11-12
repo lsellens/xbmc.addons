@@ -10,3 +10,6 @@
 [submodule "script.module.audo-dependencies"]
 	path = script.module.audo-dependencies
 	url = git@github.com:lsellens/script.module.audo-dependencies.git
+[submodule "service.downloadmanager.SickPotatoHead"]
+	path = service.downloadmanager.SickPotatoHead
+	url = git@github.com:lsellens/service.downloadmanager.SickPotatoHead.git

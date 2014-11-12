@@ -1,9 +1,7 @@
-sources
-sources/*
-build*
-build*/*
-target
-target/*
-tools/mkpkg/build.*
-tools/mkpkg/build.*/*
-tools/mkpkg/SABnzbd-*
+*/build*
+*/build*/*
+*/target
+*/target/*
+*/mkpkg/build.*
+*/mkpkg/build.*/*
+*/mkpkg/SABnzbd-*

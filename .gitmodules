@@ -13,3 +13,9 @@
 [submodule "service.downloadmanager.SickPotatoHead"]
 	path = service.downloadmanager.SickPotatoHead
 	url = git@github.com:lsellens/service.downloadmanager.SickPotatoHead.git
+[submodule "script.module.RPi.GPIO"]
+	path = script.module.RPi.GPIO
+	url = git@github.com:lsellens/script.module.RPi.GPIO.git
+[submodule "script.module.distutils"]
+	path = script.module.distutils
+	url = git@github.com:lsellens/script.module.distutils.git

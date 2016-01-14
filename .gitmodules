@@ -22,3 +22,6 @@
 [submodule "script.service.rpi.tv.switch"]
 	path = script.service.rpi.tv.switch
 	url = git@github.com:lsellens/script.service.rpi.tv.switch.git
+[submodule "script.service.nodoze"]
+	path = script.service.nodoze
+	url = git@github.com:lsellens/script.service.nodoze.git

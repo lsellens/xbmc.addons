@@ -19,3 +19,6 @@
 [submodule "script.module.distutils"]
 	path = script.module.distutils
 	url = git@github.com:lsellens/script.module.distutils.git
+[submodule "script.service.rpi.tv.switch"]
+	path = script.service.rpi.tv.switch
+	url = git@github.com:lsellens/script.service.rpi.tv.switch.git

@@ -25,3 +25,6 @@
 [submodule "script.service.nodoze"]
 	path = script.service.nodoze
 	url = git@github.com:lsellens/script.service.nodoze.git
+[submodule "service.downloadmanager.transmission"]
+	path = service.downloadmanager.transmission
+	url = git@github.com:lsellens/service.downloadmanager.transmission.git

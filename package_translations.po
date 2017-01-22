@@ -12,34 +12,34 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: en_US\n"
 
-#: audo service summary
+msgctxt "#: audo service summary"
 msgid "Audo (Automatic Downloader) is a fork of SABnzbd-Suite. SABnzbd-Suite Metapackage which combines SABnzbd, NZBGet, SickBeard, Couchpotato and Headphones in one Addon"
 msgstr "Audo (Automatic Downloader) is a fork of SABnzbd-Suite. SABnzbd-Suite Metapackage which combines SABnzbd, NZBGet, SickBeard, Couchpotato and Headphones in one Addon"
 
-#: audo service description
+msgctxt "#: audo service description"
 msgid "Audo (Automatic Downloader) is a fork of SABnzbd-Suite. Updated frequently to newest versions of SAB, NZBGet, SB, CP, and HP."
 msgstr "Audo (Automatic Downloader) is a fork of SABnzbd-Suite. Updated frequently to newest versions of SAB, NZBGet, SB, CP, and HP."
 
-#: audo module summary
+msgctxt "#: audo module summary"
 msgid "Please install the audo service addon."
 msgstr "Please install the audo service addon."
 
-#: audo module description
+msgctxt "#: audo module description"
 msgid "Please install the audo service addon. This will do nothing on its own."
 msgstr "Please install the audo service addon. This will do nothing on its own."
 
-#: audo programs module summary
+msgctxt "#: audo programs module summary"
 msgid "Core Programs for audo"
 msgstr "Core Programs for audo"
 
-#: audo programs module description
+msgctxt "#: audo programs module description"
 msgid "This is a package of core programs for audo. Containes SABnzbd, NZBGet, HeadPhones, CouchPotato, and Sickbeard(sickrage branch)."
 msgstr "This is a package of core programs for audo. Containes SABnzbd, NZBGet, HeadPhones, CouchPotato, and Sickbeard(sickrage branch)."
 
-#: audo dependencies module summary
+msgctxt "#: audo dependencies module summary"
 msgid "Dependencies for audo"
 msgstr "Dependencies for audo"
 
-#: audo dependencies module description
+msgctxt "#: audo dependencies module description"
 msgid "This is a package of dependencies for audo. Containes multi architecture files of Cheatah, Openssl, configobj, yenc, unrar, par2, distutils, and mako"
 msgstr "This is a package of dependencies for audo. Containes multi architecture files of Cheatah, Openssl, configobj, yenc, unrar, par2, distutils, and mako"

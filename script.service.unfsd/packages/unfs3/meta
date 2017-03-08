@@ -1,4 +1,0 @@
-PKG_NAME="unfs3"
-PKG_VERSION="0.9.22"
-PKG_URL="https://downloads.sourceforge.net/project/${PKG_NAME}/${PKG_NAME}/${PKG_VERSION}/${PKG_NAME}-${PKG_VERSION}.tar.gz"
-PKG_DEPENDS=""

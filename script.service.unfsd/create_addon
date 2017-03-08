@@ -1,0 +1,35 @@
+#!/bin/sh
+
+. packages/meta
+
+echo "Building $PKG_NAME-$PKG_VERSION.$PKG_REV"
+
+rm -rf target/$PKG_VERSION.$PKG_REV/
+
+rm -rf build
+mkdir -p build/stamps
+
+cp -rf $PKG_NAME build/$PKG_NAME
+
+rm -f build/$PKG_NAME/*/.gitignore
+
+for i in $PKG_DEPENDS;do
+  if [ ! -f build/stamps/$i ]; then
+    mkpkg/mkpkg_$i
+    if [ "$?" -ne "0" ]; then
+      echo "Error building $i";exit 1
+    fi
+  fi
+done
+
+mkdir -p target/$PKG_VERSION.$PKG_REV/
+cd build
+zip -rq9y ../target/$PKG_VERSION.$PKG_REV/$PKG_NAME-$PKG_VERSION.$PKG_REV.zip $PKG_NAME
+if [ "$?" = "0" ]; then
+  echo "$PKG_NAME/target/$PKG_NAME-$PKG_VERSION.$PKG_REV.zip"
+fi
+cp $PKG_NAME/changelog.txt ../target/$PKG_VERSION.$PKG_REV/changelog-$PKG_VERSION.$PKG_REV.txt
+cp $PKG_NAME/addon.xml ../target/$PKG_VERSION.$PKG_REV/addon.xml
+cd ..
+rm -rf build
+exit 0

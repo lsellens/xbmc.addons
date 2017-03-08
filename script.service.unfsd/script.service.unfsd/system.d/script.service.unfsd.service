@@ -1,0 +1,20 @@
+[Unit]
+Description=UNFS3
+After=network-online.target rpcbind.target
+Requires=network-online.target rpcbind.target
+Wants=rpcbind.service
+After=rpcbind.service
+
+[Service]
+Type=forking
+ExecStart=/bin/sh -c "exec sh /storage/.kodi/addons/script.service.unfsd/bin/unfsd.start"
+ExecStop=/bin/sh -c "exec sh /storage/.kodi/addons/script.service.unfsd/bin/unfsd.stop"
+ExecReload=/bin/kill -HUP $MAINPID
+PIDFile=/var/run/unfsd.pid
+TimeoutStopSec=1
+Restart=always
+RestartSec=2
+StartLimitInterval=0
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,11 @@
+#!/bin/sh
+
+. /etc/profile
+oe_setup_addon script.service.unfsd
+
+ADDON_ID=script.service.unfsd
+ADDON_DIR="$HOME/.kodi/addons/$ADDON_ID"
+ADDON_HOME="$HOME/.kodi/userdata/addon_data/$ADDON_ID"
+
+PID=`cat /var/run/unfsd.pid`
+kill -TERM $PID

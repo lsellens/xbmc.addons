@@ -28,3 +28,6 @@
 [submodule "service.downloadmanager.transmission"]
 	path = service.downloadmanager.transmission
 	url = git@github.com:lsellens/service.downloadmanager.transmission.git
+[submodule "script.service.unfsd"]
+	path = script.service.unfsd
+	url = git@github.com:lsellens/script.service.unfsd.git

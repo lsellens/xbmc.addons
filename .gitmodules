@@ -31,3 +31,6 @@
 [submodule "script.service.unfsd"]
 	path = script.service.unfsd
 	url = git@github.com:lsellens/script.service.unfsd.git
+[submodule "metadata.scraper.moviesetartwork"]
+	path = metadata.scraper.moviesetartwork
+	url = git@github.com:lsellens/metadata.scraper.moviesetartwork.git

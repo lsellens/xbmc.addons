@@ -34,3 +34,6 @@
 [submodule "metadata.scraper.moviesetartwork"]
 	path = metadata.scraper.moviesetartwork
 	url = git@github.com:lsellens/metadata.scraper.moviesetartwork.git
+[submodule "script.service.nfs-ganesha"]
+	path = script.service.nfs-ganesha
+	url = git@github.com:lsellens/script.service.nfs-ganesha.git

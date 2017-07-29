@@ -37,3 +37,6 @@
 [submodule "script.service.nfs-ganesha"]
 	path = script.service.nfs-ganesha
 	url = git@github.com:lsellens/script.service.nfs-ganesha.git
+[submodule "script.module.transmissionrpc"]
+	path = script.module.transmissionrpc
+	url = git@github.com:lsellens/script.module.transmissionrpc.git
